@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Store, Network, Search, User, ChevronDown, Rocket, Code, Zap, Globe, Shield, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -6,10 +6,19 @@ import ChatWindow from './ChatWindow';
 import SearchOverlay from '../search/SearchOverlay';
 
 const ChatLayout = () => {
-  const [isNavOpen, setIsNavOpen] = useState(true);
+  const [isNavOpen, setIsNavOpen] = useState(window.innerWidth >= 768);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsNavOpen(window.innerWidth >= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   const navItems = [
     {
@@ -63,24 +72,29 @@ const ChatLayout = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-gray-900 to-gray-900" />
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)`,
-          backgroundSize: '40px 40px' 
-        }} />
-      </div>
+    <div className="flex h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white overflow-hidden">
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {isNavOpen && window.innerWidth < 768 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsNavOpen(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
       <AnimatePresence>
         {isNavOpen && (
           <motion.aside
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 320, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            className="bg-gray-800/50 backdrop-blur-xl border-r border-white/10 relative z-10 flex flex-col"
+            initial={{ x: -320 }}
+            animate={{ x: 0 }}
+            exit={{ x: -320 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed md:static top-0 left-0 h-full w-[320px] bg-gray-800/50 backdrop-blur-xl border-r border-white/10 z-50 flex flex-col"
           >
             <div className="p-4">
               <div className="flex items-center justify-between mb-8">
@@ -91,13 +105,13 @@ const ChatLayout = () => {
                 />
                 <button
                   onClick={() => setIsNavOpen(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors md:hidden"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <div className="h-[70vh] ml-[10px] overflow-y-auto space-y-4 pr-4 custom-scrollbar">
+              <div className="h-[calc(100vh-8rem)] overflow-y-auto space-y-4 pr-4 custom-scrollbar">
                 {navItems.map((item, index) => (
                   <motion.div
                     key={index}
@@ -183,7 +197,9 @@ const ChatLayout = () => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col relative">
         {/* Floating Icons */}
-        <div className="absolute top-4 right-4 z-50 flex items-center gap-5">
+        <div className={`absolute top-4 right-4 z-30 flex items-center gap-5 transition-opacity duration-300 ${
+          isNavOpen && window.innerWidth < 768 ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -204,7 +220,7 @@ const ChatLayout = () => {
         {!isNavOpen && (
           <motion.button
             onClick={() => setIsNavOpen(true)}
-            className="absolute top-4 left-4 z-50"
+            className="absolute top-4 left-4 z-30"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >

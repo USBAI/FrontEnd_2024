@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, MessageCircle, Globe, ChevronDown } from 'lucide-react';
+import { Menu, X, Sparkles, Globe, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState('');
-  const { t, i18n } = useTranslation();
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,27 +54,25 @@ const Navbar = () => {
         { label: 'Partner Program', href: '/partners/program' },
         { label: 'Success Stories', href: '/partners/success' }
       ]
-    },
-    {
-      label: t('nav.ourTeam'),
-      href: '/team',
-      dropdownItems: [
-        { label: 'Leadership Team', href: '/team/leadership' },
-        { label: 'AI Research Team', href: '/team/research' },
-        { label: 'Careers', href: '/careers' },
-        { label: 'Contact Us', href: '/contact' }
-      ]
-    },
+    }
   ];
 
+  const buttonVariants = {
+    initial: { scale: 1 },
+    hover: { scale: 1.05 },
+    tap: { scale: 0.95 }
+  };
+
+  const glowVariants = {
+    initial: { opacity: 0.5 },
+    animate: { opacity: [0.3, 0.5, 0.3] },
+    hover: { opacity: 0.7 }
+  };
+
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-500 ${
-        scrolled
-          ? 'bg-black/80 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
-      }`}
-    >
+    <nav className={`fixed w-full z-50 transition-all duration-500 ${
+      scrolled ? 'bg-black/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -81,13 +81,13 @@ const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex-shrink-0"
           >
-            <a href="/" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <img
                 className="h-10 w-auto"
                 src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
                 alt="Kluret"
               />
-            </a>
+            </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -100,18 +100,19 @@ const Navbar = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
+                  className="relative"
                   onHoverStart={() => setShowDropdown(item.href)}
                   onHoverEnd={() => setShowDropdown('')}
-                  className="relative"
                 >
-                  <NavLink href={item.href}>
-                    <span className="flex items-center gap-1">
-                      {item.label}
-                      <ChevronDown className="h-4 w-4 opacity-50" />
-                    </span>
-                  </NavLink>
+                  <button
+                    onClick={() => setActiveDropdown(activeDropdown === item.href ? null : item.href)}
+                    className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                  >
+                    {item.label}
+                    <ChevronDown className="h-4 w-4 opacity-50" />
+                  </button>
                   <AnimatePresence>
-                    {showDropdown === item.href && (
+                    {(showDropdown === item.href || activeDropdown === item.href) && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -119,13 +120,13 @@ const Navbar = () => {
                         className="absolute top-full left-0 mt-2 w-56 rounded-lg bg-gray-900/95 backdrop-blur-md shadow-xl py-2"
                       >
                         {item.dropdownItems.map((dropdownItem) => (
-                          <a
+                          <Link
                             key={dropdownItem.href}
-                            href={dropdownItem.href}
+                            to={dropdownItem.href}
                             className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors"
                           >
                             {dropdownItem.label}
-                          </a>
+                          </Link>
                         ))}
                       </motion.div>
                     )}
@@ -148,15 +149,38 @@ const Navbar = () => {
             </motion.button>
 
             {/* CTA Button */}
-            <motion.a
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              href="/chat"
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium"
-            >
-              <MessageCircle className="h-4 w-4" />
-              {t('nav.kluretChat')}
-            </motion.a>
+            <Link to="/chat">
+              <motion.div
+                className="relative"
+                initial="initial"
+                animate="animate"
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <motion.div
+                  variants={glowVariants}
+                  className="absolute inset-0 bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-full blur-xl"
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                
+                <motion.button
+                  variants={buttonVariants}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="relative flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 text-white font-medium text-sm border border-pink-400/20 shadow-lg hover:shadow-pink-500/25"
+                >
+                  <Sparkles className="h-4 w-4 animate-pulse" />
+                  <span className="relative">
+                    {t('nav.kluretChat')}
+                    <motion.span
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-white/40"
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </span>
+                </motion.button>
+              </motion.div>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -187,20 +211,38 @@ const Navbar = () => {
             <div className="px-4 py-6 space-y-4">
               {menuItems.map((item) => (
                 <div key={item.href} className="space-y-2">
-                  <MobileNavLink href={item.href}>
+                  <button
+                    onClick={() => setActiveDropdown(activeDropdown === item.href ? null : item.href)}
+                    className="w-full flex items-center justify-between text-gray-300 hover:text-white transition-colors text-lg font-medium"
+                  >
                     {item.label}
-                  </MobileNavLink>
-                  <div className="pl-4 space-y-2">
-                    {item.dropdownItems.map((dropdownItem) => (
-                      <a
-                        key={dropdownItem.href}
-                        href={dropdownItem.href}
-                        className="block text-sm text-gray-400 hover:text-white transition-colors py-1"
+                    <motion.div
+                      animate={{ rotate: activeDropdown === item.href ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown className="h-5 w-5" />
+                    </motion.div>
+                  </button>
+                  <AnimatePresence>
+                    {activeDropdown === item.href && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="pl-4 space-y-2"
                       >
-                        {dropdownItem.label}
-                      </a>
-                    ))}
-                  </div>
+                        {item.dropdownItems.map((dropdownItem) => (
+                          <Link
+                            key={dropdownItem.href}
+                            to={dropdownItem.href}
+                            className="block text-sm text-gray-400 hover:text-white transition-colors py-1"
+                          >
+                            {dropdownItem.label}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ))}
               <div className="pt-4 border-t border-gray-800">
@@ -212,13 +254,13 @@ const Navbar = () => {
                   {i18n.language === 'en' ? 'Svenska' : 'English'}
                 </button>
               </div>
-              <a
-                href="/chat"
-                className="flex items-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 transition-colors rounded-lg text-white font-medium"
+              <Link
+                to="/chat"
+                className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 transition-colors rounded-lg text-white font-medium"
               >
-                <MessageCircle className="h-5 w-5" />
+                <Sparkles className="h-5 w-5" />
                 {t('nav.kluretChat')}
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}
@@ -226,23 +268,5 @@ const Navbar = () => {
     </nav>
   );
 };
-
-const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <a
-    href={href}
-    className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
-  >
-    {children}
-  </a>
-);
-
-const MobileNavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <a
-    href={href}
-    className="block text-gray-300 hover:text-white transition-colors text-lg font-medium"
-  >
-    {children}
-  </a>
-);
 
 export default Navbar;

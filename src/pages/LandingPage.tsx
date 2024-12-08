@@ -22,13 +22,13 @@ function LandingPage() {
   });
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen font-inter">
+    <div className="relative bg-gray-900 text-white font-inter">
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-pink to-accent-purple origin-left z-50"
         style={{ scaleX }}
       />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <HeroSection />
         <StatsSection />
         <FeaturesSection />

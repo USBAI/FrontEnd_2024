@@ -18,7 +18,7 @@ const PartnersSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-black">
+    <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-pink-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
@@ -26,8 +26,8 @@ const PartnersSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Partners</h2>
-          <p className="text-xl text-gray-400">Working with industry leaders to provide the best service</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Our Partners</h2>
+          <p className="text-xl text-gray-600">Working with industry leaders to provide the best service</p>
         </motion.div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
           {partners.map((partner, index) => (
@@ -36,12 +36,47 @@ const PartnersSection = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: 0.1 * index }}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center relative group"
             >
-              <div className="h-16 w-16 bg-gray-800/50 rounded-lg p-3 flex items-center justify-center mb-2">
-                <img src={partner.logo} alt={partner.name} className="h-full w-full object-contain" />
+              {/* Animated Background */}
+              <motion.div
+                className="absolute inset-0 bg-white/80 backdrop-blur-[2px] rounded-lg"
+                animate={{
+                  scale: [1, 1.05, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: index * 0.2,
+                }}
+              />
+              
+              {/* Glow Effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-200/30 to-pink-200/30 rounded-lg blur-xl"
+                animate={{
+                  opacity: [0.3, 0.5, 0.3],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+
+              <div className="relative h-16 w-16 bg-white/90 backdrop-blur-sm rounded-lg p-3 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:shadow-xl">
+                <motion.img
+                  src={partner.logo}
+                  alt={partner.name}
+                  className="h-full w-full object-contain"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                />
               </div>
-              <p className="text-sm text-gray-400">{partner.name}</p>
+              <p className="mt-2 text-sm text-gray-600 relative z-10">{partner.name}</p>
             </motion.div>
           ))}
         </div>
