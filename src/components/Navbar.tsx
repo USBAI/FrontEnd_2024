@@ -57,23 +57,13 @@ const Navbar = () => {
     }
   ];
 
-  const buttonVariants = {
-    initial: { scale: 1 },
-    hover: { scale: 1.05 },
-    tap: { scale: 0.95 }
-  };
-
-  const glowVariants = {
-    initial: { opacity: 0.5 },
-    animate: { opacity: [0.3, 0.5, 0.3] },
-    hover: { opacity: 0.7 }
-  };
-
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
-      scrolled ? 'bg-black/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      scrolled ? 'bg-black/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 transition-opacity duration-500" style={{ opacity: scrolled ? 1 : 0 }} />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <motion.div
@@ -117,13 +107,13 @@ const Navbar = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full left-0 mt-2 w-56 rounded-lg bg-gray-900/95 backdrop-blur-md shadow-xl py-2"
+                        className="absolute top-full left-0 mt-2 w-56 rounded-lg bg-black/90 backdrop-blur-xl shadow-xl py-2 border border-white/10"
                       >
                         {item.dropdownItems.map((dropdownItem) => (
                           <Link
                             key={dropdownItem.href}
                             to={dropdownItem.href}
-                            className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors"
+                            className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
                           >
                             {dropdownItem.label}
                           </Link>
@@ -152,33 +142,27 @@ const Navbar = () => {
             <Link to="/chat">
               <motion.div
                 className="relative"
-                initial="initial"
-                animate="animate"
-                whileHover="hover"
-                whileTap="tap"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <motion.div
-                  variants={glowVariants}
-                  className="absolute inset-0 bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-full blur-xl"
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl"
+                  animate={{
+                    opacity: [0.5, 0.8, 0.5],
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
                 />
-                
-                <motion.button
-                  variants={buttonVariants}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  className="relative flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 text-white font-medium text-sm border border-pink-400/20 shadow-lg hover:shadow-pink-500/25"
-                >
-                  <Sparkles className="h-4 w-4 animate-pulse" />
-                  <span className="relative">
-                    {t('nav.kluretChat')}
-                    <motion.span
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-white/40"
-                      initial={{ scaleX: 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </span>
-                </motion.button>
+                <button className="relative px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-sm flex items-center gap-2 hover:shadow-lg hover:shadow-blue-500/25 transition-shadow">
+                  <Sparkles className="h-4 w-4" />
+                  <span>{t('nav.kluretChat')}</span>
+                </button>
               </motion.div>
             </Link>
           </div>
@@ -206,7 +190,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden bg-gray-900/95 backdrop-blur-md border-t border-gray-800"
+            className="md:hidden overflow-hidden bg-black/95 backdrop-blur-xl border-t border-white/10"
           >
             <div className="px-4 py-6 space-y-4">
               {menuItems.map((item) => (
@@ -256,7 +240,7 @@ const Navbar = () => {
               </div>
               <Link
                 to="/chat"
-                className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 transition-colors rounded-lg text-white font-medium"
+                className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-colors rounded-lg text-white font-medium"
               >
                 <Sparkles className="h-5 w-5" />
                 {t('nav.kluretChat')}

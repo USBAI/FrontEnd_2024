@@ -23,24 +23,35 @@ function LandingPage() {
 
   return (
     <div className="relative bg-gray-900 text-white font-inter">
+      {/* Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-pink to-accent-purple origin-left z-50"
         style={{ scaleX }}
       />
-      <Navbar />
-      <main className="relative z-10">
-        <HeroSection />
-        <StatsSection />
-        <FeaturesSection />
-        <HowItWorksSection />
-        <WhyKluretSection />
-        <TestimonialsSection />
-        <PartnersSection />
-        <APISection />
-        <StoreIntegrationSection />
-        <CTASection />
-      </main>
-      <Footer />
+
+      {/* Background Gradient */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-gray-900 to-purple-900/20 animate-gradient" />
+        <div className="absolute inset-0 backdrop-blur-[100px]" />
+      </div>
+
+      {/* Content */}
+      <div className="relative">
+        <Navbar />
+        <main className="relative z-10">
+          <HeroSection />
+          <StatsSection />
+          <FeaturesSection />
+          <HowItWorksSection />
+          <WhyKluretSection />
+          <TestimonialsSection />
+          <PartnersSection />
+          <APISection />
+          <StoreIntegrationSection />
+          <CTASection />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }

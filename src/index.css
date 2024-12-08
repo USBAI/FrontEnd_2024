@@ -20,56 +20,90 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Root element styles */
-html {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior-y: none;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Chat layout specific styles */
-.chat-layout {
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Prevent overscroll bounce effect */
-@supports (-webkit-touch-callout: none) {
-  body {
-    /* iOS specific styles */
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Smooth scrolling */
+/* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Animation utilities */
+/* Reset body styles */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent overscroll bounce effect */
+html, body {
+  overscroll-behavior-y: none;
+}
+
+/* Ensure sections take full viewport height */
+.min-h-screen {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Gradient animations */
 @keyframes gradient {
-  0%, 100% {
+  0% {
     background-position: 0% 50%;
   }
   50% {
     background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
 .animate-gradient {
   animation: gradient 15s ease infinite;
   background-size: 200% 200%;
+}
+
+/* Custom utilities */
+.backdrop-blur-2xl {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Improved mobile responsiveness */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Better touch handling for mobile */
+@media (hover: none) {
+  .hover\:scale-105:hover {
+    transform: none;
+  }
+}
+
+/* Prevent text size adjustments */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Improved focus styles */
+:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+/* Better button touch targets on mobile */
+@media (max-width: 640px) {
+  button, 
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

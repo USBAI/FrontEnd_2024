@@ -4,10 +4,12 @@ import { Menu, X, Store, Network, Search, User, ChevronDown, Rocket, Code, Zap, 
 import { useNavigate } from 'react-router-dom';
 import ChatWindow from './ChatWindow';
 import SearchOverlay from '../search/SearchOverlay';
+import ProfilePage from './ProfilePage';
 
 const ChatLayout = () => {
   const [isNavOpen, setIsNavOpen] = useState(window.innerWidth >= 768);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
   const navigate = useNavigate();
 
@@ -19,7 +21,7 @@ const ChatLayout = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
+
   const navItems = [
     {
       icon: Store,
@@ -73,15 +75,15 @@ const ChatLayout = () => {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white overflow-hidden">
-      {/* Mobile Overlay */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isNavOpen && window.innerWidth < 768 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-40"
             onClick={() => setIsNavOpen(false)}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
           />
         )}
       </AnimatePresence>
@@ -94,9 +96,9 @@ const ChatLayout = () => {
             animate={{ x: 0 }}
             exit={{ x: -320 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed md:static top-0 left-0 h-full w-[320px] bg-gray-800/50 backdrop-blur-xl border-r border-white/10 z-50 flex flex-col"
+            className={`fixed md:static top-0 left-0 h-full w-80 bg-gray-800/50 backdrop-blur-xl border-r border-white/10 z-50 flex flex-col`}
           >
-            <div className="p-4">
+            <div className="p-6">
               <div className="flex items-center justify-between mb-8">
                 <img
                   src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
@@ -111,7 +113,7 @@ const ChatLayout = () => {
                 </button>
               </div>
 
-              <div className="h-[calc(100vh-8rem)] overflow-y-auto space-y-4 pr-4 custom-scrollbar">
+              <div className="space-y-4">
                 {navItems.map((item, index) => (
                   <motion.div
                     key={index}
@@ -130,7 +132,7 @@ const ChatLayout = () => {
                           <div className={`p-3 rounded-lg bg-gradient-to-r ${item.gradient}`}>
                             <item.icon className="h-5 w-5" />
                           </div>
-                          <div className="flex-1 text-left">
+                          <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <h3 className="font-medium">{item.label}</h3>
                               <motion.div
@@ -161,7 +163,7 @@ const ChatLayout = () => {
                                   transition={{ delay: detailIndex * 0.1 }}
                                   className="flex items-start gap-3 bg-gray-800/50 p-3 rounded-lg"
                                 >
-                                  <detail.icon className="h-4 w-4 text-gray-400 mt-0.5" />
+                                  <detail.icon className="h-5 w-5 text-gray-400 mt-0.5" />
                                   <div>
                                     <h4 className="text-sm font-medium">{detail.title}</h4>
                                     <p className="text-xs text-gray-400">{detail.description}</p>
@@ -194,7 +196,7 @@ const ChatLayout = () => {
         )}
       </AnimatePresence>
 
-      {/* Main Chat Area */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
         {/* Floating Icons */}
         <div className={`absolute top-4 right-4 z-30 flex items-center gap-5 transition-opacity duration-300 ${
@@ -203,6 +205,7 @@ const ChatLayout = () => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => setIsProfileOpen(true)}
             className="text-white/70 hover:text-white transition-colors"
           >
             <User className="h-6 w-6" />
@@ -230,6 +233,13 @@ const ChatLayout = () => {
 
         <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         <ChatWindow />
+
+        {/* Profile Page */}
+        <AnimatePresence>
+          {isProfileOpen && (
+            <ProfilePage isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
