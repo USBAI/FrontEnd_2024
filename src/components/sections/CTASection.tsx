@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 
 const CTASection = () => {
@@ -38,21 +39,25 @@ const CTASection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              variant="primary"
-              size="lg"
-              icon={<ArrowRight className="h-5 w-5" />}
-              className="w-full sm:w-auto"
-            >
-              Start Searching Now
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              className="w-full sm:w-auto"
-            >
-              Watch Demo
-            </Button>
+            <Link to="/connectstore">
+              <Button
+                variant="primary"
+                size="lg"
+                icon={<ArrowRight className="h-5 w-5" />}
+                className="w-full sm:w-auto"
+              >
+                Connect Your Store
+              </Button>
+            </Link>
+            <Link to="/accessapi">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
+                Access API
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>

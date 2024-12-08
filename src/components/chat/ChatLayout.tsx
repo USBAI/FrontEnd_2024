@@ -62,18 +62,6 @@ const ChatLayout = () => {
     }
   ];
 
-  const iconVariants = {
-    initial: { scale: 0.8, opacity: 0 },
-    animate: { scale: 1, opacity: 1 },
-    hover: { scale: 1.1 },
-    tap: { scale: 0.95 }
-  };
-
-  const dropdownVariants = {
-    hidden: { height: 0, opacity: 0 },
-    visible: { height: 'auto', opacity: 1 }
-  };
-
   return (
     <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
       {/* Animated Background */}
@@ -145,10 +133,9 @@ const ChatLayout = () => {
                         <AnimatePresence>
                           {expandedItem === index && (
                             <motion.div
-                              variants={dropdownVariants}
-                              initial="hidden"
-                              animate="visible"
-                              exit="hidden"
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.2 }}
                               className="mt-4 space-y-3"
                             >
@@ -160,7 +147,7 @@ const ChatLayout = () => {
                                   transition={{ delay: detailIndex * 0.1 }}
                                   className="flex items-start gap-3 bg-gray-800/50 p-3 rounded-lg"
                                 >
-                                  <detail.icon className="h-5 w-5 text-gray-400 mt-0.5" />
+                                  <detail.icon className="h-4 w-4 text-gray-400 mt-0.5" />
                                   <div>
                                     <h4 className="text-sm font-medium">{detail.title}</h4>
                                     <p className="text-xs text-gray-400">{detail.description}</p>
@@ -198,17 +185,15 @@ const ChatLayout = () => {
         {/* Floating Icons */}
         <div className="absolute top-4 right-4 z-50 flex items-center gap-5">
           <motion.button
-            whileHover="hover"
-            whileTap="tap"
-            variants={iconVariants}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             className="text-white/70 hover:text-white transition-colors"
           >
             <User className="h-6 w-6" />
           </motion.button>
           <motion.button
-            whileHover="hover"
-            whileTap="tap"
-            variants={iconVariants}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setIsSearchOpen(true)}
             className="text-white/70 hover:text-white transition-colors"
           >
@@ -220,9 +205,8 @@ const ChatLayout = () => {
           <motion.button
             onClick={() => setIsNavOpen(true)}
             className="absolute top-4 left-4 z-50"
-            whileHover="hover"
-            whileTap="tap"
-            variants={iconVariants}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Menu className="h-6 w-6 text-white/70 hover:text-white transition-colors" />
           </motion.button>

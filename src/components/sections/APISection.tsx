@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Code, Zap, Lock, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 
 const APISection = () => {
@@ -96,14 +97,16 @@ const results = await response.json();`}</code>
                 </div>
               </div>
             ))}
-            <Button
-              variant="primary"
-              size="lg"
-              icon={<Code className="h-5 w-5" />}
-              className="mt-8"
-            >
-              Get API Access
-            </Button>
+            <Link to="/accessapi">
+              <Button
+                variant="primary"
+                size="lg"
+                icon={<Code className="h-5 w-5" />}
+                className="mt-8"
+              >
+                Get API Access
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>

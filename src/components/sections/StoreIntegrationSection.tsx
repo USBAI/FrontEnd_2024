@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ShoppingBag, ArrowRight, Boxes, BarChart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 
 const StoreIntegrationSection = () => {
@@ -72,14 +73,16 @@ const StoreIntegrationSection = () => {
           transition={{ delay: 0.6 }}
           className="text-center"
         >
-          <Button
-            variant="primary"
-            size="lg"
-            icon={<ArrowRight className="h-5 w-5" />}
-            className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700"
-          >
-            Start Selling on Kluret
-          </Button>
+          <Link to="/connectstore">
+            <Button
+              variant="primary"
+              size="lg"
+              icon={<ArrowRight className="h-5 w-5" />}
+              className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700"
+            >
+              Start Selling on Kluret
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>
