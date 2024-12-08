@@ -1,0 +1,71 @@
+:root {
+  --theme-primary: pink;
+  --theme-secondary: purple;
+  --theme-accent: blue;
+}
+
+/* Primary Theme Colors */
+.theme-primary-text {
+  @apply text-pink-500 data-[theme=blue]:text-blue-500 data-[theme=green]:text-green-500 data-[theme=orange]:text-orange-500 data-[theme=purple]:text-purple-500;
+}
+
+.theme-primary-bg {
+  @apply bg-pink-500 data-[theme=blue]:bg-blue-500 data-[theme=green]:bg-green-500 data-[theme=orange]:bg-orange-500 data-[theme=purple]:bg-purple-500;
+}
+
+.theme-primary-border {
+  @apply border-pink-500 data-[theme=blue]:border-blue-500 data-[theme=green]:border-green-500 data-[theme=orange]:border-orange-500 data-[theme=purple]:border-purple-500;
+}
+
+.theme-primary-hover {
+  @apply hover:bg-pink-600 data-[theme=blue]:hover:bg-blue-600 data-[theme=green]:hover:bg-green-600 data-[theme=orange]:hover:bg-orange-600 data-[theme=purple]:hover:bg-purple-600;
+}
+
+/* Secondary Theme Colors */
+.theme-secondary-text {
+  @apply text-purple-500 data-[theme=blue]:text-indigo-500 data-[theme=green]:text-teal-500 data-[theme=orange]:text-red-500 data-[theme=purple]:text-blue-500;
+}
+
+.theme-secondary-bg {
+  @apply bg-purple-500 data-[theme=blue]:bg-indigo-500 data-[theme=green]:bg-teal-500 data-[theme=orange]:bg-red-500 data-[theme=purple]:bg-blue-500;
+}
+
+.theme-secondary-border {
+  @apply border-purple-500 data-[theme=blue]:border-indigo-500 data-[theme=green]:border-teal-500 data-[theme=orange]:border-red-500 data-[theme=purple]:border-blue-500;
+}
+
+/* Accent Theme Colors */
+.theme-accent-text {
+  @apply text-blue-500 data-[theme=blue]:text-purple-500 data-[theme=green]:text-emerald-500 data-[theme=orange]:text-yellow-500 data-[theme=purple]:text-pink-500;
+}
+
+.theme-accent-bg {
+  @apply bg-blue-500 data-[theme=blue]:bg-purple-500 data-[theme=green]:bg-emerald-500 data-[theme=orange]:bg-yellow-500 data-[theme=purple]:bg-pink-500;
+}
+
+.theme-accent-border {
+  @apply border-blue-500 data-[theme=blue]:border-purple-500 data-[theme=green]:border-emerald-500 data-[theme=orange]:border-yellow-500 data-[theme=purple]:border-pink-500;
+}
+
+/* Background and Surface Colors */
+.theme-surface {
+  @apply bg-white/5 backdrop-blur-sm;
+}
+
+.theme-surface-hover {
+  @apply hover:bg-white/10;
+}
+
+/* Gradient Backgrounds */
+.theme-gradient {
+  @apply bg-gradient-to-r from-pink-500 to-purple-500
+         data-[theme=blue]:from-blue-500 data-[theme=blue]:to-indigo-500
+         data-[theme=green]:from-green-500 data-[theme=green]:to-teal-500
+         data-[theme=orange]:from-orange-500 data-[theme=orange]:to-red-500
+         data-[theme=purple]:from-purple-500 data-[theme=purple]:to-blue-500;
+}
+
+/* Transitions */
+.theme-transition {
+  @apply transition-colors duration-200;
+}
