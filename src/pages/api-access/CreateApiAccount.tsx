@@ -1,61 +1,86 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Code, ArrowLeft, Check, Building2, Globe, Lock, Mail, CreditCard } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Store, ArrowLeft, Check, Building2, Globe, Lock, Mail } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CreateApiAccount = () => {
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
   const [formData, setFormData] = useState({
-    companyName: '',
+    company_name: '',
     email: '',
+    website_url: '',
+    plan: 'Professional',
     password: '',
-    confirmPassword: '',
-    websiteUrl: '',
-    plan: 'basic',
-    categories: []
+    confirm_password: ''
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: ''
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (isLogin) {
+        // Handle login
+        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/AccessApi/login/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: loginData.email,
+            password: loginData.password
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('user_uuid', data.user_uuid);
+          navigate('/accessapi/dashboard');
+        } else {
+          setError(data.message || 'Login failed. Please check your credentials.');
+        }
+      } else {
+        // Handle registration
+        if (formData.password !== formData.confirm_password) {
+          setError('Passwords do not match');
+          setIsSubmitting(false);
+          return;
+        }
+
+        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/AccessApi/register/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setIsLogin(true);
+          setLoginData({ email: formData.email, password: '' });
+        } else {
+          setError(data.message || 'Registration failed. Please try again.');
+        }
+      }
     } catch (error) {
-      console.error('Error creating account:', error);
+      setError('An error occurred. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const plans = [
-    {
-      value: 'basic',
-      label: 'Basic',
-      price: '250kr',
-      description: 'Access to 1 product category'
-    },
-    {
-      value: 'professional',
-      label: 'Professional',
-      price: '600kr',
-      description: 'Access to all product categories'
-    },
-    {
-      value: 'enterprise',
-      label: 'Enterprise',
-      price: 'Custom',
-      description: 'Custom category selection'
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
@@ -64,7 +89,6 @@ const CreateApiAccount = () => {
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient" />
           <div className="absolute inset-0 backdrop-blur-[100px]" />
-          {/* Animated Circles */}
           <motion.div
             animate={{
               scale: [1, 1.2, 1],
@@ -108,179 +132,177 @@ const CreateApiAccount = () => {
           >
             <div className="flex items-center gap-4 mb-8">
               <div className="p-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl">
-                <Code className="h-6 w-6 text-blue-400" />
+                <Store className="h-6 w-6 text-blue-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Create API Account</h1>
-                <p className="text-gray-400 text-sm">Get access to Kluret's powerful search API</p>
+                <h1 className="text-2xl font-bold">{isLogin ? 'Welcome Back' : 'Create API Account'}</h1>
+                <p className="text-gray-400 text-sm">
+                  {isLogin ? 'Sign in to access your API dashboard' : 'Get started with Kluret API'}
+                </p>
               </div>
             </div>
 
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400">
+                {error}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Company Name */}
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Company Name
-                  </label>
-                  <div className="relative">
-                    <Building2 className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="companyName"
-                      value={formData.companyName}
-                      onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white placeholder-gray-500"
-                      placeholder="Enter your company name"
-                      required
-                    />
+              {isLogin ? (
+                // Login Form
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="email"
+                        value={loginData.email}
+                        onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        placeholder="Enter your email"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Email */}
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white placeholder-gray-500"
-                      placeholder="Enter your email"
-                      required
-                    />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="password"
+                        value={loginData.password}
+                        onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        placeholder="Enter your password"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-
-                {/* Website URL */}
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Website URL
-                  </label>
-                  <div className="relative">
-                    <Globe className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                    <input
-                      type="url"
-                      name="websiteUrl"
-                      value={formData.websiteUrl}
-                      onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white placeholder-gray-500"
-                      placeholder="https://your-company.com"
-                      required
-                    />
+                </>
+              ) : (
+                // Registration Form
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Company Name
+                    </label>
+                    <div className="relative">
+                      <Building2 className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="text"
+                        value={formData.company_name}
+                        onChange={(e) => setFormData(prev => ({ ...prev, company_name: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        placeholder="Enter company name"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Plan Selection */}
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Select Plan
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {plans.map((plan) => (
-                      <label
-                        key={plan.value}
-                        className={`relative flex flex-col p-4 cursor-pointer rounded-lg border ${
-                          formData.plan === plan.value
-                            ? 'border-blue-500 bg-blue-500/10'
-                            : 'border-white/10 bg-white/5 hover:bg-white/10'
-                        } transition-colors`}
-                      >
-                        <input
-                          type="radio"
-                          name="plan"
-                          value={plan.value}
-                          checked={formData.plan === plan.value}
-                          onChange={handleChange}
-                          className="sr-only"
-                        />
-                        <span className="font-medium mb-1">{plan.label}</span>
-                        <span className="text-sm text-blue-400 mb-2">{plan.price}</span>
-                        <span className="text-xs text-gray-400">{plan.description}</span>
-                        {formData.plan === plan.value && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute -top-2 -right-2 bg-blue-500 rounded-full p-1"
-                          >
-                            <Check className="h-3 w-3 text-white" />
-                          </motion.div>
-                        )}
-                      </label>
-                    ))}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        placeholder="Enter email"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Password */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white placeholder-gray-500"
-                      placeholder="Create a password"
-                      required
-                    />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Website URL
+                    </label>
+                    <div className="relative">
+                      <Globe className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="url"
+                        value={formData.website_url}
+                        onChange={(e) => setFormData(prev => ({ ...prev, website_url: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        placeholder="https://your-company.com"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Confirm Password */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white placeholder-gray-500"
-                      placeholder="Confirm your password"
-                      required
-                    />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="password"
+                        value={formData.password}
+                        onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        placeholder="Create password"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              <div className="pt-4">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium flex items-center justify-center gap-2 hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-                >
-                  {isSubmitting ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-                  ) : (
-                    <>
-                      Create API Account
-                      <Check className="h-5 w-5" />
-                    </>
-                  )}
-                </motion.button>
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Confirm Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="password"
+                        value={formData.confirm_password}
+                        onChange={(e) => setFormData(prev => ({ ...prev, confirm_password: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        placeholder="Confirm password"
+                        required
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium flex items-center justify-center gap-2 hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                ) : (
+                  <>
+                    {isLogin ? 'Sign In' : 'Create Account'}
+                    <Check className="h-5 w-5" />
+                  </>
+                )}
+              </motion.button>
             </form>
-          </motion.div>
 
-          <div className="mt-8 text-center text-sm text-gray-400">
-            By creating an account, you agree to our{' '}
-            <a href="#" className="text-blue-400 hover:text-blue-300">Terms of Service</a>
-            {' '}and{' '}
-            <a href="#" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>
-          </div>
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-blue-400 hover:text-blue-300"
+              >
+                {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
+              </button>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>
