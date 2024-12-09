@@ -27,7 +27,7 @@ const Navbar = () => {
   const menuItems = [
     {
       label: t('nav.whatsKluret'),
-      href: '/',
+      href: '/about',
       dropdownItems: [
         { label: 'About Our Technology', href: '/technology' },
         { label: 'AI Search Engine', href: '/ai-search' },

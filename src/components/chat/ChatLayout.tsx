@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Store, Network, Search, User, ChevronDown, Rocket, Code, Zap, Globe, Shield, ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Menu, X, Store, Network, Search, User, ChevronDown, Rocket, Code, Zap, Globe, Shield, ArrowRight, ArrowLeft } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import ChatWindow from './ChatWindow';
 import SearchOverlay from '../search/SearchOverlay';
 import ProfilePage from './ProfilePage';
+
+const MIN_SIDEBAR_WIDTH = 280;
+const MAX_SIDEBAR_WIDTH = 600;
 
 const ChatLayout = () => {
   const [isNavOpen, setIsNavOpen] = useState(window.innerWidth >= 768);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
+  const [sidebarWidth, setSidebarWidth] = useState(320);
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +27,40 @@ const ChatLayout = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+
+      let newWidth = e.clientX;
+      if (newWidth < MIN_SIDEBAR_WIDTH) newWidth = MIN_SIDEBAR_WIDTH;
+      if (newWidth > MAX_SIDEBAR_WIDTH) newWidth = MAX_SIDEBAR_WIDTH;
+      
+      setSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.body.style.cursor = 'default';
+      document.body.style.userSelect = 'auto';
+    };
+
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
+
+  const startResizing = () => {
+    setIsResizing(true);
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+  };
 
   const navItems = [
     {
@@ -88,7 +128,53 @@ const ChatLayout = () => {
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col relative">
+        {/* Floating Icons */}
+        <div className={`absolute top-4 right-4 z-30 flex items-center gap-5 transition-opacity duration-300 ${
+          isNavOpen && window.innerWidth < 768 ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsProfileOpen(true)}
+            className="text-white/70 hover:text-white transition-colors"
+          >
+            <User className="h-6 w-6" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsSearchOpen(true)}
+            className="text-white/70 hover:text-white transition-colors"
+          >
+            <Search className="h-6 w-6" />
+          </motion.button>
+        </div>
+
+        {!isNavOpen && (
+          <motion.button
+            onClick={() => setIsNavOpen(true)}
+            className="absolute top-4 left-4 z-30"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Menu className="h-6 w-6 text-white/70 hover:text-white transition-colors" />
+          </motion.button>
+        )}
+
+        <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+        <ChatWindow />
+
+        {/* Profile Page */}
+        <AnimatePresence>
+          {isProfileOpen && (
+            <ProfilePage isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Sidebar - Now positioned above main content */}
       <AnimatePresence>
         {isNavOpen && (
           <motion.aside
@@ -96,24 +182,35 @@ const ChatLayout = () => {
             animate={{ x: 0 }}
             exit={{ x: -320 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className={`fixed md:static top-0 left-0 h-full w-80 bg-gray-800/50 backdrop-blur-xl border-r border-white/10 z-50 flex flex-col`}
+            className="fixed top-0 left-0 h-screen bg-gray-800/50 backdrop-blur-xl border-r border-white/10 z-50 flex flex-col overflow-hidden"
+            style={{ width: `${sidebarWidth}px` }}
           >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-8">
-                <img
-                  src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
-                  alt="Kluret"
-                  className="h-8"
-                />
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Link 
+                    to="/"
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <ArrowLeft className="h-5 w-5 text-white/70 hover:text-white" />
+                  </Link>
+                  <img
+                    src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
+                    alt="Kluret"
+                    className="h-8"
+                  />
+                </div>
                 <button
                   onClick={() => setIsNavOpen(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors md:hidden"
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5 text-white/70 hover:text-white" />
                 </button>
               </div>
+            </div>
 
-              <div className="space-y-4">
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+              <div className="p-6 space-y-4">
                 {navItems.map((item, index) => (
                   <motion.div
                     key={index}
@@ -192,55 +289,18 @@ const ChatLayout = () => {
                 ))}
               </div>
             </div>
+
+            {/* Resize Handle */}
+            <div
+              ref={resizeRef}
+              className="absolute top-0 right-0 w-1 h-full cursor-ew-resize group"
+              onMouseDown={startResizing}
+            >
+              <div className="absolute inset-y-0 right-0 w-4 group-hover:bg-blue-500/20 transition-colors -mr-2" />
+            </div>
           </motion.aside>
         )}
       </AnimatePresence>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col relative">
-        {/* Floating Icons */}
-        <div className={`absolute top-4 right-4 z-30 flex items-center gap-5 transition-opacity duration-300 ${
-          isNavOpen && window.innerWidth < 768 ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsProfileOpen(true)}
-            className="text-white/70 hover:text-white transition-colors"
-          >
-            <User className="h-6 w-6" />
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsSearchOpen(true)}
-            className="text-white/70 hover:text-white transition-colors"
-          >
-            <Search className="h-6 w-6" />
-          </motion.button>
-        </div>
-
-        {!isNavOpen && (
-          <motion.button
-            onClick={() => setIsNavOpen(true)}
-            className="absolute top-4 left-4 z-30"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Menu className="h-6 w-6 text-white/70 hover:text-white transition-colors" />
-          </motion.button>
-        )}
-
-        <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <ChatWindow />
-
-        {/* Profile Page */}
-        <AnimatePresence>
-          {isProfileOpen && (
-            <ProfilePage isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
-          )}
-        </AnimatePresence>
-      </div>
     </div>
   );
 };

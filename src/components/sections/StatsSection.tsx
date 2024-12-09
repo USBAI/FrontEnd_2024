@@ -46,7 +46,7 @@ const StatsSection = () => {
             opacity: [0.1, 0.2, 0.1],
           }}
           transition={{
-            duration: 8,
+            duration: 4,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -58,10 +58,10 @@ const StatsSection = () => {
             opacity: [0.1, 0.2, 0.1],
           }}
           transition={{
-            duration: 8,
+            duration: 4,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 4,
+            delay: 2,
           }}
           className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-200/20 rounded-full blur-3xl"
         />
@@ -72,6 +72,7 @@ const StatsSection = () => {
           ref={ref}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4 }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -89,7 +90,7 @@ const StatsSection = () => {
               ref={ref}
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.1 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
               className="relative p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 overflow-hidden group hover:border-blue-200/50 transition-colors duration-300 shadow-lg hover:shadow-xl"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-100/30 to-pink-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -101,7 +102,7 @@ const StatsSection = () => {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={inView ? { scale: 1 } : {}}
-                    transition={{ delay: index * 0.1 + 0.2 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
                     className="text-2xl font-bold text-gray-900"
                   >
                     {stat.value}

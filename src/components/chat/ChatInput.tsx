@@ -91,67 +91,99 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 px-4 pb-4 pt-2">
-        <div className="max-w-[800px] mx-auto">
-          {imagePreview && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="relative mb-4 w-32 mx-auto"
-            >
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-32 h-32 object-cover rounded-xl cursor-pointer shadow-lg"
+      <div className="relative w-full">
+        {imagePreview && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative mb-4 w-32 mx-auto"
+          >
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded-xl cursor-pointer shadow-lg"
+              onClick={() => setShowImageEditor(true)}
+            />
+            <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2 rounded-xl">
+              <button
                 onClick={() => setShowImageEditor(true)}
-              />
-              <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2 rounded-xl">
-                <button
-                  onClick={() => setShowImageEditor(true)}
-                  className="p-2 bg-blue-500/80 rounded-full"
-                >
-                  <Maximize2 className="h-4 w-4 text-white" />
-                </button>
-                <button
-                  onClick={removeImage}
-                  className="p-2 bg-red-500/80 rounded-full"
-                >
-                  <X className="h-4 w-4 text-white" />
-                </button>
-              </div>
-            </motion.div>
-          )}
+                className="p-2 bg-blue-500/80 rounded-full"
+              >
+                <Maximize2 className="h-4 w-4 text-white" />
+              </button>
+              <button
+                onClick={removeImage}
+                className="p-2 bg-red-500/80 rounded-full"
+              >
+                <X className="h-4 w-4 text-white" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+        
+        <div className="relative">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageSelect}
+            accept="image/*"
+            className="hidden"
+          />
           
-          <div className="relative">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageSelect}
-              accept="image/*"
-              className="hidden"
-            />
-            
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              onPaste={handlePaste}
-              placeholder="Type your message..."
-              className="w-full px-16 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg"
-              disabled={isLoading}
-            />
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            onPaste={handlePaste}
+            placeholder="Type your message..."
+            className="w-full px-14 py-3 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg text-sm md:text-base"
+            disabled={isLoading}
+          />
 
-            <motion.button
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-white/10 transition-all duration-300"
-              disabled={isLoading}
-              onHoverStart={() => setIsHovered(prev => ({ ...prev, image: true }))}
-              onHoverEnd={() => setIsHovered(prev => ({ ...prev, image: false }))}
-              whileHover="hover"
-            >
-              <AnimatePresence mode="wait">
+          <motion.button
+            onClick={() => fileInputRef.current?.click()}
+            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-white/10 transition-all duration-300"
+            disabled={isLoading}
+            onHoverStart={() => setIsHovered(prev => ({ ...prev, image: true }))}
+            onHoverEnd={() => setIsHovered(prev => ({ ...prev, image: false }))}
+            whileHover="hover"
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isHovered.image ? 'hoveredImage' : 'defaultImage'}
+                variants={iconVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ 
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 12
+                }}
+              >
+                {isHovered.image ? (
+                  <ImagePlus className="h-5 w-5 text-blue-400" />
+                ) : (
+                  <ImageIcon className="h-5 w-5 text-blue-400" />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
+
+          <motion.button
+            onClick={handleSubmit}
+            disabled={isLoading || (!input.trim() && !selectedImage)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-white/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            onHoverStart={() => setIsHovered(prev => ({ ...prev, send: true }))}
+            onHoverEnd={() => setIsHovered(prev => ({ ...prev, send: false }))}
+            whileHover="hover"
+          >
+            <AnimatePresence mode="wait">
+              {isLoading ? (
+                <Loader2 className="h-5 w-5 text-blue-400 animate-spin" />
+              ) : (
                 <motion.div
-                  key={isHovered.image ? 'hoveredImage' : 'defaultImage'}
+                  key={isHovered.send ? 'hoveredSend' : 'defaultSend'}
                   variants={iconVariants}
                   initial="initial"
                   animate="animate"
@@ -162,49 +194,15 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
                     damping: 12
                   }}
                 >
-                  {isHovered.image ? (
-                    <ImagePlus className="h-5 w-5 text-blue-400" />
+                  {isHovered.send ? (
+                    <SendHorizontal className="h-5 w-5 text-blue-400" />
                   ) : (
-                    <ImageIcon className="h-5 w-5 text-blue-400" />
+                    <Send className="h-5 w-5 text-blue-400" />
                   )}
                 </motion.div>
-              </AnimatePresence>
-            </motion.button>
-
-            <motion.button
-              onClick={handleSubmit}
-              disabled={isLoading || (!input.trim() && !selectedImage)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-white/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              onHoverStart={() => setIsHovered(prev => ({ ...prev, send: true }))}
-              onHoverEnd={() => setIsHovered(prev => ({ ...prev, send: false }))}
-              whileHover="hover"
-            >
-              <AnimatePresence mode="wait">
-                {isLoading ? (
-                  <Loader2 className="h-5 w-5 text-blue-400 animate-spin" />
-                ) : (
-                  <motion.div
-                    key={isHovered.send ? 'hoveredSend' : 'defaultSend'}
-                    variants={iconVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ 
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 12
-                    }}
-                  >
-                    {isHovered.send ? (
-                      <SendHorizontal className="h-5 w-5 text-blue-400" />
-                    ) : (
-                      <Send className="h-5 w-5 text-blue-400" />
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
       </div>
 
