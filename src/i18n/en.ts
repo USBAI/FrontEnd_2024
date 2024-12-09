@@ -10,7 +10,7 @@ export default {
   hero: {
     title: 'The Future of Product Search is Here',
     subtitle: 'Powered by Advanced AI Technology',
-    tryButton: 'Try Kluret ',
+    tryButton: 'Try Kluret →',
   },
   features: {
     title: 'Why Choose Kluret',

@@ -1,25 +1,36 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ApiAccessLanding from './ApiAccessLanding';
 import CreateApiAccount from './CreateApiAccount';
-import Dashboard from './dashboard/Dashboard';
-import APIUsage from './dashboard/APIUsage';
-import Analytics from './dashboard/Analytics';
-import APIKeys from './dashboard/APIKeys';
-import Documentation from './dashboard/Documentation';
-import Settings from './dashboard/Settings';
+import Dashboard from './dashboard';
+import LoginPage from './auth/LoginPage';
+
+// Auth Guard Component
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+  const userUuid = localStorage.getItem('user_uuid');
+  if (!userUuid) {
+    return <Navigate to="/accessapi/login" replace />;
+  }
+  return <>{children}</>;
+};
 
 const ApiAccess = () => {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/" element={<ApiAccessLanding />} />
       <Route path="/create-account" element={<CreateApiAccount />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/dashboard/usage" element={<APIUsage />} />
-      <Route path="/dashboard/analytics" element={<Analytics />} />
-      <Route path="/dashboard/keys" element={<APIKeys />} />
-      <Route path="/dashboard/docs" element={<Documentation />} />
-      <Route path="/dashboard/settings" element={<Settings />} />
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* Protected Dashboard Routes */}
+      <Route path="/dashboard/*" element={
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
+      } />
+
+      {/* Catch-all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
