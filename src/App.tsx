@@ -45,6 +45,9 @@ function App() {
           <Route path="/technology" element={<TechnologyPage />} />
           <Route path="/ai-search" element={<AISearchPage />} />
           <Route path="/success-stories" element={<SuccessStoriesPage />} />
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/report-problem" element={<ReportProblemPage />} />
           
           {/* Updates Routes */}
           <Route path="/updates/product" element={<ProductUpdatesPage />} />
@@ -61,11 +64,6 @@ function App() {
           {/* Policy Routes */}
           <Route path="/policy" element={<TermsPage />} />
           <Route path="/cookies" element={<CookiesPage />} />
-          
-          {/* Help & Support Routes */}
-          <Route path="/how-it-works" element={<HowItWorksPage />} />
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/report-problem" element={<ReportProblemPage />} />
           
           {/* Store Routes */}
           <Route path="/connectstore/*" element={<ConnectStore />} />

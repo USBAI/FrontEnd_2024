@@ -11,6 +11,9 @@ export default defineConfig({
     port: 5173
   },
   build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -20,5 +23,6 @@ export default defineConfig({
         }
       }
     }
-  }
+  },
+  base: '/'
 });
