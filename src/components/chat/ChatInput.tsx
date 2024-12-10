@@ -23,7 +23,6 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
-        setShowImageEditor(true);
       };
       reader.readAsDataURL(file);
     }
@@ -40,7 +39,6 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
             const reader = new FileReader();
             reader.onloadend = () => {
               setImagePreview(reader.result as string);
-              setShowImageEditor(true);
             };
             reader.readAsDataURL(file);
           }
@@ -87,26 +85,40 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
   return (
     <>
       <div className="relative w-full">
-        {imagePreview && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="relative mb-4 w-24 mx-auto"
-          >
-            <img
-              src={imagePreview}
-              alt="Preview"
-              className="w-24 h-24 object-cover rounded-xl cursor-pointer shadow-lg"
-              onClick={() => setShowImageEditor(true)}
-            />
-            <button
-              onClick={removeImage}
-              className="absolute -top-2 -right-2 p-1 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors"
+        {/* Image Preview */}
+        <AnimatePresence>
+          {imagePreview && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute -top-20 left-0 bg-white/5 backdrop-blur-sm rounded-lg p-2 border border-white/10"
             >
-              <X className="h-4 w-4" />
-            </button>
-          </motion.div>
-        )}
+              <div className="relative group">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="h-16 w-16 object-cover rounded-lg cursor-pointer"
+                  onClick={() => setShowImageEditor(true)}
+                />
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeImage();
+                  }}
+                  className="absolute -top-2 -right-2 p-1 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </motion.button>
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                  <ImageIcon className="h-6 w-6 text-white" />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         
         <div className="relative">
           <input

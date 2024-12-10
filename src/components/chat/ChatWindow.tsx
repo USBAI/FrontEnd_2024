@@ -41,7 +41,7 @@ const ChatWindow = () => {
         setMessages(prev => prev.map(msg =>
           msg.id === 'welcome' ? { ...msg, isTyping: false } : msg
         ));
-      }, 1000);
+      }, 2000);
     }
   }, []);
 
@@ -108,8 +108,8 @@ const ChatWindow = () => {
       setMessages(prev => [...prev, botMessage]);
       scrollToBottom();
 
-      // Simulate typing animation
-      const typingDuration = Math.min(data.response.length * 20, 2000);
+      // Simulate typing animation with longer duration
+      const typingDuration = Math.min(data.response.length * 50, 5000); // Increased duration
       setTimeout(() => {
         setMessages(prev => prev.map(msg =>
           msg.id === botMessage.id ? { ...msg, isTyping: false } : msg
@@ -124,12 +124,12 @@ const ChatWindow = () => {
   };
 
   return (
-    <div className="flex flex-col h-[100vh] h-[100svh] bg-gradient-to-br from-gray-900 via-gray-900 to-black">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black">
       <div
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent pb-32 md:pb-24"
       >
-        <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col justify-end min-h-full">
           <AnimatePresence initial={false}>
             {messages.map((message) => (
               <motion.div

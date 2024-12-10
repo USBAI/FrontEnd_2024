@@ -85,7 +85,6 @@ const NordicSection = () => {
       city: 'Stockholm',
       flag: '🇸🇪',
       description: 'Our headquarters and primary market',
-      coordinates: { x: 20, y: -30 },
       image: 'https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80'
     },
     {
@@ -93,7 +92,6 @@ const NordicSection = () => {
       city: 'Oslo',
       flag: '🇳🇴',
       description: 'Expanding Nordic presence',
-      coordinates: { x: -20, y: -20 },
       image: 'https://images.unsplash.com/photo-1513622118278-bc041b3c13ed?auto=format&fit=crop&w=800&q=80'
     },
     {
@@ -101,7 +99,6 @@ const NordicSection = () => {
       city: 'Copenhagen',
       flag: '🇩🇰',
       description: 'Growing market reach',
-      coordinates: { x: 0, y: -10 },
       image: 'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?auto=format&fit=crop&w=800&q=80'
     },
     {
@@ -109,7 +106,6 @@ const NordicSection = () => {
       city: 'Helsinki',
       flag: '🇫🇮',
       description: 'Strategic expansion',
-      coordinates: { x: 40, y: -40 },
       image: 'https://images.unsplash.com/photo-1573108724029-4c46571d6490?auto=format&fit=crop&w=800&q=80'
     }
   ];
