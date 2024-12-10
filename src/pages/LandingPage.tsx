@@ -12,7 +12,7 @@ import PartnersSection from '../components/sections/PartnersSection';
 import APISection from '../components/sections/APISection';
 import StoreIntegrationSection from '../components/sections/StoreIntegrationSection';
 import CTASection from '../components/sections/CTASection';
-import NordicSection from '../components/sections/NordicSection';
+import GlobalPresenceSection from '../components/sections/GlobalPresenceSection';
 
 function LandingPage() {
   const { scrollYProgress } = useScroll();
@@ -45,7 +45,7 @@ function LandingPage() {
           <FeaturesSection />
           <HowItWorksSection />
           <WhyKluretSection />
-          <NordicSection />
+          <GlobalPresenceSection />
           <TestimonialsSection />
           <PartnersSection />
           <APISection />

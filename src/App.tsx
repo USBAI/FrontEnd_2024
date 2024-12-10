@@ -16,6 +16,13 @@ import RetailerIntegrationPage from './pages/partners/RetailerIntegrationPage';
 import APIDocumentationPage from './pages/partners/APIDocumentationPage';
 import PartnerProgramPage from './pages/partners/PartnerProgramPage';
 import PartnerSuccessStoriesPage from './pages/partners/PartnerSuccessStoriesPage';
+import TermsPage from './pages/policy/TermsPage';
+import CookiesPage from './pages/policy/CookiesPage';
+import HowItWorksPage from './pages/how-it-works/HowItWorksPage';
+import FAQPage from './pages/faq/FAQPage';
+import ReportProblemPage from './pages/support/ReportProblemPage';
+
+// Styles
 import './i18n/config';
 import '@fontsource/space-grotesk/400.css';
 import '@fontsource/space-grotesk/500.css';
@@ -23,15 +30,6 @@ import '@fontsource/space-grotesk/700.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
-
-// Auth Guard Component
-const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const userUuid = localStorage.getItem('user_uuid');
-  if (!userUuid) {
-    return <Navigate to="/accessapi/login" replace />;
-  }
-  return <>{children}</>;
-};
 
 function App() {
   return (
@@ -60,10 +58,19 @@ function App() {
           <Route path="/partners/program" element={<PartnerProgramPage />} />
           <Route path="/partners/success" element={<PartnerSuccessStoriesPage />} />
           
+          {/* Policy Routes */}
+          <Route path="/policy" element={<TermsPage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
+          
+          {/* Help & Support Routes */}
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/report-problem" element={<ReportProblemPage />} />
+          
           {/* Store Routes */}
           <Route path="/connectstore/*" element={<ConnectStore />} />
           
-          {/* API Access Routes - Some protected */}
+          {/* API Access Routes */}
           <Route path="/accessapi/*" element={<ApiAccess />} />
 
           {/* Catch-all route */}
