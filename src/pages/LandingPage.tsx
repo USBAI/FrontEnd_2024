@@ -46,7 +46,7 @@ function LandingPage() {
           <HowItWorksSection />
           <WhyKluretSection />
           <NordicSection />
-          {/* <TestimonialsSection /> */}
+          <TestimonialsSection />
           <PartnersSection />
           <APISection />
           <StoreIntegrationSection />

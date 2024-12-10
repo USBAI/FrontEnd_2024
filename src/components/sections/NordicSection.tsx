@@ -79,34 +79,26 @@ const NordicSection = () => {
     threshold: 0.1
   });
 
-  const countries = [
+  const cities = [
     {
-      name: 'Sweden',
-      city: 'Stockholm',
-      flag: '🇸🇪',
-      description: 'Our headquarters and primary market',
+      name: 'Stockholm',
+      description: 'Our headquarters and main operations center',
       image: 'https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80'
     },
     {
-      name: 'Norway',
-      city: 'Oslo',
-      flag: '🇳🇴',
-      description: 'Expanding Nordic presence',
-      image: 'https://images.unsplash.com/photo-1513622118278-bc041b3c13ed?auto=format&fit=crop&w=800&q=80'
+      name: 'Gothenburg',
+      description: 'Western Sweden expansion hub',
+      image: 'https://images.unsplash.com/photo-1577086664693-894d8405334a?auto=format&fit=crop&w=800&q=80'
     },
     {
-      name: 'Denmark',
-      city: 'Copenhagen',
-      flag: '🇩🇰',
-      description: 'Growing market reach',
-      image: 'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?auto=format&fit=crop&w=800&q=80'
+      name: 'Malmö',
+      description: 'Southern Sweden operations',
+      image: 'https://images.unsplash.com/photo-1581850518616-bcb8077a2336?auto=format&fit=crop&w=800&q=80'
     },
     {
-      name: 'Finland',
-      city: 'Helsinki',
-      flag: '🇫🇮',
-      description: 'Strategic expansion',
-      image: 'https://images.unsplash.com/photo-1573108724029-4c46571d6490?auto=format&fit=crop&w=800&q=80'
+      name: 'Uppsala',
+      description: 'Research and development center',
+      image: 'https://images.unsplash.com/photo-1592419044706-39796d40f98c?auto=format&fit=crop&w=800&q=80'
     }
   ];
 
@@ -123,10 +115,10 @@ const NordicSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Operating in the Nordic Countries
+            Operating in Sweden
           </h2>
           <p className="text-xl text-gray-600 mb-12">
-            Bringing AI-powered product search to the Nordic region
+            Revolutionizing product search across Sweden with AI technology
           </p>
 
           {/* Enhanced Stats Display */}
@@ -173,9 +165,9 @@ const NordicSection = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {countries.map((country, index) => (
+          {cities.map((city, index) => (
             <motion.div
-              key={country.name}
+              key={city.name}
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.1 }}
@@ -186,16 +178,16 @@ const NordicSection = () => {
                 {/* City Image */}
                 <div className="relative h-48 overflow-hidden flex-shrink-0">
                   <motion.img
-                    src={country.image}
-                    alt={`${country.city}, ${country.name}`}
+                    src={city.image}
+                    alt={city.name}
                     className="w-full h-full object-cover"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.3 }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute bottom-4 left-4 text-white">
-                    <div className="text-3xl mb-1">{country.flag}</div>
-                    <h3 className="text-xl font-bold">{country.name}</h3>
+                    <div className="text-3xl mb-1">🇸🇪</div>
+                    <h3 className="text-xl font-bold">{city.name}</h3>
                   </div>
                 </div>
                 
@@ -203,9 +195,9 @@ const NordicSection = () => {
                 <div className="p-6 flex-grow flex flex-col">
                   <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
                     <MapPin className="h-4 w-4" />
-                    {country.city}
+                    {city.name}, Sweden
                   </div>
-                  <p className="text-gray-600 flex-grow">{country.description}</p>
+                  <p className="text-gray-600 flex-grow">{city.description}</p>
                 </div>
               </div>
             </motion.div>
