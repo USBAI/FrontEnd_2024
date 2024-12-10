@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Pencil, Circle, Download, Check } from 'lucide-react';
+import { X, Pencil, Circle, Check, Eraser, Undo, Redo, Download } from 'lucide-react';
 
 interface ImageEditorProps {
   imageUrl: string;
@@ -10,10 +10,14 @@ interface ImageEditorProps {
 
 const ImageEditor = ({ imageUrl, onClose, onSave }: ImageEditorProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [tool, setTool] = useState<'pencil' | 'circle'>('pencil');
+  const [tool, setTool] = useState<'pencil' | 'circle' | 'eraser'>('pencil');
+  const [color, setColor] = useState('#00ff00');
+  const [lineWidth, setLineWidth] = useState(2);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastX, setLastX] = useState(0);
   const [lastY, setLastY] = useState(0);
+  const [history, setHistory] = useState<ImageData[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -41,8 +45,47 @@ const ImageEditor = ({ imageUrl, onClose, onSave }: ImageEditorProps) => {
       canvas.width = width;
       canvas.height = height;
       ctx.drawImage(img, 0, 0, width, height);
+      
+      // Save initial state
+      const initialState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      setHistory([initialState]);
+      setHistoryIndex(0);
     };
   }, [imageUrl]);
+
+  const saveState = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(currentState);
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext('2d');
+      if (!canvas || !ctx) return;
+
+      setHistoryIndex(historyIndex - 1);
+      ctx.putImageData(history[historyIndex - 1], 0, 0);
+    }
+  };
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext('2d');
+      if (!canvas || !ctx) return;
+
+      setHistoryIndex(historyIndex + 1);
+      ctx.putImageData(history[historyIndex + 1], 0, 0);
+    }
+  };
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -68,10 +111,18 @@ const ImageEditor = ({ imageUrl, onClose, onSave }: ImageEditorProps) => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    ctx.strokeStyle = '#00ff00';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
 
-    if (tool === 'pencil') {
+    if (tool === 'eraser') {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineWidth = lineWidth * 2;
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    if (tool === 'pencil' || tool === 'eraser') {
       ctx.beginPath();
       ctx.moveTo(lastX, lastY);
       ctx.lineTo(x, y);
@@ -88,7 +139,10 @@ const ImageEditor = ({ imageUrl, onClose, onSave }: ImageEditorProps) => {
   };
 
   const stopDrawing = () => {
-    setIsDrawing(false);
+    if (isDrawing) {
+      setIsDrawing(false);
+      saveState();
+    }
   };
 
   const handleSave = () => {
@@ -110,41 +164,94 @@ const ImageEditor = ({ imageUrl, onClose, onSave }: ImageEditorProps) => {
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
     >
-      <div className="relative">
-        <div className="absolute top-4 right-4 flex items-center gap-2">
+      <div className="relative max-w-full max-h-full p-4">
+        {/* Toolbar */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/10 backdrop-blur-sm p-2 rounded-full">
           <button
             onClick={() => setTool('pencil')}
-            className={`p-2 rounded-lg ${tool === 'pencil' ? 'bg-green-500' : 'bg-gray-700'}`}
+            className={`p-2 rounded-full transition-colors ${
+              tool === 'pencil' ? 'bg-blue-500 text-white' : 'hover:bg-white/10 text-gray-300'
+            }`}
           >
             <Pencil className="h-5 w-5" />
           </button>
           <button
             onClick={() => setTool('circle')}
-            className={`p-2 rounded-lg ${tool === 'circle' ? 'bg-green-500' : 'bg-gray-700'}`}
+            className={`p-2 rounded-full transition-colors ${
+              tool === 'circle' ? 'bg-blue-500 text-white' : 'hover:bg-white/10 text-gray-300'
+            }`}
           >
             <Circle className="h-5 w-5" />
           </button>
           <button
-            onClick={handleSave}
-            className="p-2 rounded-lg bg-blue-500 hover:bg-blue-600"
+            onClick={() => setTool('eraser')}
+            className={`p-2 rounded-full transition-colors ${
+              tool === 'eraser' ? 'bg-blue-500 text-white' : 'hover:bg-white/10 text-gray-300'
+            }`}
           >
-            <Check className="h-5 w-5" />
+            <Eraser className="h-5 w-5" />
+          </button>
+          <div className="w-px h-6 bg-white/20" />
+          <button
+            onClick={undo}
+            disabled={historyIndex <= 0}
+            className="p-2 rounded-full hover:bg-white/10 text-gray-300 disabled:opacity-50"
+          >
+            <Undo className="h-5 w-5" />
           </button>
           <button
-            onClick={onClose}
-            className="p-2 rounded-lg bg-red-500 hover:bg-red-600"
+            onClick={redo}
+            disabled={historyIndex >= history.length - 1}
+            className="p-2 rounded-full hover:bg-white/10 text-gray-300 disabled:opacity-50"
           >
-            <X className="h-5 w-5" />
+            <Redo className="h-5 w-5" />
           </button>
+          <div className="w-px h-6 bg-white/20" />
+          <input
+            type="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            className="w-8 h-8 rounded-full cursor-pointer"
+          />
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={lineWidth}
+            onChange={(e) => setLineWidth(parseInt(e.target.value))}
+            className="w-24 accent-blue-500"
+          />
         </div>
+
+        {/* Canvas */}
         <canvas
           ref={canvasRef}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
           onMouseOut={stopDrawing}
-          className="border border-gray-600 rounded-lg cursor-crosshair"
+          className="border border-white/10 rounded-lg cursor-crosshair bg-black/50 backdrop-blur-sm"
         />
+
+        {/* Action Buttons */}
+        <div className="absolute bottom-4 right-4 flex items-center gap-2">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onClose}
+            className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            <X className="h-5 w-5 text-white" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleSave}
+            className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors"
+          >
+            <Check className="h-5 w-5 text-white" />
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );

@@ -1,19 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Loader2, Image as ImageIcon, X, Maximize2, SendHorizontal, ImagePlus } from 'lucide-react';
+import { Send, Image as ImageIcon, X, SendHorizontal, ImagePlus } from 'lucide-react';
 import ImageEditor from './ImageEditor';
 
 interface ChatInputProps {
   onSendMessage: (text: string, image?: File) => Promise<void>;
   isLoading: boolean;
 }
-
-const iconVariants = {
-  initial: { opacity: 0, scale: 0.8, rotate: -45 },
-  animate: { opacity: 1, scale: 1, rotate: 0 },
-  exit: { opacity: 0, scale: 0.8, rotate: 45 },
-  hover: { scale: 1.1 }
-};
 
 const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
   const [input, setInput] = useState('');
@@ -30,6 +23,7 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+        setShowImageEditor(true);
       };
       reader.readAsDataURL(file);
     }
@@ -46,6 +40,7 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
             const reader = new FileReader();
             reader.onloadend = () => {
               setImagePreview(reader.result as string);
+              setShowImageEditor(true);
             };
             reader.readAsDataURL(file);
           }
@@ -96,28 +91,20 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative mb-4 w-32 mx-auto"
+            className="relative mb-4 w-24 mx-auto"
           >
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-32 h-32 object-cover rounded-xl cursor-pointer shadow-lg"
+              className="w-24 h-24 object-cover rounded-xl cursor-pointer shadow-lg"
               onClick={() => setShowImageEditor(true)}
             />
-            <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2 rounded-xl">
-              <button
-                onClick={() => setShowImageEditor(true)}
-                className="p-2 bg-blue-500/80 rounded-full"
-              >
-                <Maximize2 className="h-4 w-4 text-white" />
-              </button>
-              <button
-                onClick={removeImage}
-                className="p-2 bg-red-500/80 rounded-full"
-              >
-                <X className="h-4 w-4 text-white" />
-              </button>
-            </div>
+            <button
+              onClick={removeImage}
+              className="absolute -top-2 -right-2 p-1 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </motion.div>
         )}
         
@@ -136,7 +123,7 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
             onKeyPress={handleKeyPress}
             onPaste={handlePaste}
             placeholder="Type your message..."
-            className="w-full px-14 py-3 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg text-sm md:text-base"
+            className="w-full px-14 py-3 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg"
             disabled={isLoading}
           />
 
@@ -151,15 +138,10 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={isHovered.image ? 'hoveredImage' : 'defaultImage'}
-                variants={iconVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ 
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 12
-                }}
+                initial={{ opacity: 0, scale: 0.8, rotate: -45 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, scale: 0.8, rotate: 45 }}
+                transition={{ type: "spring", stiffness: 200, damping: 12 }}
               >
                 {isHovered.image ? (
                   <ImagePlus className="h-5 w-5 text-blue-400" />
@@ -180,19 +162,18 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
           >
             <AnimatePresence mode="wait">
               {isLoading ? (
-                <Loader2 className="h-5 w-5 text-blue-400 animate-spin" />
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="h-5 w-5 border-2 border-blue-400 border-t-transparent rounded-full"
+                />
               ) : (
                 <motion.div
                   key={isHovered.send ? 'hoveredSend' : 'defaultSend'}
-                  variants={iconVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  transition={{ 
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 12
-                  }}
+                  initial={{ opacity: 0, scale: 0.8, rotate: -45 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, rotate: 45 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 12 }}
                 >
                   {isHovered.send ? (
                     <SendHorizontal className="h-5 w-5 text-blue-400" />
