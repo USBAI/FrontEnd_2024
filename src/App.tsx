@@ -21,6 +21,11 @@ import CookiesPage from './pages/policy/CookiesPage';
 import HowItWorksPage from './pages/how-it-works/HowItWorksPage';
 import FAQPage from './pages/faq/FAQPage';
 import ReportProblemPage from './pages/support/ReportProblemPage';
+import TeamPage from './pages/company/TeamPage';
+import ContactPage from './pages/company/ContactPage';
+import IntegrationGuidePage from './pages/developers/IntegrationGuidePage';
+import StatusPage from './pages/developers/StatusPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 // Styles
 import './i18n/config';
@@ -49,6 +54,10 @@ function App() {
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/report-problem" element={<ReportProblemPage />} />
           
+          {/* Company Routes */}
+          <Route path="/team" element={<TeamPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          
           {/* Updates Routes */}
           <Route path="/updates/product" element={<ProductUpdatesPage />} />
           <Route path="/updates/ai" element={<AIImprovementsPage />} />
@@ -61,6 +70,10 @@ function App() {
           <Route path="/partners/program" element={<PartnerProgramPage />} />
           <Route path="/partners/success" element={<PartnerSuccessStoriesPage />} />
           
+          {/* Developer Routes */}
+          <Route path="/developers/integration" element={<IntegrationGuidePage />} />
+          <Route path="/developers/status" element={<StatusPage />} />
+          
           {/* Policy Routes */}
           <Route path="/policy" element={<TermsPage />} />
           <Route path="/cookies" element={<CookiesPage />} />
@@ -71,8 +84,8 @@ function App() {
           {/* API Access Routes */}
           <Route path="/accessapi/*" element={<ApiAccess />} />
 
-          {/* Catch-all route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* 404 Route */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </Suspense>
