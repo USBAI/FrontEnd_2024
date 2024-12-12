@@ -1,77 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { MapPin, Database, Search, Zap, Globe } from 'lucide-react';
-
-const Globe3D = () => {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-      <motion.div 
-        className="relative w-[800px] h-[800px]"
-        animate={{ 
-          rotate: 360,
-        }}
-        transition={{ 
-          duration: 200,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-      >
-        {/* Grid Lines */}
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={`line-${i}`}
-            className="absolute inset-0 rounded-full border border-pink-200/10"
-            style={{ 
-              transform: `rotateX(${i * 15}deg) rotateY(${i * 30}deg)`,
-              transformStyle: 'preserve-3d'
-            }}
-          />
-        ))}
-
-        {/* Floating Particles */}
-        {[...Array(30)].map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-gradient-to-r from-pink-200 to-white rounded-full shadow-glow"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.2, 0.5, 0.2],
-              x: Math.cos(i * Math.PI / 15) * 350,
-              y: Math.sin(i * Math.PI / 15) * 350,
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.2
-            }}
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              boxShadow: '0 0 15px rgba(255, 182, 193, 0.5)'
-            }}
-          />
-        ))}
-
-        {/* Connection Lines */}
-        {[...Array(18)].map((_, i) => (
-          <motion.div
-            key={`connection-${i}`}
-            className="absolute w-px h-[400px] origin-bottom"
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: `rotate(${i * 20}deg)`,
-              background: 'linear-gradient(to top, transparent, rgba(255, 182, 193, 0.3))'
-            }}
-          />
-        ))}
-      </motion.div>
-    </div>
-  );
-};
+import Globe3D from './globe/Globe3D';
+import RegionCard from './globe/RegionCard';
+import GlobalStats from './globe/GlobalStats';
 
 const GlobalPresenceSection = () => {
   const [ref, inView] = useInView({
@@ -130,85 +62,12 @@ const GlobalPresenceSection = () => {
           </p>
 
           {/* Enhanced Stats Display */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2 }}
-            className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-8 shadow-xl border border-pink-100/50 max-w-3xl mx-auto backdrop-blur-sm"
-          >
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="p-3 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-xl"
-              >
-                <Globe className="h-6 w-6 text-pink-500" />
-              </motion.div>
-              <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">
-                100+ Countries Served
-              </h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex items-center gap-3">
-                <Search className="h-5 w-5 text-pink-500" />
-                <span className="text-gray-700">Global search coverage</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Zap className="h-5 w-5 text-pink-500" />
-                <span className="text-gray-700">24/7 availability</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Database className="h-5 w-5 text-pink-500" />
-                <span className="text-gray-700">Worldwide data centers</span>
-              </div>
-            </div>
-          </motion.div>
+          <GlobalStats inView={inView} />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {regions.map((region, index) => (
-            <motion.div
-              key={region.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.1 }}
-              className="relative group h-full flex flex-col"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-100/50 to-purple-100/50 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-lg border border-pink-100/50 hover:border-pink-200/50 transition-all duration-300 hover:shadow-xl flex flex-col h-full">
-                {/* City Image */}
-                <div className="relative h-48 overflow-hidden flex-shrink-0">
-                  <motion.img
-                    src={region.image}
-                    alt={`${region.city}, ${region.name}`}
-                    className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <div className="text-3xl mb-1">{region.flag}</div>
-                    <h3 className="text-xl font-bold">{region.name}</h3>
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <div className="p-6 flex-grow flex flex-col">
-                  <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
-                    <MapPin className="h-4 w-4" />
-                    {region.city}
-                  </div>
-                  <p className="text-gray-600 flex-grow">{region.description}</p>
-                </div>
-              </div>
-            </motion.div>
+            <RegionCard key={region.name} {...region} index={index} />
           ))}
         </div>
       </div>

@@ -12,6 +12,8 @@
   "dependencies": {
     "@fontsource/inter": "^5.0.16",
     "@fontsource/space-grotesk": "^5.0.16",
+    "@stripe/react-stripe-js": "^2.5.0",
+    "@stripe/stripe-js": "^3.0.3",
     "framer-motion": "^11.0.8",
     "i18next": "^23.10.1",
     "i18next-browser-languagedetector": "^7.2.0",
