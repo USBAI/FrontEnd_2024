@@ -62,7 +62,7 @@ const PaymentForm = ({ total, onProcessing, onSuccess, onError }: PaymentFormPro
 
       if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
         // Payment successful, confirm with backend
-        const response = await fetch('http://127.0.0.1:8013/kluret_stripe/confirm-payment/', {
+        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/confirm-payment/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
