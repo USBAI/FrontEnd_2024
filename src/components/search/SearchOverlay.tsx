@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LoadingGlobe, IdleGlobe } from './GlobeAnimation';
 import ProductDetail from './ProductDetail';
@@ -8,22 +8,45 @@ import ProductGrid from './components/ProductGrid';
 import { Product } from './types';
 import { useSearch } from './hooks/useSearch';
 import ErrorMessage from './components/ErrorMessage';
+import { usePaymentOverlay } from '../../hooks/usePaymentOverlay';
 
 interface SearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
+  initialSearchQuery?: string;
+  shouldTriggerSearch?: boolean;
 }
 
-const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const SearchOverlay: React.FC<SearchOverlayProps> = ({ 
+  isOpen, 
+  onClose,
+  initialSearchQuery = '',
+  shouldTriggerSearch = false
+}) => {
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [showFilters, setShowFilters] = useState(false);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(10000);
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const { state: paymentState } = usePaymentOverlay();
 
   const { products, isLoading, error, performSearch } = useSearch();
+
+  useEffect(() => {
+    if (isOpen && initialSearchQuery) {
+      setSearchQuery(initialSearchQuery);
+      if (shouldTriggerSearch) {
+        // Use setTimeout to ensure the search button exists in the DOM
+        setTimeout(() => {
+          searchButtonRef.current?.click();
+        }, 100);
+      }
+    }
+  }, [isOpen, initialSearchQuery, shouldTriggerSearch]);
 
   const handleSearch = async () => {
     await performSearch(searchQuery, { min: minPrice, max: maxPrice });
@@ -36,6 +59,11 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
       });
     }
   };
+
+  // If payment is in progress, restore the payment overlay
+  if (paymentState.isOpen) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -55,6 +83,8 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
               showFilters={showFilters}
               setShowFilters={setShowFilters}
               onClose={onClose}
+              inputRef={searchInputRef}
+              searchButtonRef={searchButtonRef}
             />
 
             <div ref={listRef} className="flex-1 overflow-y-auto">

@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Brain, Network, Cpu, Database, Zap, Cloud } from 'lucide-react';
 
 const NeuralNetworkAnimation = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -127,89 +127,11 @@ const NeuralNetworkAnimation = () => {
   );
 };
 
-const AIFeatureCard = ({ feature, index }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.2 }}
-      className="relative group"
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 hover:border-blue-500/50 transition-colors h-full">
-        <div className="relative mb-6">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl opacity-20 blur-lg"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.3, 0.2]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-          <div className="relative p-4 bg-white/5 rounded-xl">
-            <feature.icon className="h-8 w-8 text-blue-400" />
-          </div>
-        </div>
-
-        <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-        <p className="text-gray-400 mb-6 leading-relaxed">{feature.description}</p>
-
-        <div className="flex items-center gap-3">
-          <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
-            {feature.stats.value}
-          </div>
-          <div className="text-sm text-gray-500">{feature.stats.label}</div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 const TestimonialsSection = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1
   });
-
-  const aiFeatures = [
-    {
-      icon: Brain,
-      title: 'Neural Networks',
-      description: 'Advanced neural networks trained on millions of product data points for intelligent search and recommendations',
-      stats: {
-        value: '99.9%',
-        label: 'Accuracy Rate'
-      }
-    },
-    {
-      icon: Network,
-      title: 'Deep Learning',
-      description: 'State-of-the-art deep learning models that understand context and user intent in real-time',
-      stats: {
-        value: '<100ms',
-        label: 'Response Time'
-      }
-    },
-    {
-      icon: Database,
-      title: 'Data Processing',
-      description: 'Processes billions of data points daily to deliver accurate and personalized results',
-      stats: {
-        value: '1B+',
-        label: 'Daily Operations'
-      }
-    }
-  ];
 
   return (
     <section className="py-24 bg-gray-900 relative overflow-hidden">
@@ -222,7 +144,7 @@ const TestimonialsSection = () => {
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           className="text-center mb-16"
         >
           <motion.div
@@ -244,15 +166,9 @@ const TestimonialsSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {aiFeatures.map((feature, index) => (
-            <AIFeatureCard key={index} feature={feature} index={index} />
-          ))}
-        </div>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ delay: 0.6 }}
           className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >

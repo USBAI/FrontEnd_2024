@@ -1,15 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatInput from './ChatInput';
-import MessageBubble from './components/MessageBubble';
+import BotMessage from './components/BotMessage';
+import UserMessage from './components/UserMessage';
+import SearchOverlay from '../search/SearchOverlay';
 import { Message } from './types';
-import TypingAnimation from './components/TypingAnimation';
-import ImageProcessingOverlay from './components/ImageProcessingOverlay';
 
 const ChatWindow = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [userHistory, setUserHistory] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [shouldTriggerSearch, setShouldTriggerSearch] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +39,6 @@ const ChatWindow = () => {
         }
       ]);
 
-      // Simulate typing animation for welcome message
       setTimeout(() => {
         setMessages(prev => prev.map(msg =>
           msg.id === 'welcome' ? { ...msg, isTyping: false } : msg
@@ -44,6 +46,20 @@ const ChatWindow = () => {
       }, 2000);
     }
   }, []);
+
+  const handleViewProduct = (product: string) => {
+    // Animate the search overlay opening
+    setIsSearchOpen(true);
+    setSearchQuery(product);
+    // Set flag to trigger search after animation
+    setShouldTriggerSearch(true);
+  };
+
+  const handleSearchClose = () => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    setShouldTriggerSearch(false);
+  };
 
   const sendMessage = async (text: string, image?: File) => {
     if (!text.trim() && !image) return;
@@ -89,16 +105,14 @@ const ChatWindow = () => {
       const data = await response.json();
       setUserHistory(data.updated_user_history);
 
-      // Update user message status
       if (image) {
         setMessages(prev => prev.map(msg =>
           msg.id === messageId ? { ...msg, status: 'complete' } : msg
         ));
       }
 
-      // Add bot's response with typing animation
       const botMessage: Message = {
-        content: data.response,
+        content: typeof data === 'object' ? JSON.stringify(data) : data.response,
         type: 'bot',
         id: Date.now().toString(),
         status: 'complete',
@@ -108,8 +122,7 @@ const ChatWindow = () => {
       setMessages(prev => [...prev, botMessage]);
       scrollToBottom();
 
-      // Simulate typing animation with longer duration
-      const typingDuration = Math.min(data.response.length * 50, 5000); // Increased duration
+      const typingDuration = Math.min(data.response?.length * 50 || 2000, 5000);
       setTimeout(() => {
         setMessages(prev => prev.map(msg =>
           msg.id === botMessage.id ? { ...msg, isTyping: false } : msg
@@ -124,51 +137,72 @@ const ChatWindow = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black">
-      <div
-        ref={chatContainerRef}
-        className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent pb-32 md:pb-24"
-      >
-        <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col justify-end min-h-full">
-          <AnimatePresence initial={false}>
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
-              >
-                {message.type === 'bot' && (
-                  <div className="flex-shrink-0 mr-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                      <img
-                        src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
-                        alt="Kluret"
-                        className="w-4 h-4"
-                      />
+    <div className="relative flex flex-col h-[100vh] h-[100svh] bg-gradient-to-br from-gray-900 via-gray-900 to-black">
+      {/* Fixed Header Space */}
+      <div className="h-16 flex-shrink-0" />
+      
+      {/* Messages Container */}
+      <div className="relative flex-1 min-h-0">
+        <div
+          ref={chatContainerRef}
+          className="absolute inset-0 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent"
+        >
+          <div className="relative min-h-full flex flex-col justify-end">
+            <div className="max-w-4xl w-full mx-auto px-4 py-6">
+              <AnimatePresence initial={false}>
+                {messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
+                  >
+                    {message.type === 'bot' && (
+                      <div className="flex-shrink-0 mr-2">
+                        <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                          <img
+                            src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
+                            alt="Kluret"
+                            className="w-4 h-4"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <div className="max-w-[80%]">
+                      {message.type === 'bot' ? (
+                        <BotMessage 
+                          message={message} 
+                          onViewProduct={handleViewProduct}
+                        />
+                      ) : (
+                        <UserMessage message={message} />
+                      )}
                     </div>
-                  </div>
-                )}
-                <div className="max-w-[80%]">
-                  <MessageBubble message={message} />
-                  {message.image && message.status === 'processing' && (
-                    <ImageProcessingOverlay image={message.image} />
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-          <div ref={messagesEndRef} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-900/95 to-transparent">
-        <div className="max-w-4xl mx-auto px-4 pb-6">
+      {/* Fixed Input Area */}
+      <div className="flex-shrink-0 bg-gradient-to-t from-gray-900 via-gray-900/95 to-transparent pb-6 pt-4">
+        <div className="max-w-4xl mx-auto px-4">
           <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
         </div>
       </div>
+
+      {/* Search Overlay */}
+      <SearchOverlay 
+        isOpen={isSearchOpen} 
+        onClose={handleSearchClose}
+        initialSearchQuery={searchQuery}
+        shouldTriggerSearch={shouldTriggerSearch}
+      />
     </div>
   );
 };

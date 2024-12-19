@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Edit2, Check, X } from 'lucide-react';
 import { Message } from '../types';
 import TypingAnimation from './TypingAnimation';
+import ImageProcessingOverlay from './ImageProcessingOverlay';
 
 interface MessageBubbleProps {
   message: Message;
@@ -35,20 +36,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             className="max-h-48 rounded-lg mx-auto"
           />
           {message.status === 'processing' && (
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-lg flex items-center justify-center">
-              <div className="flex flex-col items-center gap-2">
-                <div className="relative">
-                  {/* AI Scanning Animation */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-transparent animate-scan" />
-                  <img
-                    src={message.image}
-                    alt="Processing"
-                    className="max-h-48 rounded-lg opacity-50"
-                  />
-                </div>
-                <p className="text-xs text-blue-200">AI Processing Image...</p>
-              </div>
-            </div>
+            <ImageProcessingOverlay image={message.image} />
           )}
         </div>
       )}

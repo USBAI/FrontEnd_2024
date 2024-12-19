@@ -6,9 +6,15 @@ import { Elements } from '@stripe/react-stripe-js';
 import PaymentForm from './PaymentForm';
 import PaymentProcessing from './PaymentProcessing';
 import PaymentSuccess from './PaymentSuccess';
+import PaymentHeader from './PaymentHeader';
+import SecurityNotice from './SecurityNotice';
+import SecurityBadges from './SecurityBadges';
+import { usePaymentOverlay } from '../../../hooks/usePaymentOverlay';
 
-// Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+// Initialize Stripe outside component to avoid re-initialization
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY, {
+  locale: 'sv', // Set Swedish locale for Klarna support
+});
 
 interface PaymentOverlayProps {
   isOpen: boolean;
@@ -18,8 +24,9 @@ interface PaymentOverlayProps {
 
 const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
+  const { state, startProcessing, stopProcessing } = usePaymentOverlay();
 
   useEffect(() => {
     const initializePayment = async () => {
@@ -32,7 +39,7 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
       }
 
       try {
-        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/create-payment-intent/', {
+        const response = await fetch('http://127.0.0.1:8013/kluret_stripe/create-payment-intent/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -45,14 +52,13 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
         });
 
         const data = await response.json();
-        
-        if (data.status === 'success' && data.client_secret) {
+        if (response.ok && data.client_secret) {
           setClientSecret(data.client_secret);
         } else {
           throw new Error(data.message || 'Failed to initialize payment');
         }
       } catch (error) {
-        console.error('Payment initialization error:', error);
+        console.error('Error initializing payment:', error);
         setError(error instanceof Error ? error.message : 'Failed to initialize payment');
       }
     };
@@ -60,18 +66,27 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
     if (isOpen) {
       initializePayment();
     } else {
-      // Reset state when overlay closes
       setClientSecret(null);
-      setPaymentStatus('idle');
       setError(null);
+      setPaymentId(null);
     }
   }, [isOpen, total]);
 
   const handleClose = () => {
-    if (paymentStatus !== 'processing') {
+    if (!state.isProcessing) {
       onClose();
     }
   };
+
+  const handlePaymentSuccess = (id: string) => {
+    setPaymentId(id);
+    stopProcessing();
+  };
+
+  // If payment is in progress, restore the payment overlay
+  if (state.isOpen) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -93,27 +108,11 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative overflow-hidden">
-              {/* Header */}
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-50 rounded-lg">
-                      <CreditCard className="h-6 w-6 text-blue-500" />
-                    </div>
-                    <h2 className="text-xl font-semibold">Secure Checkout</h2>
-                  </div>
-                  {paymentStatus !== 'processing' && (
-                    <button
-                      onClick={handleClose}
-                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    >
-                      <X className="h-5 w-5 text-gray-500" />
-                    </button>
-                  )}
-                </div>
-              </div>
+              <PaymentHeader 
+                onClose={handleClose} 
+                isProcessing={state.isProcessing} 
+              />
 
-              {/* Content */}
               <div className="p-6">
                 {error && (
                   <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
@@ -122,11 +121,18 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
                 )}
 
                 {clientSecret ? (
-                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                  <Elements 
+                    stripe={stripePromise} 
+                    options={{ 
+                      clientSecret,
+                      appearance: { theme: 'stripe' },
+                      loader: 'auto'
+                    }}
+                  >
                     <PaymentForm
                       total={total}
-                      onProcessing={() => setPaymentStatus('processing')}
-                      onSuccess={() => setPaymentStatus('success')}
+                      onProcessing={() => startProcessing(clientSecret)}
+                      onSuccess={handlePaymentSuccess}
                       onError={setError}
                     />
                   </Elements>
@@ -136,28 +142,18 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
                   </div>
                 )}
 
-                {paymentStatus === 'processing' && (
-                  <PaymentProcessing />
+                {state.isProcessing && <PaymentProcessing />}
+                {paymentId && (
+                  <PaymentSuccess
+                    onClose={handleClose}
+                    paymentId={paymentId}
+                  />
                 )}
 
-                {paymentStatus === 'success' && (
-                  <PaymentSuccess onClose={handleClose} />
-                )}
-
-                {/* Security Notice */}
-                <div className="mt-6 flex items-center gap-2 text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
-                  <Lock className="h-4 w-4" />
-                  <p>Your payment information is encrypted and secure</p>
-                </div>
+                <SecurityNotice />
               </div>
 
-              {/* Security Badges */}
-              <div className="px-6 pb-6 flex items-center justify-center gap-4 text-gray-400">
-                <Shield className="h-5 w-5" />
-                <span className="text-sm">PCI Compliant</span>
-                <span>•</span>
-                <span className="text-sm">256-bit SSL Encryption</span>
-              </div>
+              <SecurityBadges />
             </div>
           </motion.div>
         </>

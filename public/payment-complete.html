@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Complete</title>
+  <script>
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const paymentIntentId = params.get('payment_intent');
+      const status = params.get('redirect_status');
+      
+      // Update status text and button based on payment status
+      const statusText = document.getElementById('statusText');
+      const statusDescription = document.getElementById('statusDescription');
+      const returnButton = document.getElementById('returnButton');
+      const retryButton = document.getElementById('retryButton');
+      
+      if (status === 'succeeded') {
+        statusText.textContent = 'Payment Successful!';
+        statusDescription.textContent = 'Your payment has been processed successfully.';
+        statusText.classList.add('success');
+        retryButton.style.display = 'none';
+      } else if (status === 'failed') {
+        statusText.textContent = 'Payment Failed';
+        statusDescription.textContent = 'There was an issue processing your payment.';
+        statusText.classList.add('error');
+        retryButton.style.display = 'inline-flex';
+      } else if (status === 'canceled') {
+        statusText.textContent = 'Payment Canceled';
+        statusDescription.textContent = 'The payment was canceled.';
+        statusText.classList.add('pending');
+        retryButton.style.display = 'inline-flex';
+      }
+
+      // Handle return button click
+      returnButton.addEventListener('click', function() {
+        const returnUrl = localStorage.getItem('payment_return_url');
+        const paymentState = localStorage.getItem('payment_form_state');
+        
+        if (window.opener) {
+          // Send message to parent window
+          window.opener.postMessage({
+            type: 'PAYMENT_COMPLETE',
+            paymentIntentId: paymentIntentId,
+            status: status,
+            returnUrl: returnUrl,
+            paymentState: paymentState
+          }, window.location.origin);
+          
+          // Close this window after sending message
+          window.close();
+        } else {
+          // If no opener, restore the payment form state
+          if (returnUrl) {
+            // Store status to be checked when page loads
+            localStorage.setItem('payment_status', status);
+            localStorage.setItem('payment_intent_id', paymentIntentId);
+            
+            // Redirect to the stored return URL
+            window.location.href = returnUrl;
+          } else {
+            // Fallback to chat page if no return URL
+            window.location.href = '/chat';
+          }
+        }
+      });
+
+      // Handle retry button click
+      retryButton.addEventListener('click', function() {
+        const returnUrl = localStorage.getItem('payment_return_url');
+        
+        if (window.opener) {
+          // Send retry message to parent window
+          window.opener.postMessage({
+            type: 'PAYMENT_RETRY',
+            paymentIntentId: paymentIntentId,
+            returnUrl: returnUrl
+          }, window.location.origin);
+          
+          // Close this window after sending message
+          window.close();
+        } else {
+          // If no opener, try to restore the payment form
+          if (returnUrl) {
+            // Store retry flag
+            localStorage.setItem('payment_retry', 'true');
+            localStorage.setItem('payment_intent_id', paymentIntentId);
+            
+            // Redirect to the stored return URL
+            window.location.href = returnUrl;
+          } else {
+            // Fallback to chat page if no return URL
+            window.location.href = '/chat';
+          }
+        }
+      });
+
+      // Auto-close if payment was successful
+      if (status === 'succeeded' && window.opener) {
+        setTimeout(() => {
+          window.opener.postMessage({
+            type: 'PAYMENT_COMPLETE',
+            paymentIntentId: paymentIntentId,
+            status: status,
+            returnUrl: localStorage.getItem('payment_return_url'),
+            paymentState: localStorage.getItem('payment_form_state')
+          }, window.location.origin);
+          window.close();
+        }, 1500);
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f9fafb;
+      color: #1f2937;
+    }
+    .container {
+      text-align: center;
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 1rem;
+      border: 3px solid #e5e7eb;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin: 0.5rem;
+    }
+    .button.primary {
+      background: #3b82f6;
+      color: white;
+    }
+    .button.primary:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+    .button.secondary {
+      background: #ef4444;
+      color: white;
+    }
+    .button.secondary:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+    .status {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .status.success {
+      color: #059669;
+    }
+    .status.error {
+      color: #dc2626;
+    }
+    .status.pending {
+      color: #d97706;
+    }
+    .button-group {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner"></div>
+    <h1 id="statusText" class="status">Processing Payment...</h1>
+    <p id="statusDescription">Please wait while we complete your payment.</p>
+    <div class="button-group">
+      <button id="retryButton" class="button secondary" style="display: none;">
+        Retry Payment
+      </button>
+      <button id="returnButton" class="button primary">
+        Return to Payment Form
+      </button>
+    </div>
+  </div>
+</body>
+</html>

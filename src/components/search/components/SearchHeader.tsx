@@ -10,6 +10,8 @@ interface SearchHeaderProps {
   showFilters: boolean;
   setShowFilters: (show: boolean) => void;
   onClose: () => void;
+  inputRef?: React.RefObject<HTMLInputElement>;
+  searchButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
 const SearchHeader = ({
@@ -19,7 +21,9 @@ const SearchHeader = ({
   loading,
   showFilters,
   setShowFilters,
-  onClose
+  onClose,
+  inputRef,
+  searchButtonRef
 }: SearchHeaderProps) => {
   return (
     <div className="sticky top-0 z-10 pt-8 pb-4 bg-gradient-to-b from-white via-white to-transparent">
@@ -30,6 +34,7 @@ const SearchHeader = ({
           className="relative"
         >
           <input
+            ref={inputRef}
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -47,6 +52,7 @@ const SearchHeader = ({
               <Filter className="h-5 w-5" />
             </motion.button>
             <motion.button
+              ref={searchButtonRef}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleSearch}

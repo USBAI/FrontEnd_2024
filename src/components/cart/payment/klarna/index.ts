@@ -1,0 +1,1 @@
+export { default as KlarnaPayment } from './KlarnaPayment';

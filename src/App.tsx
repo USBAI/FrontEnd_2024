@@ -26,6 +26,7 @@ import ContactPage from './pages/company/ContactPage';
 import IntegrationGuidePage from './pages/developers/IntegrationGuidePage';
 import StatusPage from './pages/developers/StatusPage';
 import NotFoundPage from './pages/NotFoundPage';
+import KlarnaPaymentPage from './pages/payment/KlarnaPaymentPage';
 
 // Styles
 import './i18n/config';
@@ -83,6 +84,9 @@ function App() {
           
           {/* API Access Routes */}
           <Route path="/accessapi/*" element={<ApiAccess />} />
+
+          {/* Payment Routes */}
+          <Route path="/payment/klarna" element={<KlarnaPaymentPage />} />
 
           {/* 404 Route */}
           <Route path="*" element={<NotFoundPage />} />
