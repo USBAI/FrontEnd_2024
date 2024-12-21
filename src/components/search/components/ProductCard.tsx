@@ -5,6 +5,7 @@ import { Product } from '../types';
 import { calculateMonthlyPayment } from '../utils/priceUtils';
 import { useAuth } from '../hooks/useAuth';
 import AuthModal from '../../auth/AuthModal';
+import { detectNordicCountry, convertFromSEK } from '../../../utils/currencyUtils';
 
 interface ProductCardProps {
   product: Product;
@@ -22,6 +23,11 @@ const ProductCard = ({
   onClick
 }: ProductCardProps) => {
   const { showAuthModal, setShowAuthModal, checkAuth, handleAuthSuccess } = useAuth();
+  const userCountry = detectNordicCountry();
+  
+  // Extract numeric price from SEK string and convert to user's currency
+  const numericPrice = parseFloat(product.price.replace(/[^0-9.]/g, ''));
+  const localPrice = userCountry ? convertFromSEK(numericPrice, userCountry) : product.price;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -89,7 +95,7 @@ const ProductCard = ({
           <div className="flex items-center justify-between">
             <div>
               <div className="text-lg font-semibold text-gray-900">
-                {product.price}
+                {localPrice}
               </div>
               <div className="flex items-center gap-1 text-xs text-gray-500">
                 <img 
@@ -97,7 +103,7 @@ const ProductCard = ({
                   alt="Klarna" 
                   className="h-3 w-3"
                 />
-                <span>{calculateMonthlyPayment(product.price)}</span>
+                <span>{calculateMonthlyPayment(localPrice)}</span>
               </div>
             </div>
           </div>

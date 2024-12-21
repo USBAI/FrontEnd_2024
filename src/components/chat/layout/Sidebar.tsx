@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { 
-  Store, 
-  Network, 
-  ChevronDown, 
-  Rocket, 
-  Code, 
-  Shield, 
+import {
+  Store,
+  Network,
+  ChevronDown,
+  Rocket,
+  Code,
+  Shield,
   ArrowRight,
   Globe,
   Zap,
@@ -16,7 +16,10 @@ import {
   MessageSquare,
   Settings,
   BarChart3,
-  Brain
+  Brain,
+  ShoppingBag,
+  Clock,
+  CreditCard
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -27,6 +30,30 @@ interface SidebarProps {
 }
 
 const navItems = [
+  {
+    icon: ShoppingBag,
+    label: 'Create your online store',
+    description: 'Launch your store in minutes with Kluret AI',
+    gradient: 'from-emerald-500 to-teal-500',
+    path: '/create-store',
+    details: [
+      {
+        icon: Clock,
+        title: 'Quick Setup',
+        description: 'Get your store running in under 5 minutes'
+      },
+      {
+        icon: CreditCard,
+        title: 'Secure Payments',
+        description: 'Built-in payment processing with Klarna'
+      },
+      {
+        icon: Brain,
+        title: 'AI-Powered',
+        description: 'Smart product recommendations and search'
+      }
+    ]
+  },
   {
     icon: Store,
     label: 'Connect your online store',
@@ -226,7 +253,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, expandedItem, setExpandedItem
                           transition={{ delay: detailIndex * 0.1 }}
                           className="flex items-start gap-3 bg-gray-800/50 p-3 rounded-lg"
                         >
-                          <detail.icon className="h-5 w-5 text-gray-400 mt-0.5" />
+                          <detail.icon className="h-4 w-4 text-gray-400 mt-0.5" />
                           <div>
                             <h4 className="text-sm font-medium">{detail.title}</h4>
                             <p className="text-xs text-gray-400">{detail.description}</p>
@@ -241,7 +268,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, expandedItem, setExpandedItem
                           e.stopPropagation();
                           navigate(item.path);
                         }}
-                        className="w-full mt-4 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg text-white font-medium flex items-center justify-between group hover:shadow-lg transition-all duration-300"
+                        className={`w-full mt-4 px-4 py-3 bg-gradient-to-r ${item.gradient} rounded-lg text-white font-medium flex items-center justify-between group hover:shadow-lg transition-all duration-300`}
                       >
                         <span>Get Started</span>
                         <ArrowRight className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" />

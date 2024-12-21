@@ -27,6 +27,8 @@ import IntegrationGuidePage from './pages/developers/IntegrationGuidePage';
 import StatusPage from './pages/developers/StatusPage';
 import NotFoundPage from './pages/NotFoundPage';
 import KlarnaPaymentPage from './pages/payment/KlarnaPaymentPage';
+import CreateStorePage from './pages/create-store/CreateStorePage';
+import CreateStoreDashboard from './pages/create-store/dashboard';
 
 // Styles
 import './i18n/config';
@@ -54,6 +56,10 @@ function App() {
           <Route path="/how-it-works" element={<HowItWorksPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/report-problem" element={<ReportProblemPage />} />
+          
+          {/* Create Store Routes */}
+          <Route path="/create-store" element={<CreateStorePage />} />
+          <Route path="/create-store/dashboard/*" element={<CreateStoreDashboard />} />
           
           {/* Company Routes */}
           <Route path="/team" element={<TeamPage />} />
