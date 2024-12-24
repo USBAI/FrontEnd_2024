@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Eye, ArrowRight } from 'lucide-react';
 import { Message } from '../types';
 import { ViewProductButton } from './ViewProductButton';
 
@@ -10,7 +9,6 @@ interface BotMessageProps {
 }
 
 const BotMessage: React.FC<BotMessageProps> = ({ message, onViewProduct }) => {
-  // Try to parse the message content as JSON
   let parsedContent = null;
   try {
     parsedContent = JSON.parse(message.content);
@@ -23,8 +21,8 @@ const BotMessage: React.FC<BotMessageProps> = ({ message, onViewProduct }) => {
   const product = parsedContent?.additional_data?.product;
 
   return (
-    <div className="rounded-2xl px-4 py-3 bg-gray-800/50 backdrop-blur-xl border border-white/10 max-w-[85%] relative group">
-      <p className="whitespace-pre-wrap text-xs md:text-sm">{displayContent}</p>
+    <div className="rounded-2xl px-4 py-3 bg-white shadow-sm border border-gray-200 max-w-[85%] relative group">
+      <p className="whitespace-pre-wrap text-xs md:text-sm text-gray-800">{displayContent}</p>
       
       {isViewable && product && (
         <ViewProductButton 

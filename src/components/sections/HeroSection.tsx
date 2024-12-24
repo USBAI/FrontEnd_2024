@@ -24,7 +24,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative h-[100vh] h-[100svh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-900 via-gray-900 to-black">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-pink-50/50 to-blue-50/50">
       {/* Background Globe */}
       <HeroGlobe />
 
@@ -35,10 +35,10 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
             {t('hero.title')}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
             {t('hero.subtitle')}
           </p>
 
@@ -50,9 +50,9 @@ const HeroSection = () => {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 placeholder={placeholderTexts[currentPlaceholderIndex]}
-                className="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-14 px-6 bg-white rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-200 pr-32 shadow-lg"
               />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full flex items-center gap-2 transition-colors">
+              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white px-6 py-2 rounded-full flex items-center gap-2 transition-all">
                 <Search className="h-5 w-5" />
                 <span className="hidden sm:inline">Search</span>
               </button>
@@ -66,7 +66,7 @@ const HeroSection = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-medium flex items-center gap-2 hover:from-blue-700 hover:to-blue-900 transition-all"
+                className="px-8 py-4 rounded-full bg-gradient-to-r from-pink-500 to-blue-500 text-white font-medium flex items-center gap-2 hover:from-pink-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl"
               >
                 {t('hero.tryButton')}
                 <ArrowRight className="h-5 w-5" />
@@ -77,7 +77,7 @@ const HeroSection = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6 }}
-                className="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white font-medium hover:bg-white/20 transition-all"
+                className="px-8 py-4 rounded-full bg-white text-gray-700 font-medium hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl border border-gray-100"
               >
                 Learn More
               </motion.button>

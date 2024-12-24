@@ -1,74 +1,52 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Clock } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 interface PaymentMethodSelectorProps {
-  selectedMethod: string;
-  onSelect: (methodId: string) => void;
+  onSelectMethod: (method: 'card' | 'klarna') => void;
 }
 
-const PaymentMethodSelector = ({ selectedMethod, onSelect }: PaymentMethodSelectorProps) => {
-  const navigate = useNavigate();
-
-  const handleMethodSelect = (method: string) => {
-    onSelect(method);
-    
-    if (method === 'klarna') {
-      // Open Klarna payment page in new tab
-      window.open('/payment/klarna', '_blank', 'noopener,noreferrer');
+const PaymentMethodSelector = ({ onSelectMethod }: PaymentMethodSelectorProps) => {
+  const paymentMethods = [
+    {
+      id: 'card',
+      title: 'Pay with Card',
+      description: 'Credit/Debit Card, Apple Pay, Google Pay',
+      icon: CreditCard,
+      gradient: 'from-blue-500 to-purple-500'
+    },
+    {
+      id: 'klarna',
+      title: 'Pay with Klarna',
+      description: 'Pay later or in installments',
+      icon: Clock,
+      gradient: 'from-pink-500 to-purple-500'
     }
-  };
+  ];
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900 mb-3">Select Payment Method</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => handleMethodSelect('card')}
-          className={`relative flex flex-col p-4 rounded-lg border-2 text-left ${
-            selectedMethod === 'card'
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <div className={`p-2 rounded-lg ${
-              selectedMethod === 'card' ? 'bg-blue-500/10' : 'bg-gray-100'
-            }`}>
-              <CreditCard className={`h-5 w-5 ${
-                selectedMethod === 'card' ? 'text-blue-500' : 'text-gray-500'
-              }`} />
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-6">Select Payment Method</h2>
+      <div className="grid grid-cols-1 gap-4">
+        {paymentMethods.map((method) => (
+          <motion.button
+            key={method.id}
+            onClick={() => onSelectMethod(method.id as 'card' | 'klarna')}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`w-full p-6 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white text-left transition-all`}
+          >
+            <div className="flex items-center gap-4">
+              <div className={`p-3 rounded-xl bg-gradient-to-r ${method.gradient}`}>
+                <method.icon className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">{method.title}</h3>
+                <p className="text-sm text-gray-500">{method.description}</p>
+              </div>
             </div>
-            <span className="font-medium">Credit Card</span>
-          </div>
-          <p className="text-sm text-gray-500">Pay directly with your credit card</p>
-        </motion.button>
-
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => handleMethodSelect('klarna')}
-          className={`relative flex flex-col p-4 rounded-lg border-2 text-left ${
-            selectedMethod === 'klarna'
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-200 hover:border-gray-300'
-          }`}
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <div className={`p-2 rounded-lg ${
-              selectedMethod === 'klarna' ? 'bg-blue-500/10' : 'bg-gray-100'
-            }`}>
-              <Clock className={`h-5 w-5 ${
-                selectedMethod === 'klarna' ? 'text-blue-500' : 'text-gray-500'
-              }`} />
-            </div>
-            <span className="font-medium">Klarna</span>
-          </div>
-          <p className="text-sm text-gray-500">Pay later or in installments</p>
-        </motion.button>
+          </motion.button>
+        ))}
       </div>
     </div>
   );

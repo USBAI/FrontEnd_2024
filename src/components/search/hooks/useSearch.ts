@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Product } from '../types';
 import { searchProducts } from '../services/searchService';
 
@@ -6,12 +6,23 @@ export const useSearch = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState('1');
+  const [hasMore, setHasMore] = useState(true);
+  const currentPage = useRef(1);
+  const lastQuery = useRef('');
+  const lastPriceRange = useRef({ min: 0, max: 0 });
 
-  const performSearch = async (query: string, priceRange: { min: number; max: number }) => {
+  const performSearch = async (query: string, priceRange: { min: number; max: number }, reset: boolean = true) => {
     if (!query.trim()) {
       setProducts([]);
       return;
+    }
+
+    // Reset state if this is a new search
+    if (reset) {
+      setProducts([]);
+      currentPage.current = 1;
+      lastQuery.current = query;
+      lastPriceRange.current = priceRange;
     }
 
     setIsLoading(true);
@@ -20,39 +31,39 @@ export const useSearch = () => {
     try {
       const { products: searchResults, error: searchError } = await searchProducts(
         query,
-        currentPage,
+        currentPage.current.toString(),
         priceRange
       );
       
       if (searchError) {
         setError(searchError);
-        setProducts([]);
+        setProducts(reset ? [] : products);
       } else {
-        setProducts(searchResults);
+        setProducts(prev => reset ? searchResults : [...prev, ...searchResults]);
+        setHasMore(searchResults.length > 0);
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
-      setProducts([]);
+      setProducts(reset ? [] : products);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const nextPage = () => {
-    setCurrentPage(prev => (parseInt(prev) + 1).toString());
-  };
-
-  const previousPage = () => {
-    setCurrentPage(prev => Math.max(1, parseInt(prev) - 1).toString());
-  };
+  const loadMore = useCallback(async () => {
+    if (!isLoading && hasMore) {
+      currentPage.current += 1;
+      await performSearch(lastQuery.current, lastPriceRange.current, false);
+    }
+  }, [isLoading, hasMore]);
 
   return {
     products,
     isLoading,
     error,
     performSearch,
-    currentPage,
-    nextPage,
-    previousPage
+    loadMore,
+    hasMore,
+    currentPage: currentPage.current
   };
 };

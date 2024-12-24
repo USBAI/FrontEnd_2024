@@ -16,34 +16,37 @@ const Header: React.FC<HeaderProps> = ({
   setIsSearchOpen
 }) => {
   return (
-    <div className="fixed top-0 left-0 right-0 z-30 bg-gray-900/80 backdrop-blur-lg border-b border-white/10">
+    <div className="fixed top-0 left-0 right-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-200">
       <div className="flex items-center justify-between px-4 h-16">
-        {!isNavOpen && (
-          <motion.button
-            onClick={() => setIsNavOpen(true)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Menu className="h-6 w-6 text-white/70 hover:text-white" />
-          </motion.button>
-        )}
+        <div className="flex items-center gap-3">
+          {!isNavOpen && (
+            <motion.button
+              onClick={() => setIsNavOpen(true)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Menu className="h-6 w-6 text-gray-600" />
+            </motion.button>
+          )}
+        </div>
 
-        <div className="flex items-center gap-5 ml-auto">
+        <div className="flex items-center gap-5">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsProfileOpen(true)}
-            className="text-white/70 hover:text-white transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <User className="h-6 w-6" />
+            <User className="h-6 w-6 text-gray-600" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsSearchOpen(true)}
-            className="text-white/70 hover:text-white transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <Search className="h-6 w-6" />
+            <Search className="h-6 w-6 text-gray-600" />
           </motion.button>
         </div>
       </div>

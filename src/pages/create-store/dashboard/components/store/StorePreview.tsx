@@ -41,7 +41,8 @@ const StorePreview = () => {
             setProjectUrl(`https://nikestore.kluret.com`);
           }
         } else {
-          throw new Error(data.message || 'Failed to fetch project files');
+          setFiles([]); // Set empty files to show default landing
+          setProjectUrl(null);
         }
       } catch (error) {
         console.error('Error fetching project files:', error);

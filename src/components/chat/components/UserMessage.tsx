@@ -8,7 +8,7 @@ interface UserMessageProps {
 
 const UserMessage: React.FC<UserMessageProps> = ({ message }) => {
   return (
-    <div className="rounded-2xl px-4 py-3 bg-white/10 backdrop-blur-sm text-white border border-white/20 ml-auto max-w-[85%] group relative">
+    <div className="rounded-2xl px-4 py-3 bg-blue-500 text-white border border-blue-600 ml-auto max-w-[85%] group relative">
       {message.image && (
         <div className="relative group mb-2">
           <img

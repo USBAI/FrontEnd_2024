@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import ChatWindow from './ChatWindow';
-import SearchOverlay from '../search/SearchOverlay';
-import ProfilePage from './ProfilePage';
 import Header from './layout/Header';
 import Sidebar from './layout/Sidebar';
 import ResizeHandle from './layout/ResizeHandle';
+import ChatWindow from './ChatWindow';
+import SearchOverlay from '../search/SearchOverlay';
+import ProfilePage from './ProfilePage';
 
 const MIN_SIDEBAR_WIDTH = 280;
 const MAX_SIDEBAR_WIDTH = 600;
@@ -66,7 +66,7 @@ const ChatLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white overflow-hidden">
+    <div className="flex h-screen bg-gradient-to-br from-pink-50 via-white to-blue-50 text-gray-900 overflow-hidden">
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isNavOpen && window.innerWidth < 768 && (
@@ -74,7 +74,7 @@ const ChatLayout = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40"
             onClick={() => setIsNavOpen(false)}
           />
         )}
@@ -108,21 +108,32 @@ const ChatLayout = () => {
             animate={{ x: 0 }}
             exit={{ x: -320 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 left-0 h-screen bg-gray-800/50 backdrop-blur-xl border-r border-white/10 z-50 flex flex-col overflow-hidden"
+            className="fixed top-0 left-0 h-screen bg-white/80 backdrop-blur-xl border-r border-gray-200 z-50 flex flex-col overflow-hidden"
             style={{ width: `${sidebarWidth}px` }}
           >
-            <div className="p-6 border-b border-white/10">
+            <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <img
-                  src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
-                  alt="Kluret"
-                  className="h-8"
-                />
+                <svg width="40" height="40" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="22" height="22" rx="11" fill="url(#paint0_linear_0_1)"/>
+                  <path d="M0.128418 12.32L21.6595 12.8032V12.8032C21.5887 15.9615 18.9709 18.4643 15.8126 18.3934L5.71863 18.1669C2.56036 18.096 0.0575377 15.4783 0.128418 12.32V12.32Z" fill="url(#paint1_linear_0_1)"/>
+                  <rect x="9" y="3" width="11" height="11" rx="5.5" fill="white"/>
+                  <defs>
+                    <linearGradient id="paint0_linear_0_1" x1="4.51" y1="2.53" x2="18.26" y2="19.69" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#EFF0FF"/>
+                      <stop offset="0.55" stopColor="#C9B8FC"/>
+                      <stop offset="0.986587" stopColor="#FFBAF6"/>
+                    </linearGradient>
+                    <linearGradient id="paint1_linear_0_1" x1="12.0269" y1="18.3714" x2="12.6321" y2="12.2372" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#E7B4FF" stopOpacity="0.22"/>
+                      <stop offset="1" stopColor="#8330E8"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
                 <button
                   onClick={() => setIsNavOpen(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  <X className="h-5 w-5 text-white/70 hover:text-white" />
+                  <X className="h-5 w-5 text-gray-500 hover:text-gray-700" />
                 </button>
               </div>
             </div>

@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CreditCard, Lock, Shield } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import PaymentForm from './PaymentForm';
-import PaymentProcessing from './PaymentProcessing';
-import PaymentSuccess from './PaymentSuccess';
-import PaymentHeader from './PaymentHeader';
-import SecurityNotice from './SecurityNotice';
-import SecurityBadges from './SecurityBadges';
-import { usePaymentOverlay } from '../../../hooks/usePaymentOverlay';
+import { loadStripe } from '@stripe/stripe-js';
+import { X } from 'lucide-react';
+import PaymentMethodSelector from './PaymentMethodSelector';
+import CardPaymentForm from './CardPaymentForm';
+import LoadingSpinner from '../../ui/LoadingSpinner';
 
-// Initialize Stripe outside component to avoid re-initialization
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY, {
-  locale: 'sv', // Set Swedish locale for Klarna support
-});
+// Initialize Stripe
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface PaymentOverlayProps {
   isOpen: boolean;
@@ -23,70 +17,55 @@ interface PaymentOverlayProps {
 }
 
 const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
+  const [selectedMethod, setSelectedMethod] = useState<'card' | 'klarna' | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [paymentId, setPaymentId] = useState<string | null>(null);
-  const { state, startProcessing, stopProcessing } = usePaymentOverlay();
 
-  useEffect(() => {
-    const initializePayment = async () => {
-      if (!isOpen) return;
+  const handleMethodSelect = async (method: 'card' | 'klarna') => {
+    setIsLoading(true);
+    setError(null);
 
+    try {
       const userId = localStorage.getItem('user_id');
       if (!userId) {
-        setError('User not authenticated');
-        return;
+        throw new Error('User not authenticated');
       }
 
-      try {
-        const response = await fetch('http://127.0.0.1:8013/kluret_stripe/create-payment-intent/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            total_cost: total.toString(),
-            currency: 'sek'
-          })
-        });
+      const response = await fetch('http://127.0.0.1:8013/kluret_stripe/create-payment-intent/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          total_cost: total.toString(),
+          currency: 'sek'
+        })
+      });
 
-        const data = await response.json();
-        if (response.ok && data.client_secret) {
-          setClientSecret(data.client_secret);
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        if (method === 'klarna') {
+          // Store return URL and redirect to Klarna payment page
+          localStorage.setItem('payment_return_url', window.location.href);
+          window.open('/payment/klarna', '_blank');
+          onClose();
         } else {
-          throw new Error(data.message || 'Failed to initialize payment');
+          setClientSecret(data.client_secret);
+          setSelectedMethod(method);
         }
-      } catch (error) {
-        console.error('Error initializing payment:', error);
-        setError(error instanceof Error ? error.message : 'Failed to initialize payment');
+      } else {
+        throw new Error(data.message || 'Failed to initialize payment');
       }
-    };
-
-    if (isOpen) {
-      initializePayment();
-    } else {
-      setClientSecret(null);
-      setError(null);
-      setPaymentId(null);
-    }
-  }, [isOpen, total]);
-
-  const handleClose = () => {
-    if (!state.isProcessing) {
-      onClose();
+    } catch (error) {
+      console.error('Payment initialization error:', error);
+      setError(error instanceof Error ? error.message : 'Failed to initialize payment');
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const handlePaymentSuccess = (id: string) => {
-    setPaymentId(id);
-    stopProcessing();
-  };
-
-  // If payment is in progress, restore the payment overlay
-  if (state.isOpen) {
-    return null;
-  }
 
   return (
     <AnimatePresence>
@@ -97,63 +76,62 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-            onClick={handleClose}
+            onClick={onClose}
           />
           
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-50 max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative overflow-hidden">
-              <PaymentHeader 
-                onClose={handleClose} 
-                isProcessing={state.isProcessing} 
-              />
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">Checkout</h2>
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">Total: {total.toFixed(2)} kr</p>
+            </div>
 
-              <div className="p-6">
-                {error && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            {/* Content */}
+            <div className="max-h-[calc(100vh-12rem)] overflow-y-auto">
+              {error ? (
+                <div className="p-6">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
                     {error}
                   </div>
-                )}
-
-                {clientSecret ? (
-                  <Elements 
-                    stripe={stripePromise} 
-                    options={{ 
-                      clientSecret,
-                      appearance: { theme: 'stripe' },
-                      loader: 'auto'
-                    }}
-                  >
-                    <PaymentForm
-                      total={total}
-                      onProcessing={() => startProcessing(clientSecret)}
-                      onSuccess={handlePaymentSuccess}
-                      onError={setError}
-                    />
-                  </Elements>
-                ) : (
-                  <div className="flex items-center justify-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent" />
-                  </div>
-                )}
-
-                {state.isProcessing && <PaymentProcessing />}
-                {paymentId && (
-                  <PaymentSuccess
-                    onClose={handleClose}
-                    paymentId={paymentId}
+                </div>
+              ) : isLoading ? (
+                <div className="p-6 flex flex-col items-center justify-center">
+                  <LoadingSpinner size="lg" />
+                  <p className="mt-4 text-gray-500">Initializing payment...</p>
+                </div>
+              ) : !selectedMethod ? (
+                <PaymentMethodSelector onSelectMethod={handleMethodSelect} />
+              ) : selectedMethod === 'card' && clientSecret ? (
+                <Elements 
+                  stripe={stripePromise} 
+                  options={{ 
+                    clientSecret,
+                    appearance: { theme: 'stripe' },
+                    loader: 'auto'
+                  }}
+                >
+                  <CardPaymentForm
+                    clientSecret={clientSecret}
+                    total={total}
+                    onBack={() => setSelectedMethod(null)}
+                    onSuccess={onClose}
                   />
-                )}
-
-                <SecurityNotice />
-              </div>
-
-              <SecurityBadges />
+                </Elements>
+              ) : null}
             </div>
           </motion.div>
         </>

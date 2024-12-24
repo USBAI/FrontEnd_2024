@@ -9,9 +9,8 @@ import HowItWorksSection from '../components/sections/HowItWorksSection';
 import StatsSection from '../components/sections/StatsSection';
 import TestimonialsSection from '../components/sections/TestimonialsSection';
 import PartnersSection from '../components/sections/PartnersSection';
-import APISection from '../components/sections/APISection';
-import StoreIntegrationSection from '../components/sections/StoreIntegrationSection';
-import CTASection from '../components/sections/CTASection';
+import AICategoriesSection from '../components/sections/AICategoriesSection';
+import AlgorithmSection from '../components/sections/AlgorithmSection';
 import GlobalPresenceSection from '../components/sections/GlobalPresenceSection';
 
 function LandingPage() {
@@ -23,17 +22,16 @@ function LandingPage() {
   });
 
   return (
-    <div className="relative bg-gray-900 text-white font-inter">
+    <div className="relative bg-white text-gray-900 font-inter">
       {/* Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-pink to-accent-purple origin-left z-50"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 to-blue-500 origin-left z-50"
         style={{ scaleX }}
       />
 
       {/* Background Gradient */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-gray-900 to-purple-900/20 animate-gradient" />
-        <div className="absolute inset-0 backdrop-blur-[100px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-blue-50 animate-gradient" />
       </div>
 
       {/* Content */}
@@ -45,12 +43,11 @@ function LandingPage() {
           <FeaturesSection />
           <HowItWorksSection />
           <WhyKluretSection />
+          <AICategoriesSection />
+          <AlgorithmSection />
           <GlobalPresenceSection />
           <TestimonialsSection />
           <PartnersSection />
-          <APISection />
-          <StoreIntegrationSection />
-          <CTASection />
         </main>
         <Footer />
       </div>

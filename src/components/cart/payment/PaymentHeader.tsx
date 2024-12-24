@@ -1,29 +1,37 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { X, CreditCard } from 'lucide-react';
 
 interface PaymentHeaderProps {
   onClose: () => void;
-  isProcessing: boolean;
+  isProcessing?: boolean;
 }
 
 const PaymentHeader = ({ onClose, isProcessing }: PaymentHeaderProps) => {
   return (
-    <div className="p-4 sm:p-6 border-b border-gray-200">
+    <div className="relative p-6 border-b border-gray-200/50">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-50 rounded-lg">
-            <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
+          <div className="p-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl">
+            <CreditCard className="h-6 w-6 text-blue-500" />
           </div>
-          <h2 className="text-lg sm:text-xl font-semibold">Secure Checkout</h2>
+          <div>
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Secure Checkout
+            </h2>
+            <p className="text-sm text-gray-500">Complete your purchase securely</p>
+          </div>
         </div>
-        {!isProcessing && (
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <X className="h-5 w-5 text-gray-500" />
-          </button>
-        )}
+        
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={onClose}
+          disabled={isProcessing}
+          className="p-2 hover:bg-gray-100/50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <X className="h-5 w-5 text-gray-500" />
+        </motion.button>
       </div>
     </div>
   );

@@ -48,10 +48,8 @@ const ChatWindow = () => {
   }, []);
 
   const handleViewProduct = (product: string) => {
-    // Animate the search overlay opening
     setIsSearchOpen(true);
     setSearchQuery(product);
-    // Set flag to trigger search after animation
     setShouldTriggerSearch(true);
   };
 
@@ -137,7 +135,7 @@ const ChatWindow = () => {
   };
 
   return (
-    <div className="relative flex flex-col h-[100vh] h-[100svh] bg-gradient-to-br from-gray-900 via-gray-900 to-black">
+    <div className="relative flex flex-col h-[100vh] h-[100svh] bg-gray-50">
       {/* Fixed Header Space */}
       <div className="h-16 flex-shrink-0" />
       
@@ -145,7 +143,7 @@ const ChatWindow = () => {
       <div className="relative flex-1 min-h-0">
         <div
           ref={chatContainerRef}
-          className="absolute inset-0 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent"
+          className="absolute inset-0 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
         >
           <div className="relative min-h-full flex flex-col justify-end">
             <div className="max-w-4xl w-full mx-auto px-4 py-6">
@@ -161,7 +159,7 @@ const ChatWindow = () => {
                   >
                     {message.type === 'bot' && (
                       <div className="flex-shrink-0 mr-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                           <img
                             src="https://www.kluret.se/static/media/kluret_wt.ad13e882d6d5f566612d2b35479039fd.svg"
                             alt="Kluret"
@@ -190,7 +188,7 @@ const ChatWindow = () => {
       </div>
 
       {/* Fixed Input Area */}
-      <div className="flex-shrink-0 bg-gradient-to-t from-gray-900 via-gray-900/95 to-transparent pb-6 pt-4">
+      <div className="flex-shrink-0 bg-gradient-to-t from-white via-white/95 to-transparent pb-6 pt-4">
         <div className="max-w-4xl mx-auto px-4">
           <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
         </div>

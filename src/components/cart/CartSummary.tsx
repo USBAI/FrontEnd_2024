@@ -13,8 +13,8 @@ const CartSummary = ({ items, onClose }: CartSummaryProps) => {
 
   const calculateTotal = () => {
     return items.reduce((sum, item) => {
-      const price = parseFloat(item.product_price.replace(/[^0-9.]/g, ''));
-      return sum + price;
+      const numericPrice = parseFloat(item.product_price.replace(/[^0-9.]/g, ''));
+      return sum + numericPrice;
     }, 0).toFixed(2);
   };
 

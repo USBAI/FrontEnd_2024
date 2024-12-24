@@ -1,8 +1,18 @@
 {
   "rewrites": [
     {
-      "source": "/:project*",
-      "destination": "/projects/:project/index.html"
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<subdomain>[^.]+).kluret.com"
+        }
+      ],
+      "destination": "/projects/:subdomain/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -15,8 +25,5 @@
         }
       ]
     }
-  ],
-  "github": {
-    "silent": true
-  }
+  ]
 }

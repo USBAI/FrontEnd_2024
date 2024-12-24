@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LoadingGlobe, IdleGlobe } from './GlobeAnimation';
 import ProductDetail from './ProductDetail';
@@ -9,6 +9,7 @@ import { Product } from './types';
 import { useSearch } from './hooks/useSearch';
 import ErrorMessage from './components/ErrorMessage';
 import { usePaymentOverlay } from '../../hooks/usePaymentOverlay';
+import LoadingIndicator from './components/LoadingIndicator';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -34,13 +35,35 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const { state: paymentState } = usePaymentOverlay();
 
-  const { products, isLoading, error, performSearch } = useSearch();
+  const { 
+    products, 
+    isLoading, 
+    error, 
+    performSearch, 
+    loadMore,
+    hasMore 
+  } = useSearch();
+
+  // Handle infinite scroll
+  const observer = useRef<IntersectionObserver>();
+  const lastProductRef = useCallback((node: HTMLDivElement) => {
+    if (isLoading) return;
+    
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadMore();
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [isLoading, hasMore, loadMore]);
 
   useEffect(() => {
     if (isOpen && initialSearchQuery) {
       setSearchQuery(initialSearchQuery);
       if (shouldTriggerSearch) {
-        // Use setTimeout to ensure the search button exists in the DOM
         setTimeout(() => {
           searchButtonRef.current?.click();
         }, 100);
@@ -48,10 +71,18 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     }
   }, [isOpen, initialSearchQuery, shouldTriggerSearch]);
 
+  // Cleanup observer on unmount
+  useEffect(() => {
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    };
+  }, []);
+
   const handleSearch = async () => {
     await performSearch(searchQuery, { min: minPrice, max: maxPrice });
     
-    // Scroll results into view
     if (listRef.current) {
       listRef.current.scrollTo({
         top: 0,
@@ -60,7 +91,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     }
   };
 
-  // If payment is in progress, restore the payment overlay
   if (paymentState.isOpen) {
     return null;
   }
@@ -91,43 +121,47 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
               <div className="max-w-[2000px] mx-auto px-4 py-6">
                 {error ? (
                   <ErrorMessage message={error} />
-                ) : isLoading ? (
+                ) : isLoading && products.length === 0 ? (
                   <LoadingGlobe />
                 ) : products.length === 0 ? (
                   <IdleGlobe />
                 ) : (
-                  <ProductGrid
-                    products={products}
-                    hoveredProduct={hoveredProduct}
-                    setHoveredProduct={setHoveredProduct}
-                    setSelectedProduct={setSelectedProduct}
-                  />
+                  <>
+                    <ProductGrid
+                      products={products}
+                      hoveredProduct={hoveredProduct}
+                      setHoveredProduct={setHoveredProduct}
+                      setSelectedProduct={setSelectedProduct}
+                      lastProductRef={lastProductRef}
+                    />
+                    {isLoading && <LoadingIndicator />}
+                  </>
                 )}
               </div>
             </div>
+
+            <FilterPanel
+              isOpen={showFilters}
+              onClose={() => setShowFilters(false)}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              setMinPrice={setMinPrice}
+              setMaxPrice={setMaxPrice}
+              onSave={() => {
+                setShowFilters(false);
+                handleSearch();
+              }}
+            />
+
+            <AnimatePresence>
+              {selectedProduct && (
+                <ProductDetail
+                  product={selectedProduct}
+                  onClose={() => setSelectedProduct(null)}
+                />
+              )}
+            </AnimatePresence>
           </div>
-
-          <FilterPanel
-            isOpen={showFilters}
-            onClose={() => setShowFilters(false)}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            setMinPrice={setMinPrice}
-            setMaxPrice={setMaxPrice}
-            onSave={() => {
-              setShowFilters(false);
-              handleSearch();
-            }}
-          />
-
-          <AnimatePresence>
-            {selectedProduct && (
-              <ProductDetail
-                product={selectedProduct}
-                onClose={() => setSelectedProduct(null)}
-              />
-            )}
-          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>
