@@ -11,7 +11,7 @@ interface ProductImageGalleryProps {
 const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName }: ProductImageGalleryProps) => {
   return (
     <div className="space-y-4">
-      <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden">
+      <div className="relative aspect-square bg-white rounded-lg overflow-hidden">
         <img
           src={images[currentIndex]}
           alt={productName}

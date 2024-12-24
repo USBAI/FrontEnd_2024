@@ -72,12 +72,12 @@ const HeroSection = () => {
                 <ArrowRight className="h-5 w-5" />
               </motion.button>
             </Link>
-            <Link to="#features">
+            <Link to="/technology">
               <motion.button
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6 }}
-                className="px-8 py-4 rounded-full bg-white text-gray-700 font-medium hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl border border-gray-100"
+                className="px-8 py-4 rounded-full bg-white text-gray-700 font-medium hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl"
               >
                 Learn More
               </motion.button>
