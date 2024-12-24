@@ -46,16 +46,16 @@ const Navbar = () => {
         { label: 'Roadmap', href: '/updates/roadmap' }
       ]
     },
-    {
-      label: t('nav.partners'),
-      href: '/partners',
-      dropdownItems: [
-        { label: 'Retailer Integration', href: '/partners/retailers' },
-        { label: 'API Documentation', href: '/partners/api' },
-        { label: 'Partner Program', href: '/partners/program' },
-        { label: 'Success Stories', href: '/partners/success' }
-      ]
-    }
+    // {
+    //   label: t('nav.partners'),
+    //   href: '/partners',
+    //   dropdownItems: [
+    //     { label: 'Retailer Integration', href: '/partners/retailers' },
+    //     { label: 'API Documentation', href: '/partners/api' },
+    //     { label: 'Partner Program', href: '/partners/program' },
+    //     { label: 'Success Stories', href: '/partners/success' }
+    //   ]
+    // }
   ];
 
   return (
