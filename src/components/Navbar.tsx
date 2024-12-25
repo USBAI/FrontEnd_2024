@@ -29,7 +29,7 @@ const Navbar = () => {
         { label: 'About Our Technology', href: '/technology' },
         { label: 'AI Search Engine', href: '/ai-search' },
         { label: 'Success Stories', href: '/success-stories' },
-        { label: 'Why Choose Kluret', href: '/why-kluret' },
+        // { label: 'Why Choose Kluret', href: '/why-kluret' },
       ],
     },
     {

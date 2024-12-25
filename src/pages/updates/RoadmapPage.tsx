@@ -42,7 +42,7 @@ const roadmapItems = [
 
 const RoadmapPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-white text-black">
       <Navbar />
       
       <main className="pt-32 pb-20">
@@ -54,7 +54,7 @@ const RoadmapPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="inline-block p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm mb-8"
             >
-              <Map className="h-8 w-8 text-blue-400" />
+              <Map className="h-8 w-8 text-blue-500" />
             </motion.div>
             
             <motion.h1
@@ -63,7 +63,7 @@ const RoadmapPage = () => {
               className="text-4xl md:text-5xl font-bold mb-6"
             >
               Product{' '}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
+              <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
                 Roadmap
               </span>
             </motion.h1>
@@ -72,7 +72,7 @@ const RoadmapPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               See what's coming next in Kluret's development journey
             </motion.p>
@@ -88,17 +88,17 @@ const RoadmapPage = () => {
                 transition={{ delay: 0.2 + index * 0.1 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-200/10 to-gray-300/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-gray-700/10">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-blue-400" />
+                      <Calendar className="h-4 w-4 text-blue-500" />
                       <span className="font-medium">{item.quarter}</span>
                     </div>
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm ${
                       item.status === 'in-progress'
-                        ? 'bg-blue-500/20 text-blue-400'
-                        : 'bg-purple-500/20 text-purple-400'
+                        ? 'bg-blue-500/20 text-blue-500'
+                        : 'bg-purple-500/20 text-purple-500'
                     }`}>
                       {item.status === 'in-progress' ? (
                         <Clock className="h-4 w-4" />
@@ -110,15 +110,15 @@ const RoadmapPage = () => {
                   </div>
 
                   <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                  <p className="text-gray-400 mb-6">{item.description}</p>
+                  <p className="text-gray-600 mb-6">{item.description}</p>
 
                   <div className="space-y-3">
                     {item.items.map((feature, i) => (
                       <div key={i} className="flex items-center gap-3">
                         <div className="p-2 bg-blue-500/10 rounded-lg">
-                          <CheckCircle className="h-4 w-4 text-blue-400" />
+                          <CheckCircle className="h-4 w-4 text-blue-500" />
                         </div>
-                        <span className="text-gray-300">{feature}</span>
+                        <span className="text-gray-500">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -132,10 +132,10 @@ const RoadmapPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center"
+            className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-gray-300/10 text-center"
           >
             <h2 className="text-2xl font-bold mb-4">Help Shape Our Future</h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-600 mb-6">
               We value your input! Share your ideas and suggestions for future features
             </p>
             <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all inline-flex items-center gap-2">

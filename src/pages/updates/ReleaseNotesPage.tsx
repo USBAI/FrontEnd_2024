@@ -49,11 +49,11 @@ const releases = [
 const getChangeTypeIcon = (type: string) => {
   switch (type) {
     case 'feature':
-      return <CheckCircle className="h-4 w-4 text-green-400" />;
+      return <CheckCircle className="h-4 w-4 text-green-500" />;
     case 'improvement':
-      return <Info className="h-4 w-4 text-blue-400" />;
+      return <Info className="h-4 w-4 text-blue-500" />;
     case 'fix':
-      return <AlertCircle className="h-4 w-4 text-yellow-400" />;
+      return <AlertCircle className="h-4 w-4 text-yellow-500" />;
     default:
       return null;
   }
@@ -61,7 +61,7 @@ const getChangeTypeIcon = (type: string) => {
 
 const ReleaseNotesPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-white text-black">
       <Navbar />
       
       <main className="pt-32 pb-20">
@@ -73,7 +73,7 @@ const ReleaseNotesPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="inline-block p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm mb-8"
             >
-              <FileText className="h-8 w-8 text-blue-400" />
+              <FileText className="h-8 w-8 text-blue-500" />
             </motion.div>
             
             <motion.h1
@@ -82,7 +82,7 @@ const ReleaseNotesPage = () => {
               className="text-4xl md:text-5xl font-bold mb-6"
             >
               Release{' '}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
+              <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
                 Notes
               </span>
             </motion.h1>
@@ -91,7 +91,7 @@ const ReleaseNotesPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               Detailed changelog of all updates and improvements
             </motion.p>
@@ -107,21 +107,21 @@ const ReleaseNotesPage = () => {
                 transition={{ delay: 0.2 + index * 0.1 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-200/10 to-gray-300/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-gray-900/10">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
                     <div className="flex items-center gap-2">
-                      <Tag className="h-4 w-4 text-blue-400" />
+                      <Tag className="h-4 w-4 text-blue-500" />
                       <span className="text-lg font-bold">v{release.version}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Calendar className="h-4 w-4" />
                       {release.date}
                     </div>
                     <span className={`text-sm px-2 py-1 rounded-full ${
                       release.type === 'major' 
-                        ? 'bg-purple-500/20 text-purple-400'
-                        : 'bg-blue-500/20 text-blue-400'
+                        ? 'bg-purple-500/20 text-purple-500'
+                        : 'bg-blue-500/20 text-blue-500'
                     }`}>
                       {release.type.charAt(0).toUpperCase() + release.type.slice(1)} Release
                     </span>
@@ -138,7 +138,7 @@ const ReleaseNotesPage = () => {
                         </div>
                         <div>
                           <h4 className="font-medium mb-1">{change.title}</h4>
-                          <p className="text-sm text-gray-400">{change.description}</p>
+                          <p className="text-sm text-gray-600">{change.description}</p>
                         </div>
                       </div>
                     ))}
@@ -153,10 +153,10 @@ const ReleaseNotesPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center"
+            className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-gray-300/10 text-center"
           >
             <h2 className="text-2xl font-bold mb-4">Looking for older releases?</h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-600 mb-6">
               View our complete changelog archive for a full history of updates
             </p>
             <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all inline-flex items-center gap-2">

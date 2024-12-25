@@ -9,17 +9,17 @@ interface CartItemProps {
 const CartItem = ({ item }: CartItemProps) => {
   return (
     <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 bg-white p-4">
         <img
           src={item.product_image}
           alt={item.product_name}
           className="w-20 h-20 rounded-lg object-cover"
         />
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-medium text-white truncate">
+          <h3 className="text-lg font-medium text-black truncate">
             {item.product_name}
           </h3>
-          <p className="text-gray-400">kr {item.product_price}</p>
+          <p className="text-gray-700">kr {item.product_price}</p>
           {item.product_color && (
             <p className="text-sm text-gray-500">Color: {item.product_color}</p>
           )}

@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({
   setIsSearchOpen
 }) => {
   return (
-    <div className="fixed top-0 left-0 right-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+    <div className="fixed top-0 left-0 right-0 z-30 backdrop-blur-lg">
       <div className="flex items-center justify-between px-4 h-16">
         <div className="flex items-center gap-3">
           {!isNavOpen && (
@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-4">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
