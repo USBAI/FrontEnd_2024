@@ -39,7 +39,7 @@ const TechnologyPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-white text-gray-900">
+    <div className="min-h-screen bg-white from-gray-100 via-gray-200 to-white text-gray-900">
   <Navbar />
   
   <main className="pt-32 pb-20">

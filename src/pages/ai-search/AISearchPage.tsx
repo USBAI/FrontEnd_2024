@@ -30,7 +30,7 @@ const AISearchPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-white text-black">
+    <div className="min-h-screen bg-white from-gray-100 via-gray-50 to-white text-black">
   <Navbar />
 
   <main className="pt-32 pb-20">

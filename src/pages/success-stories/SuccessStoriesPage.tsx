@@ -34,9 +34,9 @@ const SuccessStoriesPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-gwhite from-gray-50 via-gray-100 to-white text-gray-900">
       <Navbar />
-      
+
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
@@ -44,27 +44,27 @@ const SuccessStoriesPage = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-block p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm mb-8"
+              className="inline-block p-3 rounded-2xl bg-blue-100/50 backdrop-blur-sm mb-8"
             >
-              <Star className="h-8 w-8 text-blue-400" />
+              <Star className="h-8 w-8 text-blue-500" />
             </motion.div>
-            
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-bold mb-6"
+              className="text-4xl md:text-5xl font-bold mb-6 text-gray-800"
             >
               Success{' '}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
+              <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
                 Stories
               </span>
             </motion.h1>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               See how businesses are transforming their e-commerce with Kluret
             </motion.p>
@@ -80,8 +80,8 @@ const SuccessStoriesPage = () => {
                 transition={{ delay: 0.2 + index * 0.1 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100/50 to-purple-100/50 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-white shadow-lg p-8 rounded-2xl border border-gray-200">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="md:col-span-2">
                       <div className="flex items-center gap-4 mb-6">
@@ -91,40 +91,40 @@ const SuccessStoriesPage = () => {
                           className="w-16 h-16 rounded-xl object-cover"
                         />
                         <div>
-                          <h3 className="text-xl font-bold">{story.company}</h3>
-                          <p className="text-gray-400">{story.author}, {story.role}</p>
+                          <h3 className="text-xl font-bold text-gray-800">{story.company}</h3>
+                          <p className="text-gray-500">{story.author}, {story.role}</p>
                         </div>
                       </div>
-                      <blockquote className="text-xl text-gray-300 mb-6">
+                      <blockquote className="text-xl text-gray-700 mb-6">
                         "{story.quote}"
                       </blockquote>
                       <div className="grid grid-cols-3 gap-4">
                         {story.metrics.map((metric) => (
                           <div key={metric.label}>
-                            <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
+                            <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
                               {metric.value}
                             </div>
-                            <div className="text-sm text-gray-400">{metric.label}</div>
+                            <div className="text-sm text-gray-500">{metric.label}</div>
                           </div>
                         ))}
                       </div>
                     </div>
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-xl" />
                       <div className="relative p-6">
-                        <h4 className="font-semibold mb-4">Key Results</h4>
+                        <h4 className="font-semibold mb-4 text-gray-800">Key Results</h4>
                         <ul className="space-y-3">
                           <li className="flex items-center gap-2 text-sm">
-                            <TrendingUp className="h-4 w-4 text-green-400" />
-                            <span>Increased conversion rates</span>
+                            <TrendingUp className="h-4 w-4 text-green-500" />
+                            <span className="text-gray-700">Increased conversion rates</span>
                           </li>
                           <li className="flex items-center gap-2 text-sm">
-                            <Users className="h-4 w-4 text-blue-400" />
-                            <span>Higher customer satisfaction</span>
+                            <Users className="h-4 w-4 text-blue-500" />
+                            <span className="text-gray-700">Higher customer satisfaction</span>
                           </li>
                           <li className="flex items-center gap-2 text-sm">
-                            <ShoppingBag className="h-4 w-4 text-purple-400" />
-                            <span>Reduced cart abandonment</span>
+                            <ShoppingBag className="h-4 w-4 text-purple-500" />
+                            <span className="text-gray-700">Reduced cart abandonment</span>
                           </li>
                         </ul>
                       </div>
@@ -142,7 +142,7 @@ const SuccessStoriesPage = () => {
             transition={{ delay: 0.4 }}
             className="text-center"
           >
-            <h2 className="text-2xl font-bold mb-6">Ready to Write Your Success Story?</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Ready to Write Your Success Story?</h2>
             <Link
               to="/connectstore"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-white font-medium hover:from-blue-600 hover:to-purple-600 transition-all group"

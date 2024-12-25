@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, Sparkles, Globe, ChevronDown } from 'lucide-react';
+import { Menu, X, Sparkles, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
 const Navbar = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState('');
@@ -21,10 +21,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === 'en' ? 'sv' : 'en');
-  };
-
   const menuItems = [
     {
       label: t('nav.whatsKluret'),
@@ -33,8 +29,8 @@ const Navbar = () => {
         { label: 'About Our Technology', href: '/technology' },
         { label: 'AI Search Engine', href: '/ai-search' },
         { label: 'Success Stories', href: '/success-stories' },
-        { label: 'Why Choose Kluret', href: '/why-kluret' }
-      ]
+        { label: 'Why Choose Kluret', href: '/why-kluret' },
+      ],
     },
     {
       label: t('nav.latestUpdates'),
@@ -43,25 +39,17 @@ const Navbar = () => {
         { label: 'Product Updates', href: '/updates/product' },
         { label: 'AI Improvements', href: '/updates/ai' },
         { label: 'Release Notes', href: '/updates/releases' },
-        { label: 'Roadmap', href: '/updates/roadmap' }
-      ]
+        { label: 'Roadmap', href: '/updates/roadmap' },
+      ],
     },
-    // {
-    //   label: t('nav.partners'),
-    //   href: '/partners',
-    //   dropdownItems: [
-    //     { label: 'Retailer Integration', href: '/partners/retailers' },
-    //     { label: 'API Documentation', href: '/partners/api' },
-    //     { label: 'Partner Program', href: '/partners/program' },
-    //     { label: 'Success Stories', href: '/partners/success' }
-    //   ]
-    // }
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${
-      scrolled ? 'bg-white shadow-lg' : 'bg-transparent'
-    }`}>
+    <nav
+      className={`fixed w-full z-50 transition-all duration-500 ${
+        scrolled ? 'bg-white shadow-lg' : 'bg-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -88,11 +76,15 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   className="relative"
-                  onHoverStart={() => setShowDropdown(item.href)}
-                  onHoverEnd={() => setShowDropdown('')}
+                  onMouseEnter={() => setShowDropdown(item.href)}
+                  onMouseLeave={() => setShowDropdown('')}
                 >
                   <button
-                    onClick={() => setActiveDropdown(activeDropdown === item.href ? null : item.href)}
+                    onClick={() =>
+                      setActiveDropdown(
+                        activeDropdown === item.href ? null : item.href
+                      )
+                    }
                     className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium"
                   >
                     {item.label}
@@ -121,19 +113,6 @@ const Navbar = () => {
                 </motion.div>
               ))}
             </div>
-
-            {/* Language Toggle */}
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              onClick={toggleLanguage}
-              className="flex items-center gap-2 px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-            >
-              <Globe className="h-4 w-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-600">
-                {i18n.language.toUpperCase()}
-              </span>
-            </motion.button>
 
             {/* CTA Button */}
             <Link to="/chat">
@@ -179,7 +158,11 @@ const Navbar = () => {
               {menuItems.map((item) => (
                 <div key={item.href} className="space-y-2">
                   <button
-                    onClick={() => setActiveDropdown(activeDropdown === item.href ? null : item.href)}
+                    onClick={() =>
+                      setActiveDropdown(
+                        activeDropdown === item.href ? null : item.href
+                      )
+                    }
                     className="w-full flex items-center justify-between text-gray-600 hover:text-gray-900 transition-colors text-lg font-medium"
                   >
                     {item.label}
@@ -212,15 +195,6 @@ const Navbar = () => {
                   </AnimatePresence>
                 </div>
               ))}
-              <div className="pt-4 border-t border-gray-100">
-                <button
-                  onClick={toggleLanguage}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <Globe className="h-5 w-5" />
-                  {i18n.language === 'en' ? 'Svenska' : 'English'}
-                </button>
-              </div>
               <Link
                 to="/chat"
                 className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-lg font-medium hover:from-pink-600 hover:to-blue-600 transition-colors"

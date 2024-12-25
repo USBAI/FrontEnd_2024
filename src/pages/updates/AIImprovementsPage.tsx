@@ -39,7 +39,7 @@ const improvements = [
 
 const AIImprovementsPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-100 to-gray-200 text-gray-900">
       <Navbar />
       
       <main className="pt-32 pb-20">
@@ -49,9 +49,9 @@ const AIImprovementsPage = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-block p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm mb-8"
+              className="inline-block p-3 rounded-2xl bg-blue-100 backdrop-blur-sm mb-8"
             >
-              <Brain className="h-8 w-8 text-blue-400" />
+              <Brain className="h-8 w-8 text-blue-600" />
             </motion.div>
             
             <motion.h1
@@ -60,7 +60,7 @@ const AIImprovementsPage = () => {
               className="text-4xl md:text-5xl font-bold mb-6"
             >
               AI{' '}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
                 Improvements
               </span>
             </motion.h1>
@@ -69,7 +69,7 @@ const AIImprovementsPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               Discover how our AI technology keeps getting smarter
             </motion.p>
@@ -85,26 +85,26 @@ const AIImprovementsPage = () => {
                 transition={{ delay: 0.2 + index * 0.1 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10">
-                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-white backdrop-blur-xl p-8 rounded-2xl border border-gray-200">
+                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
                     <Calendar className="h-4 w-4" />
                     {improvement.date}
                   </div>
                   
-                  <h3 className="text-2xl font-bold mb-2">{improvement.title}</h3>
-                  <p className="text-gray-400 mb-6">{improvement.description}</p>
+                  <h3 className="text-2xl font-bold mb-2 text-gray-900">{improvement.title}</h3>
+                  <p className="text-gray-600 mb-6">{improvement.description}</p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     {improvement.metrics.map((metric) => (
                       <div
                         key={metric.label}
-                        className="bg-white/5 rounded-lg p-4 text-center"
+                        className="bg-gray-100 rounded-lg p-4 text-center"
                       >
-                        <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text mb-1">
+                        <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text mb-1">
                           {metric.value}
                         </div>
-                        <div className="text-sm text-gray-400">{metric.label}</div>
+                        <div className="text-sm text-gray-500">{metric.label}</div>
                       </div>
                     ))}
                   </div>
@@ -112,10 +112,10 @@ const AIImprovementsPage = () => {
                   <div className="space-y-3">
                     {improvement.details.map((detail, i) => (
                       <div key={i} className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-500/10 rounded-lg">
-                          <Target className="h-4 w-4 text-blue-400" />
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <Target className="h-4 w-4 text-blue-600" />
                         </div>
-                        <span className="text-gray-300">{detail}</span>
+                        <span className="text-gray-700">{detail}</span>
                       </div>
                     ))}
                   </div>
@@ -141,17 +141,17 @@ const AIImprovementsPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+                className="bg-gray-100 backdrop-blur-sm rounded-xl p-6 border border-gray-200"
               >
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <metric.icon className="h-6 w-6 text-blue-400" />
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <metric.icon className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
                       {metric.value}
                     </div>
-                    <div className="text-gray-400">{metric.label}</div>
+                    <div className="text-gray-600">{metric.label}</div>
                   </div>
                 </div>
               </motion.div>
