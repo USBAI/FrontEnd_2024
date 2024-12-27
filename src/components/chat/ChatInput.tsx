@@ -135,7 +135,7 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
             onKeyPress={handleKeyPress}
             onPaste={handlePaste}
             placeholder="Type your message..."
-            className="w-full px-14 py-3 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg"
+            className="w-full px-14 py-3 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg"
             disabled={isLoading}
           />
 

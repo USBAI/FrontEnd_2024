@@ -40,9 +40,9 @@ const SearchHeader = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="Search for products..."
-            className="w-full h-14 px-6 bg-white rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-200 pr-32 shadow-lg"
+            className="search-engine-ssh94990204992949-38850302"
           />
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-5">
+          <div className="search-functions">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
