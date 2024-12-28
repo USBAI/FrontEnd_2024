@@ -108,7 +108,7 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
                     e.stopPropagation();
                     removeImage();
                   }}
-                  className="absolute -top-2 -right-2 p-1 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors"
+                  className="absolute -top-2 -right-2 bg-red-500 rounded-full text-white flex items-center justify-center md:p-[3px] p-[1px] h-fit w-fit"
                 >
                   <X className="h-3 w-3" />
                 </motion.button>

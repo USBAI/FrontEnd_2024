@@ -77,8 +77,12 @@ const AiChatPopup: React.FC<AiChatPopupProps> = ({ isOpen, onClose, productInfo 
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full blur-md opacity-50" />
-                <div className="relative bg-gradient-to-r from-pink-500 to-purple-500 p-2 rounded-full">
-                  <Bot className="h-6 w-6 text-white" />
+                <div className="relative bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full">
+                  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="25" height="25" rx="12.5" fill="black"/>
+                    <rect x="11" y="4" width="12" height="12" rx="6" fill="white"/>
+                    <path d="M0.25293 15H24.7402V15C24.6031 16.1412 23.635 17 22.4856 17H2.5152C1.36436 17 0.394027 16.1422 0.25293 15V15Z" fill="white"/>
+                  </svg>
                 </div>
               </motion.div>
               <div>

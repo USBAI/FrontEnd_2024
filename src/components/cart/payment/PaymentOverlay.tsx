@@ -32,7 +32,7 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
         throw new Error('User not authenticated');
       }
 
-      const response = await fetch('http://127.0.0.1:8013/kluret_stripe/create-payment-intent/', {
+      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/create-payment-intent/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -1,189 +1,272 @@
 import {
   ShoppingBag,
-  Store,
-  Network,
-  Brain,
-  Users,
-  BookOpen,
-  Settings,
-  Clock,
-  CreditCard,
-  Rocket,
-  Code,
-  Shield,
-  Globe,
-  Zap,
   BarChart3,
-  MessageSquare
+  BookOpen,
+  Shield,
+  MessageSquare,
+  Home,
+  AlertCircle,
+  Info
 } from 'lucide-react';
 
 export const navItems = [
   {
     icon: ShoppingBag,
-    label: 'Create your online store',
-    description: 'Launch your store in minutes with Kluret AI',
-    gradient: 'from-pink-400 to-rose-400',
-    path: '/create-store',
-    details: [
-      {
-        icon: Clock,
-        title: 'Quick Setup',
-        description: 'Get your store running in under 5 minutes'
-      },
-      {
-        icon: CreditCard,
-        title: 'Secure Payments',
-        description: 'Built-in payment processing with Klarna'
-      },
-      {
-        icon: Brain,
-        title: 'AI-Powered',
-        description: 'Smart product recommendations and search'
-      }
-    ]
+    label: 'Online Product Categories',
+    description: 'Explore a variety of product categories online',
+    gradient: 'from-green-400 to-blue-400',
+    path: '/product-categories',
+    details: []
   },
   {
-    icon: Store,
-    label: 'Connect your online store',
-    description: 'Integrate your e-commerce platform with our AI-powered search',
-    gradient: 'from-purple-400 to-pink-400',
-    path: '/connectstore',
-    details: [
-      {
-        icon: Rocket,
-        title: 'Quick Integration',
-        description: 'Set up in minutes with our easy-to-use API'
-      },
-      {
-        icon: Globe,
-        title: 'Multi-Platform Support',
-        description: 'Works with Shopify, WooCommerce, and more'
-      },
-      {
-        icon: Shield,
-        title: 'Secure & Reliable',
-        description: 'Enterprise-grade security for your data'
-      }
-    ]
+    icon: Home,
+    label: 'Electronics',
+    description: 'Browse a wide range of electronics',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/electronics',
+    details: []
   },
   {
-    icon: Network,
-    label: 'B2B API Partner',
-    description: 'Access our product data API for enterprise solutions',
-    gradient: 'from-blue-400 to-indigo-400',
-    path: '/accessapi',
-    details: [
-      {
-        icon: Code,
-        title: 'RESTful API',
-        description: 'Modern API with comprehensive documentation'
-      },
-      {
-        icon: Zap,
-        title: 'High Performance',
-        description: 'Process thousands of requests per second'
-      },
-      {
-        icon: Shield,
-        title: 'Enterprise Ready',
-        description: 'SLA guarantees with 24/7 support'
-      }
-    ]
+    icon: Home,
+    label: 'Fashion',
+    description: 'Explore the latest trends in fashion',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/fashion',
+    details: []
   },
   {
-    icon: Brain,
-    label: 'AI Technology',
-    description: 'Learn about our advanced AI search technology',
-    gradient: 'from-purple-400 to-indigo-400',
-    path: '/technology',
-    details: [
-      {
-        icon: Brain,
-        title: 'Neural Networks',
-        description: 'Advanced AI models for accurate search'
-      },
-      {
-        icon: Globe,
-        title: 'Global Coverage',
-        description: 'Support for multiple languages and regions'
-      },
-      {
-        icon: Zap,
-        title: 'Real-time Processing',
-        description: 'Instant results with sub-100ms latency'
-      }
-    ]
+    icon: Home,
+    label: 'Home & Kitchen',
+    description: 'Find everything for your home and kitchen',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/home-kitchen',
+    details: []
   },
   {
-    icon: Users,
-    label: 'Success Stories',
-    description: 'See how businesses are growing with Kluret',
-    gradient: 'from-green-400 to-emerald-400',
-    path: '/success-stories',
+    icon: Home,
+    label: 'Beauty & Personal Care',
+    description: 'Shop for beauty and personal care products',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/beauty',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Books & Stationery',
+    description: 'Discover a variety of books and stationery',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/books-stationery',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Sports & Outdoors',
+    description: 'Get the best products for sports and outdoor activities',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/sports-outdoors',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Toys & Games',
+    description: 'Shop for toys and games for all ages',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/toys-games',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Health & Wellness',
+    description: 'Find health and wellness products for a better life',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/health-wellness',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Automotive',
+    description: 'Browse automotive products and accessories',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/automotive',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Groceries & Food',
+    description: 'Order fresh groceries and food items online',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/groceries-food',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Pet Supplies',
+    description: 'Find everything for your pets',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/pet-supplies',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Furniture',
+    description: 'Shop furniture for your home and office',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/furniture',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Baby & Kids',
+    description: 'Discover products for babies and kids',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/baby-kids',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Jewelry & Watches',
+    description: 'Browse beautiful jewelry and watches',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/jewelry-watches',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Arts & Crafts',
+    description: 'Get all your arts and crafts supplies',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/arts-crafts',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Music & Movies',
+    description: 'Explore a wide selection of music and movies',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/music-movies',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Office Supplies',
+    description: 'Find everything for your office',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/office-supplies',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Software & Technology',
+    description: 'Discover the latest software and tech products',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/software-technology',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Gaming',
+    description: 'Explore gaming products and accessories',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/gaming',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Gifts & Gadgets',
+    description: 'Find perfect gifts and gadgets',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/gifts-gadgets',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Travel & Luggage',
+    description: 'Shop for travel essentials and luggage',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/travel-luggage',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Gardening & Outdoor Living',
+    description: 'Shop for gardening and outdoor living products',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/gardening-outdoor',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Handmade & Vintage Goods',
+    description: 'Explore unique handmade and vintage items',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/handmade-vintage',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Collectibles & Memorabilia',
+    description: 'Find rare collectibles and memorabilia',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/collectibles-memorabilia',
+    details: []
+  },
+  {
+    icon: Home,
+    label: 'Luxury Goods',
+    description: 'Shop for high-end luxury items',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/product-categories/luxury-goods',
+    details: []
+  },
+  {
+    icon: BarChart3,
+    label: 'Discounted Products',
+    description: 'Find the best deals and offers on products',
+    gradient: 'from-red-400 to-yellow-400',
+    path: '/discount-products',
     details: [
       {
         icon: BarChart3,
-        title: 'Case Studies',
-        description: 'Real results from our customers'
-      },
-      {
-        icon: Users,
-        title: 'Testimonials',
-        description: 'What our clients say about us'
-      },
-      {
-        icon: Rocket,
-        title: 'Growth Stories',
-        description: 'Business transformation stories'
-      }
-    ]
-  },
-  {
-    icon: BookOpen,
-    label: 'Documentation',
-    description: 'Comprehensive guides and API documentation',
-    gradient: 'from-orange-400 to-red-400',
-    path: '/docs',
-    details: [
-      {
-        icon: Code,
-        title: 'API Reference',
-        description: 'Detailed API documentation'
-      },
-      {
-        icon: BookOpen,
-        title: 'Integration Guides',
-        description: 'Step-by-step integration tutorials'
-      },
-      {
-        icon: MessageSquare,
-        title: 'Code Examples',
-        description: 'Sample code in multiple languages'
-      }
-    ]
-  },
-  {
-    icon: Settings,
-    label: 'Settings & Support',
-    description: 'Manage your account and get help',
-    gradient: 'from-gray-400 to-slate-400',
-    path: '/settings',
-    details: [
-      {
-        icon: Settings,
-        title: 'Account Settings',
-        description: 'Manage your preferences'
-      },
-      {
-        icon: MessageSquare,
-        title: '24/7 Support',
-        description: 'Get help when you need it'
+        title: 'Flash Sales',
+        description: 'Limited-time discounts on top products',
+        path: '/discount-products/flash-sales'
       },
       {
         icon: Shield,
-        title: 'Security',
-        description: 'Control your security settings'
+        title: 'Secure Deals',
+        description: 'Enjoy discounts without compromising security',
+        path: '/discount-products/secure-deals'
+      },
+      {
+        icon: BookOpen,
+        title: 'Exclusive Offers',
+        description: 'Special prices available only here',
+        path: '/discount-products/exclusive-offers'
       }
     ]
+  },
+  {
+    icon: Home,
+    label: 'Home',
+    description: 'Return to the main dashboard',
+    gradient: 'from-gray-400 to-slate-400',
+    path: '/home',
+    details: []
+  },
+  {
+    icon: AlertCircle,
+    label: 'Report a Problem',
+    description: 'Let us know if you encounter any issues',
+    gradient: 'from-yellow-400 to-red-400',
+    path: '/report-problem',
+    details: []
+  },
+  {
+    icon: Info,
+    label: 'About Company',
+    description: 'Learn more about us and what we do',
+    gradient: 'from-blue-400 to-indigo-400',
+    path: '/about-company',
+    details: []
   }
 ];

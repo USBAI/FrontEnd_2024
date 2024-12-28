@@ -125,3 +125,37 @@
         padding: 0;
     }
 }
+
+
+.close-icone-function{
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    padding: 3px;
+    background-color: rgb(239, 68, 68);
+    border-radius: 9999px;
+    color: white;
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 800px) {
+    .close-icone-function {
+        height: fit-content;
+        width: fit-content;
+        position: absolute;
+        top: -0.5rem;
+        right: -0.5rem;
+        padding: 1px;
+        background-color: rgb(239, 68, 68);
+        border-radius: 9999px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
