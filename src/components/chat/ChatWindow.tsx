@@ -159,22 +159,70 @@ const ChatWindow = () => {
       <div className="h-16 flex-shrink-0" />
       <div className="relative flex-1 min-h-0">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full w-full mx-auto">
-            <img
-              src="/path/to/your/logo.svg"
-              alt="Logo"
-              className="w-24 h-24 mb-4"
-            />
-            <p className="text-gray-500 mb-4">Find what you are looking for</p>
+            <div className="flex flex-col items-center justify-center h-full w-full mx-auto">
+              <div className="relative w-[70px] h-[70px] mb-4 animate-pulse-size">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100 via-purple-500 to-pink-200 mix-blend-multiply opacity-70 animate-rotate-1"></div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-100 via-cyan-100 to-blue-500 mix-blend-multiply opacity-70 animate-rotate-2"></div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-100 via-red-100 to-purple-100 mix-blend-multiply opacity-70 animate-rotate-3"></div>
+              <style jsx>{`
+                @keyframes pulseSize {
+                  0%, 100% { transform: scale(1); }
+                  50% { transform: scale(1.14); }
+                }
+                @keyframes rotate1 {
+                  0% { transform: rotate(0deg); }
+                  100% { transform: rotate(360deg); }
+                }
+                @keyframes rotate2 {
+                  0% { transform: rotate(120deg); }
+                  100% { transform: rotate(480deg); }
+                }
+                @keyframes rotate3 {
+                  0% { transform: rotate(240deg); }
+                  100% { transform: rotate(600deg); }
+                }
+                .animate-pulse-size {
+                  animation: pulseSize 3s ease-in-out infinite;
+                }
+                .animate-rotate-1 {
+                  animation: rotate1 8s linear infinite;
+                }
+                .animate-rotate-2 {
+                  animation: rotate2 8s linear infinite;
+                }
+                .animate-rotate-3 {
+                  animation: rotate3 8s linear infinite;
+                }
+              `}</style>
+            </div>
+            <p className="text-gray-500 mb-4">Simplifying the Search</p>
             <div className="w-full relative">
               <div className="flex items-center justify-center h-full w-full mx-auto overflow-x-auto space-x-4 px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent no-scrollbar">
-                {['Category 1', 'Category 2', 'Category 3'].map((category, index) => (
+                {[
+                  { 
+                    name: 'Tredning', 
+                    icon: '🔥',
+                    className: "trending-btn px-3 py-1 text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 hover:from-yellow-500 hover:via-orange-500 hover:to-red-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                  },
+                  { 
+                    name: 'Discounted', 
+                    icon: '💰',
+                    className: "discount-btn px-3 py-1 text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-teal-500 hover:via-emerald-500 hover:to-green-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                  },
+                  { 
+                    name: 'Newest', 
+                    icon: '⭐',
+                    className: "newest-btn px-3 py-1 text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-purple-500 hover:via-indigo-500 hover:to-blue-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                  }
+                ].map((category, index) => (
                   <button
                     key={index}
-                    onClick={() => handleViewProduct(category)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-full whitespace-nowrap flex-shrink-0"
+                    id='quickshow-links'
+                    onClick={() => handleViewProduct(category.name)}
+                    className={category.className}
                   >
-                    {category}
+                    <span>{category.icon}</span>
+                    <span>{category.name}</span>
                   </button>
                 ))}
               </div>
