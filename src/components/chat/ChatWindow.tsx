@@ -197,22 +197,22 @@ const ChatWindow = () => {
             </div>
             <p className="text-gray-500 mb-4">Simplifying the Search</p>
             <div className="w-full relative">
-              <div className="flex items-center justify-center h-full w-full mx-auto overflow-x-auto space-x-4 px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent no-scrollbar">
+              <div className="flex items-center justify-center h-full w-full mx-auto overflow-x-auto space-x-2 md:space-x-4 px-2 md:px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent no-scrollbar">
                 {[
                   { 
                     name: 'Tredning', 
                     icon: '🔥',
-                    className: "trending-btn px-3 py-1 text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 hover:from-yellow-500 hover:via-orange-500 hover:to-red-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                    className: "trending-btn px-2 md:px-3 py-1 text-sm md:text-base text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1 md:gap-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 hover:from-yellow-500 hover:via-orange-500 hover:to-red-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
                   },
                   { 
                     name: 'Discounted', 
                     icon: '💰',
-                    className: "discount-btn px-3 py-1 text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-teal-500 hover:via-emerald-500 hover:to-green-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                    className: "discount-btn px-2 md:px-3 py-1 text-sm md:text-base text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1 md:gap-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-teal-500 hover:via-emerald-500 hover:to-green-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
                   },
                   { 
                     name: 'Newest', 
                     icon: '⭐',
-                    className: "newest-btn px-3 py-1 text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-purple-500 hover:via-indigo-500 hover:to-blue-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
+                    className: "newest-btn px-2 md:px-3 py-1 text-sm md:text-base text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1 md:gap-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-purple-500 hover:via-indigo-500 hover:to-blue-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
                   }
                 ].map((category, index) => (
                   <button
