@@ -6,81 +6,17 @@ import UserMessage from './components/UserMessage';
 import SearchOverlay from '../search/SearchOverlay';
 import { Message } from './types';
 
-interface Product {
-  name: string;
-  price: string;
-  product_id: string;
-  cover_image_url: string;
-  product_page_url: string;
+// Add interface for API response
+interface ApiResponse {
+  response: string;
+  additional_data?: {
+    product?: string;
+    price?: string;
+    open?: boolean;
+    pricing?: boolean;
+  };
+  updated_user_history: string;
 }
-
-const QuickSuggestions = ({ onSelect }: { onSelect: (suggestion: string) => void }) => (
-  <div className="w-full relative">
-    <div className="flex items-center justify-center h-full w-full mx-auto overflow-x-auto space-x-4 px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent no-scrollbar">
-      {[
-        'Nike Shoes',
-        'Adidas Shoes',
-        'Running Shoes',
-        'Sports Wear',
-        'Training Shoes',
-        'Casual Shoes'
-      ].map((suggestion, index) => (
-        <button
-          key={index}
-          onClick={() => onSelect(suggestion)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-full whitespace-nowrap flex-shrink-0 hover:bg-blue-600 transition-colors"
-        >
-          {suggestion}
-        </button>
-      ))}
-    </div>
-  </div>
-);
-
-const ProductList = ({ products }: { products: Product[] }) => (
-  <div className="relative w-full mt-4">
-    <div className="flex overflow-x-auto space-x-4 pb-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-      {products.map((product, index) => (
-        <div 
-          key={product.product_id} 
-          className="flex-shrink-0 w-48 bg-white rounded-lg shadow-md overflow-hidden"
-        >
-          <div className="relative h-48 w-full">
-            {product.cover_image_url ? (
-              <img
-                src={product.cover_image_url}
-                alt={product.name}
-                className="object-cover w-full h-full"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-400">No image</span>
-              </div>
-            )}
-          </div>
-          <div className="p-3">
-            <h3 className="text-sm font-medium text-gray-900 truncate">
-              {product.name || 'Product Name'}
-            </h3>
-            <p className="text-sm text-gray-500 mt-1">
-              {product.price || 'Price not available'}
-            </p>
-            {product.product_page_url && (
-              <a
-                href={product.product_page_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 block text-center text-sm text-blue-500 hover:text-blue-600"
-              >
-                View Details
-              </a>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
 
 const TypingIndicator = () => (
   <div className="flex items-center space-x-1">
@@ -98,7 +34,6 @@ const ChatWindow = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [shouldTriggerSearch, setShouldTriggerSearch] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -122,41 +57,6 @@ const ChatWindow = () => {
     setIsSearchOpen(false);
     setSearchQuery('');
     setShouldTriggerSearch(false);
-  };
-
-  const fetchProducts = async (productName: string, messageId: string) => {
-    setIsLoadingProducts(true);
-    try {
-      const response = await fetch('https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          product_name: productName,
-          page_index: 1,
-          min_price: 0,
-          max_price: 10000
-        })
-      });
-
-      const products: Product[] = await response.json();
-      
-      setMessages(prev => prev.map(msg =>
-        msg.id === messageId
-          ? { ...msg, products: products }
-          : msg
-      ));
-
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setIsLoadingProducts(false);
-    }
-  };
-
-  const handleQuickSuggestion = (suggestion: string) => {
-    sendMessage(suggestion);
   };
 
   const sendMessage = async (text: string, image?: File) => {
@@ -201,7 +101,7 @@ const ChatWindow = () => {
         });
       }
   
-      const data = await response.json();
+      const data: ApiResponse = await response.json();
       setUserHistory(data.updated_user_history);
   
       if (image) {
@@ -216,7 +116,7 @@ const ChatWindow = () => {
         id: Date.now().toString(),
         status: 'complete',
         isTyping: true,
-        additional_data: data.additional_data
+        additional_data: data.additional_data // Store additional_data in the message
       };
   
       setMessages(prev => [...prev, botMessage]);
@@ -232,7 +132,7 @@ const ChatWindow = () => {
             ? { 
                 ...msg, 
                 content: data.response.slice(0, currentCharIndex + 1),
-                additional_data: data.additional_data
+                additional_data: data.additional_data // Make sure additional_data persists
               }
             : msg
         ));
@@ -266,7 +166,19 @@ const ChatWindow = () => {
               className="w-24 h-24 mb-4"
             />
             <p className="text-gray-500 mb-4">Find what you are looking for</p>
-            <QuickSuggestions onSelect={handleQuickSuggestion} />
+            <div className="w-full relative">
+              <div className="flex items-center justify-center h-full w-full mx-auto overflow-x-auto space-x-4 px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent no-scrollbar">
+                {['Category 1', 'Category 2', 'Category 3'].map((category, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleViewProduct(category)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-full whitespace-nowrap flex-shrink-0"
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           <div
@@ -303,23 +215,17 @@ const ChatWindow = () => {
                               message={message} 
                               onViewProduct={handleViewProduct}
                             />
+                            {/* View Button - Show only when additional_data contains product and open is true */}
                             {message.additional_data?.product && message.additional_data?.open && (
-                              <>
-                                <button
-                                  onClick={() => fetchProducts(message.additional_data?.product || '', message.id)}
-                                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                              <button>
+                                <br />
+                                <span
+                                  onClick={() => handleViewProduct(message.additional_data?.product || '')}
+                                  className="view-product-engine"
                                 >
-                                  View Product
-                                </button>
-                                {isLoadingProducts && (
-                                  <div className="mt-2 text-sm text-gray-500">
-                                    Loading products...
-                                  </div>
-                                )}
-                                {message.products && message.products.length > 0 && (
-                                  <ProductList products={message.products} />
-                                )}
-                              </>
+                                  View Product⚡
+                                </span>
+                              </button>
                             )}
                           </div>
                         ) : (

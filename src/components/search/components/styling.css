@@ -159,3 +159,15 @@
     }
 }
 
+
+
+.view-product-engine{
+    background: linear-gradient(to bottom right, rgb(173, 170, 255), rgb(151, 154, 255), rgb(223, 165, 255));
+    color: rgb(255, 0, 140);
+    height: fit-content;
+    width: fit-content;
+    padding: 10px 30px;
+    margin-top: 10px;
+    border-radius: 500px;
+    font-size: 12px;
+}
