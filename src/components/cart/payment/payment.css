@@ -1,0 +1,26 @@
+.paymentoverlay-div-container{
+    position: fixed;
+    inset: 1rem;
+    z-index: 50;
+    width: 100%;
+    max-width: 42rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.051);
+    overflow: hidden;
+    margin: 0 auto;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 640px) {
+    .paymentoverlay-div-container{
+        display: block;
+        justify-content: center;
+        align-items: center;
+        height: fit-content;
+        width: fit-content;
+        margin: 0 auto;
+    }
+}

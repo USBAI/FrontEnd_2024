@@ -21,7 +21,7 @@ const BotMessage: React.FC<BotMessageProps> = ({ message, onViewProduct }) => {
   const product = parsedContent?.additional_data?.product;
 
   return (
-    <div className="rounded-2xl px-4 py-0 max-w-[85%] relative group">
+    <div className="rounded-2xl px-4 py-0 max-w-[100%] relative group">
       <p className="whitespace-pre-wrap text-xs md:text-sm text-gray-800">{displayContent}</p>
       
       {isViewable && product && (

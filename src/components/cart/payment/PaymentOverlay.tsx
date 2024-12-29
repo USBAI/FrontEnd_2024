@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import PaymentMethodSelector from './PaymentMethodSelector';
 import CardPaymentForm from './CardPaymentForm';
 import LoadingSpinner from '../../ui/LoadingSpinner';
+import './payment.css'
 
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -83,7 +84,8 @@ const PaymentOverlay = ({ isOpen, onClose, total }: PaymentOverlayProps) => {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-50 max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
+            className="paymentoverlay-div-container"
+            // className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-50 max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
