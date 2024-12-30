@@ -18,6 +18,14 @@ interface ApiResponse {
   updated_user_history: string;
 }
 
+interface Product {
+  name: string;
+  price: string;
+  product_id: string;
+  cover_image_url: string;
+  product_page_url: string;
+}
+
 const TypingIndicator = () => (
   <div className="flex items-center space-x-1">
     <span className="dot bg-gray-400 rounded-full w-2 h-2 animate-bounce"></span>
@@ -34,6 +42,8 @@ const ChatWindow = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [shouldTriggerSearch, setShouldTriggerSearch] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [productSuggestions, setProductSuggestions] = useState<Product[]>([]);
+  const [isFetchingProducts, setIsFetchingProducts] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -47,11 +57,47 @@ const ChatWindow = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleViewProduct = (product: string) => {
-    setIsSearchOpen(true);
-    setSearchQuery(product);
-    setShouldTriggerSearch(true);
+  const fetchProducts = async (productName: string) => {
+    if (isFetchingProducts) return; // Prevent multiple requests
+
+    setIsFetchingProducts(true);
+
+    try {
+      const response = await fetch(
+        'https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            product_name: productName,
+            page_index: 1,
+            min_price: 0,
+            max_price: 10000,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const data: Product[] = await response.json();
+        setProductSuggestions(data);
+      }
+    } catch (error) {
+      console.error('Error fetching product suggestions:', error);
+    } finally {
+      setIsFetchingProducts(false);
+    }
   };
+
+  useEffect(() => {
+    const latestMessage = messages[messages.length - 1];
+    if (
+      latestMessage?.type === 'bot' &&
+      latestMessage.additional_data?.product &&
+      latestMessage.additional_data.open
+    ) {
+      fetchProducts(latestMessage.additional_data.product);
+    }
+  }, [messages]);
 
   const handleSearchClose = () => {
     setIsSearchOpen(false);
@@ -59,22 +105,28 @@ const ChatWindow = () => {
     setShouldTriggerSearch(false);
   };
 
+  const handleViewProduct = (productName: string) => {
+    setSearchQuery(productName);
+    setIsSearchOpen(true);
+    setShouldTriggerSearch(true);
+  };
+
   const sendMessage = async (text: string, image?: File) => {
     if (!text.trim() && !image) return;
-  
+
     const messageId = Date.now().toString();
     const userMessage: Message = {
       content: text,
       type: 'user',
       id: messageId,
       image: image ? URL.createObjectURL(image) : undefined,
-      status: image ? 'processing' : 'complete'
+      status: image ? 'processing' : 'complete',
     };
-  
-    setMessages(prev => [...prev, userMessage]);
+
+    setMessages((prev) => [...prev, userMessage]);
     scrollToBottom();
     setIsLoading(true);
-  
+
     try {
       setIsTyping(true);
       let response;
@@ -84,10 +136,10 @@ const ChatWindow = () => {
         formData.append('user_history', userHistory);
         formData.append('user_id', 'ckWh4hcLqQD4DLioKvyIZubI9r2qL0pkEx9D');
         formData.append('image', image);
-  
+
         response = await fetch('https://engine1-f36f7fb18f56.herokuapp.com/imagebase_api_ai/chatbot/', {
           method: 'POST',
-          body: formData
+          body: formData,
         });
       } else {
         response = await fetch('https://engine1-f36f7fb18f56.herokuapp.com/textbase_api/chatbot/', {
@@ -96,56 +148,57 @@ const ChatWindow = () => {
           body: JSON.stringify({
             user_input: text,
             user_history: userHistory,
-            user_id: 'ckWh4hcLqQD4DLioKvyIZubI9r2qL0pkEx9D'
-          })
+            user_id: 'ckWh4hcLqQD4DLioKvyIZubI9r2qL0pkEx9D',
+          }),
         });
       }
-  
+
       const data: ApiResponse = await response.json();
       setUserHistory(data.updated_user_history);
-  
+
       if (image) {
-        setMessages(prev => prev.map(msg =>
-          msg.id === messageId ? { ...msg, status: 'complete' } : msg
-        ));
+        setMessages((prev) =>
+          prev.map((msg) => (msg.id === messageId ? { ...msg, status: 'complete' } : msg))
+        );
       }
-  
+
       const botMessage: Message = {
         content: "",
         type: 'bot',
         id: Date.now().toString(),
         status: 'complete',
         isTyping: true,
-        additional_data: data.additional_data // Store additional_data in the message
+        additional_data: data.additional_data, // Store additional_data in the message
       };
-  
-      setMessages(prev => [...prev, botMessage]);
+
+      setMessages((prev) => [...prev, botMessage]);
       scrollToBottom();
-  
+
       const typingDuration = 4000;
       const typingInterval = typingDuration / data.response.length;
-  
+
       let currentCharIndex = 0;
       const typingIntervalId = setInterval(() => {
-        setMessages(prev => prev.map(msg =>
-          msg.id === botMessage.id
-            ? { 
-                ...msg, 
-                content: data.response.slice(0, currentCharIndex + 1),
-                additional_data: data.additional_data // Make sure additional_data persists
-              }
-            : msg
-        ));
-  
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === botMessage.id
+              ? {
+                  ...msg,
+                  content: data.response.slice(0, currentCharIndex + 1),
+                  additional_data: data.additional_data, // Make sure additional_data persists
+                }
+              : msg
+          )
+        );
+
         currentCharIndex += 1;
         if (currentCharIndex >= data.response.length) {
           clearInterval(typingIntervalId);
-          setMessages(prev => prev.map(msg =>
-            msg.id === botMessage.id ? { ...msg, isTyping: false } : msg
-          ));
+          setMessages((prev) =>
+            prev.map((msg) => (msg.id === botMessage.id ? { ...msg, isTyping: false } : msg))
+          );
         }
       }, typingInterval);
-  
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -155,12 +208,12 @@ const ChatWindow = () => {
   };
 
   return (
-    <div className="relative flex flex-col h-[100vh] h-[100svh] bg-gray-50">
+    <div className="relative flex flex-col h-[100svh] h-[100vh] bg-gray-50">
       <div className="h-16 flex-shrink-0" />
       <div className="relative flex-1 min-h-0">
         {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full w-full mx-auto">
-              <div className="relative w-[70px] h-[70px] mb-4 animate-pulse-size">
+          <div className="flex flex-col items-center justify-center h-full w-full mx-auto">
+            <div className="relative w-[70px] h-[70px] mb-4 animate-pulse-size">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100 via-purple-500 to-pink-200 mix-blend-multiply opacity-70 animate-rotate-1"></div>
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-100 via-cyan-100 to-blue-500 mix-blend-multiply opacity-70 animate-rotate-2"></div>
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-100 via-red-100 to-purple-100 mix-blend-multiply opacity-70 animate-rotate-3"></div>
@@ -196,37 +249,6 @@ const ChatWindow = () => {
               `}</style>
             </div>
             <p className="text-gray-500 mb-4">Simplifying the Search</p>
-            <div className="w-full relative">
-              <div className="flex items-center justify-center h-full w-full mx-auto overflow-x-auto space-x-2 md:space-x-4 px-2 md:px-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent no-scrollbar">
-                {[
-                  { 
-                    name: 'Tredning', 
-                    icon: '🔥',
-                    className: "trending-btn px-2 md:px-3 py-1 text-sm md:text-base text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1 md:gap-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 hover:from-yellow-500 hover:via-orange-500 hover:to-red-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
-                  },
-                  { 
-                    name: 'Discounted', 
-                    icon: '💰',
-                    className: "discount-btn px-2 md:px-3 py-1 text-sm md:text-base text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1 md:gap-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-teal-500 hover:via-emerald-500 hover:to-green-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
-                  },
-                  { 
-                    name: 'Newest', 
-                    icon: '⭐',
-                    className: "newest-btn px-2 md:px-3 py-1 text-sm md:text-base text-white rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1 md:gap-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-purple-500 hover:via-indigo-500 hover:to-blue-500 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent"
-                  }
-                ].map((category, index) => (
-                  <button
-                    key={index}
-                    id='quickshow-links'
-                    onClick={() => handleViewProduct(category.name)}
-                    className={category.className}
-                  >
-                    <span>{category.icon}</span>
-                    <span>{category.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         ) : (
           <div
@@ -261,19 +283,48 @@ const ChatWindow = () => {
                           <div className="relative">
                             <BotMessage 
                               message={message} 
-                              onViewProduct={handleViewProduct}
+                              onViewProduct={() => handleViewProduct(message.additional_data?.product || '')}
                             />
                             {/* View Button - Show only when additional_data contains product and open is true */}
                             {message.additional_data?.product && message.additional_data?.open && (
-                              <button>
-                                <br />
-                                <span
-                                  onClick={() => handleViewProduct(message.additional_data?.product || '')}
-                                  className="view-product-engine"
-                                >
-                                  View Product⚡
-                                </span>
-                              </button>
+                              <div>
+                                <button>
+                                  <br />
+                                  <span
+                                    onClick={() => handleViewProduct(message.additional_data?.product || '')}
+                                    className="view-product-engine"
+                                  >
+                                    View Product⚡
+                                  </span>
+                                </button>
+                                {/* Product Suggestions */}
+                                <div className="flex overflow-x-auto space-x-4 mt-2">
+                                  {isFetchingProducts ? (
+                                    Array.from({ length: 5 }).map((_, index) => (
+                                      <div
+                                        key={index}
+                                        className="flex-shrink-0 w-40 h-48 border rounded-lg p-2 bg-gray-200 animate-pulse"
+                                      ></div>
+                                    ))
+                                  ) : (
+                                    productSuggestions.map((product) => (
+                                      <div
+                                        key={product.product_id}
+                                        className="flex-shrink-0 w-40 h-48 border rounded-lg p-2 cursor-pointer hover:shadow-lg"
+                                        onClick={() => handleViewProduct(product.name)}
+                                      >
+                                        <img
+                                          src={product.cover_image_url}
+                                          alt={product.name}
+                                          className="w-full h-24 object-cover rounded"
+                                        />
+                                        <p className="text-sm font-semibold mt-2 truncate">{product.name}</p>
+                                        <p className="text-sm text-gray-600">${product.price}</p>
+                                      </div>
+                                    ))
+                                  )}
+                                </div>
+                              </div>
                             )}
                           </div>
                         ) : (

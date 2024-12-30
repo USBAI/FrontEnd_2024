@@ -43,7 +43,7 @@ const HeroSection = () => {
           </p>
 
           {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-12">
+          {/* <div className="max-w-2xl mx-auto mb-12">
             <div className="relative">
               <input
                 type="text"
@@ -57,7 +57,7 @@ const HeroSection = () => {
                 <span className="hidden sm:inline">Search</span>
               </button>
             </div>
-          </div>
+          </div> */}
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
