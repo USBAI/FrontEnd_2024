@@ -175,3 +175,38 @@
 .quickshow-links{
     padding: 0;
 }
+
+
+
+.message-container-div{
+    position: relative;
+    /* height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 50px 0 50px 0;
+}
+
+.message-intelligent-model{
+    position: absolute;
+    height: 0svh;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-color: rgb(209, 213, 219) transparent;
+}
+
+.message-intelligent-model::-webkit-scrollbar {
+    display: none;
+    width: 0;
+}
+
+
+.quick-engine-sugection{
+    margin-top: 15px;
+    background: linear-gradient(to bottom right, rgb(230, 218, 255), rgb(255, 220, 200), rgb(228, 222, 255), rgb(223, 218, 255));
+    padding: 5px;
+    border-radius: 10px;
+}
