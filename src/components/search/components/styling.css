@@ -162,14 +162,14 @@
 
 
 .view-product-engine{
-    background: linear-gradient(to bottom right, rgb(173, 170, 255), rgb(151, 154, 255), rgb(223, 165, 255));
-    color: rgb(255, 0, 140);
+    background: linear-gradient(to bottom right, rgb(255, 234, 244), rgb(228, 229, 255), rgb(241, 214, 255));
+    color: rgb(0, 0, 0);
     height: fit-content;
     width: fit-content;
     padding: 10px 30px;
     margin-top: 10px;
-    border-radius: 500px;
-    font-size: 12px;
+    border-radius: 0px 15px 15px 15px;
+    font-size: 15px;
 }
 
 .quickshow-links{
@@ -205,8 +205,22 @@
 
 
 .quick-engine-sugection{
-    margin-top: 15px;
+    margin-top: 45px;
     background: linear-gradient(to bottom right, rgb(230, 218, 255), rgb(255, 220, 200), rgb(228, 222, 255), rgb(223, 218, 255));
     padding: 5px;
     border-radius: 10px;
+}
+
+
+
+.usermessagesstyle{
+    border-radius: 15px 0px 15px 15px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background: linear-gradient(to bottom right, rgb(235, 211, 252), rgb(255, 228, 234), rgb(255, 233, 196));
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    max-width: 100%;
+    position: relative;
 }

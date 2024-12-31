@@ -23,8 +23,8 @@ const UserMessage: React.FC<UserMessageProps> = ({ message }) => {
           </div>
         )}
       </div>
-      <div className='rounded-2xl px-4 py-3 bg-white shadow-sm border border-gray-200 max-w-[100%] relative group'>
-        <p className="whitespace-pre-wrap text-xs md:text-sm text-gray-800">{message.content}</p>
+      <div className='usermessagesstyle'>
+        <p className="whitespace-pre-wrap text-[15px] text-gray-800">{message.content}</p>
       </div>
     </>
   );
