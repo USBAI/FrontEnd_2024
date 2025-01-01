@@ -20,7 +20,7 @@ const ProfileNav = ({ activeSection, setActiveSection, onLogout }: ProfileNavPro
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="w-[90%] bg-white/80 backdrop-blur-xl rounded-full border border-gray-200/50 shadow-lg p-2"
+        className="w-[fit-contant] bg-white/80 backdrop-blur-xl rounded-full border border-gray-200/50 shadow-lg p-2"
       >
         <div className="flex items-center justify-around px-4">
           {/* User Info */}
