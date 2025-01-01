@@ -19,10 +19,11 @@ const UserProfile = ({ onClose, onLogout, onNavigate }: UserProfileProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-white/95 backdrop-blur-xl z-50 overflow-hidden"
+      className="fixed inset-0 bg-white z-50 overflow-hidden"
     >
-      <AnimatedBackground />
-      
+      {/* Removed semi-transparent background to ensure proper visibility */}
+      {/* <AnimatedBackground /> */}
+
       {/* Header */}
       <ProfileHeader onClose={onClose} />
 
@@ -36,6 +37,7 @@ const UserProfile = ({ onClose, onLogout, onNavigate }: UserProfileProps) => {
       {/* Main Content */}
       <ProfileContent 
         activeSection={activeSection}
+        onNavigate={onNavigate}
       />
     </motion.div>
   );

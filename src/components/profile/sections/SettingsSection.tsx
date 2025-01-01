@@ -71,7 +71,6 @@ const SettingsSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log('Form submitted:', formData);
   };
 
@@ -104,9 +103,8 @@ const SettingsSection = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Profile Settings */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
         >
@@ -132,11 +130,9 @@ const SettingsSection = () => {
           </div>
         </motion.div>
 
-        {/* Security Settings */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
           className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
         >
           <div className="flex items-center gap-3 mb-6">
@@ -189,11 +185,9 @@ const SettingsSection = () => {
           </div>
         </motion.div>
 
-        {/* Preferences */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        {/* <motion.div
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
           className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
         >
           <div className="flex items-center gap-3 mb-6">
@@ -233,18 +227,18 @@ const SettingsSection = () => {
               </select>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
-        {/* Save Button */}
         <motion.button
           type="submit"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
           className="w-full py-3 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-lg font-medium hover:from-pink-600 hover:to-blue-600 transition-all"
         >
           Save Changes
         </motion.button>
+        <br />
+        <br />
       </form>
     </div>
   );

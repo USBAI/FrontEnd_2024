@@ -22,7 +22,7 @@ const ShipmentsSection = () => {
     }
   ];
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status) => {
     switch (status) {
       case 'delivered':
         return <CheckCircle className="h-5 w-5 text-green-500" />;
@@ -33,7 +33,7 @@ const ShipmentsSection = () => {
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusText = (status) => {
     switch (status) {
       case 'delivered':
         return 'Delivered';
@@ -45,7 +45,7 @@ const ShipmentsSection = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-6">
       <div className="flex items-center gap-4 mb-8">
         <div className="p-3 bg-blue-100 rounded-xl">
           <Package className="h-6 w-6 text-blue-600" />
@@ -62,7 +62,8 @@ const ShipmentsSection = () => {
             key={shipment.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+            transition={{ duration: 0.5 }}
+            className="rounded-xl p-6 shadow-md border border-gray-200 bg-gray-50"
           >
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -98,7 +99,7 @@ const ShipmentsSection = () => {
                 <p className="text-gray-700 font-mono">{shipment.trackingNumber}</p>
               </div>
 
-              <button className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+              <button className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                 Track Shipment
               </button>
             </div>
