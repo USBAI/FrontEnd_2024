@@ -22,9 +22,9 @@ const ProfileNav = ({ activeSection, setActiveSection, onLogout }: ProfileNavPro
         animate={{ y: 0, opacity: 1 }}
         className="w-[90%] bg-white/80 backdrop-blur-xl rounded-full border border-gray-200/50 shadow-lg p-2"
       >
-        <div className="flex items-center justify-between px-4">
+        <div className="flex items-center justify-around px-4">
           {/* User Info */}
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-400 to-blue-400 flex items-center justify-center">
               <User className="h-5 w-5 text-white" />
             </div>
@@ -32,10 +32,10 @@ const ProfileNav = ({ activeSection, setActiveSection, onLogout }: ProfileNavPro
               <h2 className="font-bold text-gray-900">Welcome Back</h2>
               <p className="text-sm text-gray-500">Manage your account</p>
             </div>
-          </div>
+          </div> */}
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-space-between gap-2">
             {menuItems.map((item) => (
               <motion.button
                 key={item.section}

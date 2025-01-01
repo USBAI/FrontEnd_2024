@@ -23,7 +23,7 @@ const AddressFields = ({ address, city, postalCode, country, onChange }: Address
             name="shipping_address"
             value={address}
             onChange={onChange}
-            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg"
             placeholder="Enter your street address"
             required
           />
@@ -40,7 +40,7 @@ const AddressFields = ({ address, city, postalCode, country, onChange }: Address
             name="shipping_city"
             value={city}
             onChange={onChange}
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg"
             placeholder="Enter city"
             required
           />
@@ -55,7 +55,7 @@ const AddressFields = ({ address, city, postalCode, country, onChange }: Address
             name="shipping_postal_code"
             value={postalCode}
             onChange={onChange}
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg"
             placeholder="Enter postal code"
             required
           />
@@ -70,7 +70,7 @@ const AddressFields = ({ address, city, postalCode, country, onChange }: Address
           name="shipping_country"
           value={country}
           onChange={onChange}
-          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg"
           required
         >
           <option value="">Select country</option>

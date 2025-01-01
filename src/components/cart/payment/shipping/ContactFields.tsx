@@ -19,7 +19,7 @@ const ContactFields = ({ phoneNumber, onChange }: ContactFieldsProps) => {
           name="phone_number"
           value={phoneNumber}
           onChange={onChange}
-          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg"
           placeholder="+46 70 123 4567"
           required
         />

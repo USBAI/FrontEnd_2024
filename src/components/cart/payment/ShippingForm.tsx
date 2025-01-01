@@ -30,7 +30,7 @@ const ShippingForm = ({ formData, onChange }: ShippingFormProps) => {
               name="shipping_address"
               value={formData.shipping_address}
               onChange={onChange}
-              className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg"
               placeholder="Enter your street address"
               required
             />
@@ -47,7 +47,7 @@ const ShippingForm = ({ formData, onChange }: ShippingFormProps) => {
               name="shipping_city"
               value={formData.shipping_city}
               onChange={onChange}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg"
               placeholder="Enter city"
               required
             />
@@ -62,7 +62,7 @@ const ShippingForm = ({ formData, onChange }: ShippingFormProps) => {
               name="shipping_postal_code"
               value={formData.shipping_postal_code}
               onChange={onChange}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg"
               placeholder="Enter postal code"
               required
             />
@@ -77,7 +77,7 @@ const ShippingForm = ({ formData, onChange }: ShippingFormProps) => {
             name="shipping_country"
             value={formData.shipping_country}
             onChange={onChange}
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg"
             required
           >
             <option value="">Select country</option>
@@ -99,7 +99,7 @@ const ShippingForm = ({ formData, onChange }: ShippingFormProps) => {
               name="phone_number"
               value={formData.phone_number}
               onChange={onChange}
-              className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg"
               placeholder="+46 70 123 4567"
             />
           </div>

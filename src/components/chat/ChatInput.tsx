@@ -108,9 +108,9 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
                     e.stopPropagation();
                     removeImage();
                   }}
-                  className="absolute -top-2 -right-2 bg-red-500 rounded-full text-white flex items-center justify-center md:p-[3px] p-[1px] h-fit w-fit"
+                  className=""
                 >
-                  <X className="h-3 w-3" />
+                  <X className="image-close-remove h-5 w-5" />
                 </motion.button>
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                   <ImageIcon className="h-6 w-6 text-white" />
@@ -135,7 +135,7 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
             onKeyPress={handleKeyPress}
             onPaste={handlePaste}
             placeholder="Type your message..."
-            className="w-full px-14 py-3 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg"
+            className="input-let-chat"
             disabled={isLoading}
           />
 

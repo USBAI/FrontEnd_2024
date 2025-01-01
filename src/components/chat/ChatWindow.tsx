@@ -335,13 +335,29 @@ const ChatWindow = () => {
                               <div>
                                 <span>Quick Sugections</span>
                               </div>
-                              <div className="flex overflow-x-auto space-x-4 mt-2" style={{ overflowY: 'auto', maxHeight: '200px' }}>
+                              <div className="flex overflow-x-auto space-x-4 mt-2" style={{ overflowY: 'auto', maxHeight: '220px' }}>
                                 {isFetchingProducts ? (
                                   Array.from({ length: 5 }).map((_, index) => (
                                     <div
-                                      key={index}
-                                      className="flex-shrink-0 w-40 h-48 border rounded-lg p-2 bg-gray-200 animate-pulse"
-                                    ></div>
+                                    key={index}
+                                    className="flex-shrink-0 w-40 h-36 border rounded-lg p-2 relative overflow-hidden"
+                                    style={{
+                                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                                      backgroundSize: '200% 100%',
+                                      animation: 'shimmer 2s infinite linear'
+                                    }}
+                                  >
+                                    <style jsx>{`
+                                      @keyframes shimmer {
+                                        0% {
+                                          background-position: 200% 0;
+                                        }
+                                        100% {
+                                          background-position: -200% 0;
+                                        }
+                                      }
+                                    `}</style>
+                                  </div>
                                   ))
                                 ) : (
                                   productSuggestions.map((product) => (
@@ -353,10 +369,18 @@ const ChatWindow = () => {
                                       <img
                                         src={product.cover_image_url}
                                         alt={product.name}
-                                        className="w-full h-24 object-cover rounded"
+                                        className="w-full h-24 object-contain rounded"
                                       />
                                       <p className="text-sm font-semibold mt-2 truncate">{product.name}</p>
                                       <p className="text-sm text-gray-600">{product.price}</p>
+                                      <div className='quickpay-monthly'>
+                                        <div>
+                                          {Math.round(parseFloat(product.price.replace(/[^0-9.-]+/g, '')) / 24)} kr
+                                        </div>
+                                        <div>
+                                          <svg width="15" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.443 -9.15527e-05H12.0894C12.0894 3.57134 9.89835 6.77134 6.56912 9.05705L5.26019 9.97134V-9.15527e-05H0.73584V19.9999H5.26019V10.0856L12.7439 19.9999H18.2641L11.065 10.5142C14.3374 8.14277 16.4715 4.45705 16.443 -9.15527e-05Z" fill="#0B051D"></path></svg>
+                                        </div>
+                                      </div>
                                     </div>
                                   ))
                                 )}

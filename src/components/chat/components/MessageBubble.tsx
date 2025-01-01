@@ -46,7 +46,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             <textarea
               value={editingContent}
               onChange={(e) => setEditingContent(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-base md:text-lg text-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-base md:text-lg text-white resize-none"
               rows={3}
               autoFocus
             />

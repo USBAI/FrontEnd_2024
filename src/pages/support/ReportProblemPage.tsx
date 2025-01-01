@@ -101,7 +101,7 @@ const ReportProblemPage = () => {
                           type="text"
                           value={formData.name}
                           onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
                           required
                         />
                       </div>
@@ -113,7 +113,7 @@ const ReportProblemPage = () => {
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
                           required
                         />
                       </div>
@@ -126,7 +126,7 @@ const ReportProblemPage = () => {
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
                         required
                       >
                         <option value="">Select a category</option>
@@ -144,7 +144,7 @@ const ReportProblemPage = () => {
                         value={formData.description}
                         onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                         rows={6}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white resize-none"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white resize-none"
                         required
                       />
                     </div>

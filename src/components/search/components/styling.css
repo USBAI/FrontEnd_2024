@@ -212,7 +212,6 @@
 }
 
 
-
 .usermessagesstyle{
     border-radius: 15px 0px 15px 15px;
     padding-left: 0.5rem;
@@ -223,4 +222,74 @@
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     max-width: 100%;
     position: relative;
+}
+
+
+
+.input-let-chat{
+    width: 100%;
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgb(215, 215, 215);
+    color: black;
+    /* box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); */
+}
+
+.input-let-chat::placeholder {
+    color: rgb(156, 163, 175);
+}
+
+.input-let-chat:focus {
+    outline: none;
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) rgba(59, 130, 246, 0.5);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+
+.quickpay-monthly{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: green;
+    background: linear-gradient(to bottom right, rgb(255, 233, 237), rgb(254, 236, 255), rgb(255, 244, 220));
+}
+
+
+
+
+.image-close-remove{
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    background-color: rgb(255, 0, 0);
+    border-radius: 9999px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+    width: fit-content;
+}
+
+@media (min-width: 768px) {
+    .image-close-remove {
+        padding: 3px;
+    }
+}
+
+@media (max-width: 767px) {
+    .image-close-remove {
+        padding: 2px;
+        background-color: rgb(255, 0, 0);
+    }
 }

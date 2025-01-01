@@ -57,7 +57,7 @@ const ContactPage = () => {
                       </label>
                       <input
                         type="text"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
                         required
                       />
                     </div>
@@ -67,7 +67,7 @@ const ContactPage = () => {
                       </label>
                       <input
                         type="email"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
                         required
                       />
                     </div>
@@ -79,7 +79,7 @@ const ContactPage = () => {
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
                       required
                     />
                   </div>
@@ -90,7 +90,7 @@ const ContactPage = () => {
                     </label>
                     <textarea
                       rows={6}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white resize-none"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white resize-none"
                       required
                     />
                   </div>
