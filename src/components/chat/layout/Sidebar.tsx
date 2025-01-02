@@ -24,6 +24,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, expandedItem, setExpandedItem
           />
         ))}
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

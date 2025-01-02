@@ -3,14 +3,16 @@ import { motion } from 'framer-motion';
 import { Users, Linkedin, Github, Twitter } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import eliasLuzwehimana from './images/eliasluzwehimana.png'
+import ernestItangishaka from './images/ernestitangishaka.png'
 
 const TeamPage = () => {
   const team = [
     {
       name: 'Elias Luzwehimana',
       role: 'Co-Founder & CEO',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
-      bio: 'Leading the vision and strategy for Kluret',
+      image: eliasLuzwehimana,
+      bio: 'Driving technical innovation and development',
       social: {
         linkedin: '#',
         github: '#',
@@ -20,8 +22,8 @@ const TeamPage = () => {
     {
       name: 'Ernest Itangishaka',
       role: 'Co-Founder & CTO',
-      image: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
-      bio: 'Driving technical innovation and development',
+      image: ernestItangishaka,
+      bio: 'Leading the vision and strategy for Kluret',
       social: {
         linkedin: '#',
         github: '#',

@@ -82,7 +82,7 @@ const SidebarItem = ({ item, index, isExpanded, onExpand, onNavigate }: SidebarI
                   }}
                   className={`w-full mt-4 px-4 py-3 bg-gradient-to-r ${item.gradient} rounded-lg text-white font-medium flex items-center justify-between group hover:shadow-lg transition-all duration-300`}
                 >
-                  <span>Get Started</span>
+                  <span>{item.label}</span>
                   <ArrowRight className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </motion.div>

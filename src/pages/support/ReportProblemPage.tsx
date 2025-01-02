@@ -40,14 +40,13 @@ const ReportProblemPage = () => {
   const categories = [
     'Technical Issue',
     'Account Problem',
-    'API Integration',
     'Billing Question',
     'Feature Request',
     'Other'
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-white text-black">
       <Navbar />
       
       <main className="pt-32 pb-20">
@@ -57,9 +56,9 @@ const ReportProblemPage = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-block p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm mb-8"
+              className="inline-block p-3 rounded-2xl bg-blue-100 backdrop-blur-sm mb-8"
             >
-              <AlertCircle className="h-8 w-8 text-blue-400" />
+              <AlertCircle className="h-8 w-8 text-blue-500" />
             </motion.div>
             
             <motion.h1
@@ -74,7 +73,7 @@ const ReportProblemPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               We're here to help. Let us know about any issues you're experiencing.
             </motion.p>
@@ -89,44 +88,44 @@ const ReportProblemPage = () => {
               className="lg:col-span-2"
             >
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-8 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-gray-100 backdrop-blur-sm p-8 rounded-xl border border-gray-300">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Your Name
                         </label>
                         <input
                           type="text"
                           value={formData.name}
                           onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900"
                           required
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Email Address
                         </label>
                         <input
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900"
                           required
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Problem Category
                       </label>
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900"
                         required
                       >
                         <option value="">Select a category</option>
@@ -137,14 +136,14 @@ const ReportProblemPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Problem Description
                       </label>
                       <textarea
                         value={formData.description}
                         onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                         rows={6}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white resize-none"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 resize-none"
                         required
                       />
                     </div>
@@ -183,61 +182,61 @@ const ReportProblemPage = () => {
               className="space-y-6"
             >
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-gray-100 backdrop-blur-sm p-6 rounded-xl border border-gray-300">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-2 bg-blue-500/10 rounded-lg">
-                      <MessageSquare className="h-6 w-6 text-blue-400" />
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <MessageSquare className="h-6 w-6 text-blue-500" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Live Chat</h3>
-                      <p className="text-sm text-gray-400">Available 24/7</p>
+                      <p className="text-sm text-gray-600">Available 24/7</p>
                     </div>
                   </div>
-                  <button className="w-full py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+                  <button className="w-full py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
                     Start Chat
                   </button>
                 </div>
               </div>
 
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-gray-100 backdrop-blur-sm p-6 rounded-xl border border-gray-300">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-2 bg-blue-500/10 rounded-lg">
-                      <Mail className="h-6 w-6 text-blue-400" />
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Mail className="h-6 w-6 text-blue-500" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Email Support</h3>
-                      <p className="text-sm text-gray-400">Response within 24h</p>
+                      <p className="text-sm text-gray-600">Response within 24h</p>
                     </div>
                   </div>
                   <a
-                    href="mailto:support@kluret.com"
-                    className="block w-full py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors text-center"
+                    href="mailto:hej@kluret.se"
+                    className="block w-full py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors text-center"
                   >
-                    support@kluret.com
+                    hej@kluret.se
                   </a>
                 </div>
               </div>
 
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-gray-100 backdrop-blur-sm p-6 rounded-xl border border-gray-300">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-2 bg-blue-500/10 rounded-lg">
-                      <Phone className="h-6 w-6 text-blue-400" />
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Phone className="h-6 w-6 text-blue-500" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Phone Support</h3>
-                      <p className="text-sm text-gray-400">Mon-Fri, 9am-5pm CET</p>
+                      <p className="text-sm text-gray-600">Mon-Fri, 9am-5pm CET</p>
                     </div>
                   </div>
                   <a
-                    href="tel:+46701234567"
-                    className="block w-full py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors text-center"
+                    href="tel:+46727759188"
+                    className="block w-full py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors text-center"
                   >
-                    +46 70 123 4567
+                    +46 727759188
                   </a>
                 </div>
               </div>
