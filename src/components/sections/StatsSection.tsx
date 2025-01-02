@@ -1,32 +1,32 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Users, ShoppingBag, Building2, CreditCard } from 'lucide-react';
+import { Users, ShoppingBag, Building2, CreditCard, Globe, Laptop, CloverIcon } from 'lucide-react';
 
 const stats = [
   {
-    icon: Users,
-    value: '10M+',
-    label: 'Active Shoppers',
-    description: 'Monthly active users on Kluret'
+    icon: CloverIcon,
+    value: 'Free',
+    label: 'Kluret Chat',
+    description: 'Chat with our AI for products recomandations'
   },
   {
-    icon: ShoppingBag,
-    value: '500K+',
-    label: 'Daily Orders',
-    description: 'Orders processed through our platform'
+    icon: Laptop,
+    value: '600M+',
+    label: 'Kluret Network',
+    description: 'With over 600 Million products active in our network'
   },
   {
-    icon: Building2,
-    value: '50K+',
-    label: 'Stores',
-    description: 'Businesses trust Kluret'
+    icon: Globe,
+    value: 'Free',
+    label: 'Kluret Product Assist',
+    description: 'Know more about the product before purchasing'
   },
   {
     icon: CreditCard,
-    value: '€2M+',
-    label: 'Daily GMV',
-    description: 'Gross Merchandise Value'
+    value: 'Free',
+    label: 'Fast Delivery',
+    description: 'Kluret makes it fast to get your Product in time'
   }
 ];
 
