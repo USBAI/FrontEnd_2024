@@ -12,7 +12,7 @@ const regions = [
   {
     name: 'Norway',
     flag: '🇳🇴',
-    image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'
+    image: 'https://media.istockphoto.com/id/1500420309/sv/foto/perfect-reflection-of-the-reine-village-on-the-water-of-the-fjord-in-the-lofoten-islands-norway.jpg?s=612x612&w=0&k=20&c=ACcofu0FVi1d-6jxFpmnL6QXXQUT0BQlHfZiYM0VtDQ='
   },
   {
     name: 'Denmark',
@@ -22,7 +22,7 @@ const regions = [
   {
     name: 'Finland',
     flag: '🇫🇮',
-    image: 'https://images.unsplash.com/photo-1588461195199-fdbd84a74839?auto=format&fit=crop&w=800&q=80'
+    image: 'https://media.istockphoto.com/id/1972453916/sv/foto/evening-view-of-aura-river-in-turku-finland.jpg?s=612x612&w=0&k=20&c=9d2hyipLtWcp64KhsVd9KDhow8d9GWdpq8zxMRN8ZWk='
   }
 ];
 
