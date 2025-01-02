@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { Users, Linkedin, Github, Twitter } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import eliasLuzwehimana from './images/eliasluzwehimana.png'
-import ernestItangishaka from './images/ernestitangishaka.png'
+import eliasLuzwehimana from './images/eliasluzwehimana.png';
+import ernestItangishaka from './images/ernestitangishaka.png';
 
 const TeamPage = () => {
   const team = [
@@ -33,7 +33,7 @@ const TeamPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-white text-black">
       <Navbar />
       
       <main className="pt-32 pb-20">
@@ -43,9 +43,9 @@ const TeamPage = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-block p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm mb-8"
+              className="inline-block p-3 rounded-2xl bg-blue-100 backdrop-blur-sm mb-8"
             >
-              <Users className="h-8 w-8 text-blue-400" />
+              <Users className="h-8 w-8 text-blue-500" />
             </motion.div>
             
             <motion.h1
@@ -60,7 +60,7 @@ const TeamPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               The passionate individuals driving innovation at Kluret
             </motion.p>
@@ -76,8 +76,8 @@ const TeamPage = () => {
                 transition={{ delay: 0.2 + index * 0.1 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-gray-100 backdrop-blur-sm p-6 rounded-xl border border-gray-300">
                   <div className="flex items-center gap-6">
                     <img
                       src={member.image}
@@ -86,16 +86,16 @@ const TeamPage = () => {
                     />
                     <div>
                       <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                      <p className="text-blue-400 mb-2">{member.role}</p>
-                      <p className="text-gray-400 mb-4">{member.bio}</p>
+                      <p className="text-blue-500 mb-2">{member.role}</p>
+                      <p className="text-gray-600 mb-4">{member.bio}</p>
                       <div className="flex items-center gap-4">
-                        <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
+                        <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500 transition-colors">
                           <Linkedin className="h-5 w-5" />
                         </a>
-                        <a href={member.social.github} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
+                        <a href={member.social.github} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500 transition-colors">
                           <Github className="h-5 w-5" />
                         </a>
-                        <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
+                        <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500 transition-colors">
                           <Twitter className="h-5 w-5" />
                         </a>
                       </div>
@@ -111,17 +111,17 @@ const TeamPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 text-center"
+            className="bg-gray-100 backdrop-blur-xl rounded-2xl p-8 border border-gray-300 text-center"
           >
             <h2 className="text-2xl font-bold mb-4">Join Our Team</h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-600 mb-6">
               We're always looking for talented individuals to join our mission
             </p>
             <a
               href="mailto:careers@kluret.com"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-white font-medium hover:from-blue-600 hover:to-purple-600 transition-all"
             >
-              View Open Positions
+              Reach out to us
             </a>
           </motion.div>
         </div>
