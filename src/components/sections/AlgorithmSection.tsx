@@ -35,14 +35,14 @@ const AlgorithmSection = () => {
             transition={{ delay: 0.2 }}
             className="absolute left-0 top-1/2 -translate-y-1/2 w-64 space-y-4"
           >
-            <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
+            {/* <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
               <h3 className="font-semibold mb-2 text-gray-900">Input Layer</h3>
               <div className="space-y-2">
                 <div className="h-8 bg-gradient-to-r from-pink-100 to-blue-100 rounded-lg animate-pulse" />
                 <div className="h-8 bg-gradient-to-r from-pink-100 to-blue-100 rounded-lg animate-pulse" />
                 <div className="h-8 bg-gradient-to-r from-pink-100 to-blue-100 rounded-lg animate-pulse" />
               </div>
-            </div>
+            </div> */}
           </motion.div>
 
           {/* Neural Network Animation */}
@@ -123,21 +123,21 @@ const AlgorithmSection = () => {
             transition={{ delay: 0.6 }}
             className="absolute right-0 top-1/2 -translate-y-1/2 w-64 space-y-4"
           >
-            <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
+            {/* <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
               <h3 className="font-semibold mb-2 text-gray-900">Output Layer</h3>
               <div className="space-y-2">
                 <div className="h-8 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg animate-pulse" />
                 <div className="h-8 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg animate-pulse" />
                 <div className="h-8 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg animate-pulse" />
               </div>
-            </div>
+            </div> */}
           </motion.div>
         </div>
 
         {/* Model Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { icon: Brain, value: '175B', label: 'Parameters' },
+            { icon: Brain, value: '600M+', label: 'Products' },
             { icon: Database, value: '100M+', label: 'Training Examples' },
             { icon: Network, value: '99.9%', label: 'Accuracy' },
             { icon: Zap, value: '<100ms', label: 'Response Time' }
