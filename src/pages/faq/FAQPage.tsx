@@ -26,46 +26,68 @@ const FAQPage = () => {
     },
     {
       id: 2,
-      category: 'API Access',
+      category: 'About Kluret',
       questions: [
-        {
-          question: 'How do I get API access?',
-          answer: 'You can sign up for API access through our developer portal. We offer different tiers based on your needs.'
-        },
-        {
-          question: 'What are the API rate limits?',
-          answer: 'Rate limits vary by plan. Our basic plan includes 100,000 requests per month.'
-        }
+        { question: 'Introduction to Kluret', answer: 'Kluret is a cutting-edge AI search engine designed to revolutionize the way we search for products online.' },
+        { question: 'Founders\' Vision', answer: 'Elias and Ernest envision a search engine that provides accurate results while understanding human language nuances.' },
+        { question: 'Search Engine Capabilities', answer: 'Kluret excels at advanced search engine tasks, filtering results for relevant products.' },
+        { question: 'Product Focus', answer: 'Currently focused on finding products online, with plans to expand to the Swedish entire web.' },
+        { question: 'Version 1 Features', answer: 'The first version of Kluret offers product search capabilities for the Swedish web.' },
+        { question: 'AI-Powered', answer: 'Kluret utilizes AI technology to understand queries and provide personalized results.' },
+        { question: 'Natural Language Processing', answer: 'Built on NLP principles, Kluret understands user queries like a human.' },
+        { question: 'Contextual Understanding', answer: 'Kluret ensures relevant results even for ambiguous queries.' },
+        { question: 'Product Database', answer: 'Our database is updated regularly to reflect the latest online products.' },
+        { question: 'Search Query Analysis', answer: 'Analyzing user queries helps us identify patterns and improve results.' }
       ]
     },
     {
       id: 3,
-      category: 'Integration',
+      category: 'Features',
       questions: [
-        {
-          question: 'How do I integrate Kluret with my store?',
-          answer: 'We provide easy-to-use SDKs and comprehensive documentation for seamless integration.'
-        },
-        {
-          question: 'Which platforms do you support?',
-          answer: 'We support major e-commerce platforms including Shopify, WooCommerce, and custom solutions.'
-        }
+        { question: 'User Experience', answer: 'Kluret offers an intuitive interface for a seamless search experience.' },
+        { question: 'Product Filtering', answer: 'Advanced filters allow users to refine search results by criteria like price and brand.' },
+        { question: 'Personalized Results', answer: 'Results are tailored to user preferences, search history, and browsing behavior.' },
+        { question: 'Real-Time Updates', answer: 'The database updates in real-time to provide the latest information.' },
+        { question: 'Security', answer: 'User data is protected with robust security measures.' },
+        { question: 'Partnerships', answer: 'Collaborations with retailers expand our product offerings.' },
+        { question: 'Expanding Capabilities', answer: 'We aim to include voice search and augmented reality features soon.' },
+        { question: 'Multilingual Support', answer: 'Kluret will support multiple languages for EU-wide accessibility.' },
+        { question: 'Customer Support', answer: 'Our support team is available to assist users with any queries.' },
+        { question: 'Feedback Mechanism', answer: 'Users can provide feedback to help us improve our services.' }
+      ]
+    },
+    {
+      id: 4,
+      category: 'Shopping Features',
+      questions: [
+        { question: 'Product Recommendations', answer: 'Kluret offers personalized recommendations based on user activity.' },
+        { question: 'Price Comparison', answer: 'Compare prices across retailers to find the best deals.' },
+        { question: 'Product Reviews', answer: 'Aggregated reviews provide a comprehensive view of product performance.' },
+        { question: 'Search Query Suggestions', answer: 'Get suggestions to refine your search queries.' },
+        { question: 'Product Availability', answer: 'Real-time availability information ensures accurate stock levels.' },
+        { question: 'Retailer Partnerships', answer: 'Exclusive offers and promotions from our retail partners.' },
+        { question: 'User Profiles', answer: 'Create profiles to save preferences and search history.' },
+        { question: 'Shopping Lists', answer: 'Easily manage shopping lists for future purchases.' },
+        { question: 'Price Alerts', answer: 'Receive notifications when desired products go on sale.' }
       ]
     }
   ];
 
-  const filteredFaqs = faqs.map(category => ({
-    ...category,
-    questions: category.questions.filter(
-      q => q.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           q.answer.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  })).filter(category => category.questions.length > 0);
+  const filteredFaqs = faqs
+    .map(category => ({
+      ...category,
+      questions: category.questions.filter(
+        q =>
+          q.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          q.answer.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }))
+    .filter(category => category.questions.length > 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-white text-black">
       <Navbar />
-      
+
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
@@ -73,11 +95,11 @@ const FAQPage = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-block p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm mb-8"
+              className="inline-block p-3 rounded-2xl bg-blue-100 backdrop-blur-sm mb-8"
             >
-              <HelpCircle className="h-8 w-8 text-blue-400" />
+              <HelpCircle className="h-8 w-8 text-blue-500" />
             </motion.div>
-            
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -85,12 +107,12 @@ const FAQPage = () => {
             >
               Frequently Asked Questions
             </motion.h1>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto mb-8"
+              className="text-xl text-gray-600 max-w-3xl mx-auto mb-8"
             >
               Find answers to common questions about Kluret
             </motion.p>
@@ -108,7 +130,7 @@ const FAQPage = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search FAQs..."
-                  className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-black placeholder-gray-600"
                 />
               </div>
             </motion.div>
@@ -124,23 +146,27 @@ const FAQPage = () => {
                 transition={{ delay: 0.3 + index * 0.1 }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-gray-100 backdrop-blur-sm p-6 rounded-xl border border-gray-300">
                   <h2 className="text-xl font-bold mb-6">{category.category}</h2>
                   <div className="space-y-4">
                     {category.questions.map((faq, faqIndex) => (
                       <div key={faqIndex} className="relative group">
                         <button
-                          onClick={() => setExpandedId(expandedId === faqIndex ? null : faqIndex)}
+                          onClick={() =>
+                            setExpandedId(expandedId === faqIndex ? null : faqIndex)
+                          }
                           className="w-full text-left"
                         >
-                          <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
+                          <div className="flex items-center justify-between p-4 bg-gray-200 rounded-lg group-hover:bg-gray-300 transition-colors">
                             <h3 className="font-medium pr-8">{faq.question}</h3>
                             <motion.div
-                              animate={{ rotate: expandedId === faqIndex ? 180 : 0 }}
+                              animate={{
+                                rotate: expandedId === faqIndex ? 180 : 0
+                              }}
                               transition={{ duration: 0.2 }}
                             >
-                              <ChevronDown className="h-5 w-5 text-gray-400" />
+                              <ChevronDown className="h-5 w-5 text-gray-600" />
                             </motion.div>
                           </div>
                         </button>
@@ -153,7 +179,7 @@ const FAQPage = () => {
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden"
                             >
-                              <div className="p-4 text-gray-400">
+                              <div className="p-4 text-gray-600">
                                 {faq.answer}
                               </div>
                             </motion.div>
@@ -175,7 +201,7 @@ const FAQPage = () => {
             className="mt-12 text-center"
           >
             <h2 className="text-2xl font-bold mb-4">Still Need Help?</h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-600 mb-6">
               Can't find what you're looking for? We're here to help.
             </p>
             <Link
