@@ -20,8 +20,8 @@ export default {
         description: 'Our advanced AI understands context and intent, delivering more accurate results than traditional search engines.',
       },
       {
-        title: 'Swedish-First Approach',
-        description: 'Built specifically for the Swedish market, understanding local preferences and shopping patterns.',
+        title: 'Nordic-First Approach',
+        description: 'Built specifically for the Nordic market, understanding local preferences and shopping patterns.',
       },
       {
         title: 'Real-Time Price Comparison',
