@@ -50,6 +50,7 @@ export const searchProducts = async (
         price: product.price,
         product_page: product.product_page_url,
         cover_image: product.cover_image_url,
+        discount: product.discount_percentage || null, // Include discount if available
       }));
 
     return { products: transformedProducts };

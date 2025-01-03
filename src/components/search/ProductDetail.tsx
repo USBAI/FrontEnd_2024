@@ -83,7 +83,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-white z-50 overflow-y-auto"
       >
-        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-gray-100">
+        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -102,13 +102,13 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
               >
                 <Sparkles className="h-6 w-6 text-pink-500" />
               </motion.button>
-              <motion.button
+              {/* <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 className="p-2 hover:bg-gray-100 rounded-full"
               >
                 <Heart className="h-6 w-6 text-gray-500" />
-              </motion.button>
+              </motion.button> */}
               <CartIndicator
                 count={cartItems?.length || 0}
                 onClick={() => setShowCart(true)}

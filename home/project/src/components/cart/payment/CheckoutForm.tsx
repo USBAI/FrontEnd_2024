@@ -66,7 +66,7 @@ const CheckoutForm = ({ onPaymentMethodSelect }: CheckoutFormProps) => {
 
         if (selectedMethod === 'klarna') {
           // Initialize Klarna payment
-          const response = await fetch('http://127.0.0.1:8013/klarna_pay/create-klarna-payment-intent/', {
+          const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/klarna_pay/create-klarna-payment-intent/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

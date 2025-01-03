@@ -5,4 +5,5 @@ export interface Product {
   product_page: string;
   cover_image: string;
   color?: string;
+  discount?: string; 
 }

@@ -24,7 +24,7 @@ export const useKlarnaPayment = ({ total, onSuccess, onError }: UseKlarnaPayment
         throw new Error('Minimum order amount is 3 kr');
       }
 
-      const response = await fetch('http://127.0.0.1:8013/klarna_pay/create-klarna-payment-intent/', {
+      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/klarna_pay/create-klarna-payment-intent/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -58,6 +58,35 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/users/register_user/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword
+        })
+      });
+
+      const data = await response.json();
+      if (data.status === 'success') {
+        setShowRegisterForm(false);
+      } else {
+        setError(data.message || 'Registration failed');
+      }
+    } catch (error) {
+      setError('An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('user_id');
     setIsLoggedIn(false);
@@ -88,12 +117,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-white/95 backdrop-blur-xl z-50 flex items-center justify-center"
     >
-      {/* Animated Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-blue-50 to-purple-50" />
-        
-        {/* Animated Waves */}
         {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
@@ -120,7 +145,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
         ))}
       </div>
 
-      {/* Close Button */}
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -140,22 +164,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
               exit={{ opacity: 0, y: -20 }}
               className="text-center"
             >
-              <svg width="64" height="64" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" className="mx-auto mb-6">
-                <rect width="22" height="22" rx="11" fill="url(#paint0_linear_0_1)"/>
-                <path d="M0.128418 12.32L21.6595 12.8032V12.8032C21.5887 15.9615 18.9709 18.4643 15.8126 18.3934L5.71863 18.1669C2.56036 18.096 0.0575377 15.4783 0.128418 12.32V12.32Z" fill="url(#paint1_linear_0_1)"/>
-                <rect x="9" y="3" width="11" height="11" rx="5.5" fill="white"/>
-                <defs>
-                  <linearGradient id="paint0_linear_0_1" x1="4.51" y1="2.53" x2="18.26" y2="19.69" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#EFF0FF"/>
-                    <stop offset="0.55" stopColor="#C9B8FC"/>
-                    <stop offset="0.986587" stopColor="#FFBAF6"/>
-                  </linearGradient>
-                  <linearGradient id="paint1_linear_0_1" x1="12.0269" y1="18.3714" x2="12.6321" y2="12.2372" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#E7B4FF" stopOpacity="0.22"/>
-                    <stop offset="1" stopColor="#8330E8"/>
-                  </linearGradient>
-                </defs>
-              </svg>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">
                 Kluret AI Search Engine
               </h2>
@@ -172,7 +180,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setShowRegisterForm(true)}
-                  className="w-full py-3 bg-gray-100 text-gray-700 rounded-lg font-medium"
+                  className="w-full py-3 bg-black text-white rounded-lg font-medium"
                 >
                   Register
                 </motion.button>
@@ -184,7 +192,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
+              className="rounded-2xl"
             >
               <div className="text-center mb-8">
                 <svg width="48" height="48" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" className="mx-auto mb-4">
@@ -221,7 +229,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
                 </motion.div>
               )}
 
-              <form onSubmit={handleLogin} className="space-y-6">
+              <form onSubmit={showLoginForm ? handleLogin : handleRegister} className="space-y-6">
                 <div>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -251,6 +259,23 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
                     />
                   </div>
                 </div>
+
+                {!showLoginForm && (
+                  <div>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                        placeholder="Confirm Password"
+                        className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-500/50 text-gray-900 placeholder-gray-500"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
