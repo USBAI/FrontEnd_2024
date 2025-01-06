@@ -95,6 +95,19 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     return null;
   }
 
+  const LoadingCard = () => (
+    <div className="animate-pulse rounded-lg p-0">
+      <div className="h-80 bg-gray-300 rounded-md mb-4"></div>
+      <div className="h-6 bg-gray-300 rounded-md mb-2 w-4/4"></div>
+      <div className='flex justify-between'>
+        <div className="h-6 bg-gray-300 rounded-md mb-2 w-1/2"></div>
+        <div className="h-6 bg-gray-300 rounded-md mb-2 w-[40px]"></div>
+      </div>
+      
+      <div className="h-6 bg-gray-300 rounded-md w-4/4"></div>
+    </div>
+  );
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -122,7 +135,13 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                 {error ? (
                   <ErrorMessage message={error} />
                 ) : isLoading && products.length === 0 ? (
-                  <LoadingGlobe />
+                  <>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6 lg:gap-8">
+                      {Array.from({ length: 30 }).map((_, index) => (
+                        <LoadingCard key={index} />
+                      ))}
+                    </div>
+                  </>
                 ) : products.length === 0 ? (
                   <IdleGlobe />
                 ) : (

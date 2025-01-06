@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { Product } from '../types';
@@ -25,23 +25,68 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const { showAuthModal, setShowAuthModal, checkAuth, handleAuthSuccess } = useAuth();
   const userCountry = detectNordicCountry();
-  
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   // Extract numeric price from SEK string and convert to user's currency
   const numericPrice = parseFloat(product.price.replace(/[^0-9.]/g, ''));
   const localPrice = userCountry ? convertFromSEK(numericPrice, userCountry) : product.price;
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    checkAuth(() => {
-      // Add to cart logic here
-      console.log('Adding to cart:', product);
+    setIsLoading(true);
+    setShowSuccess(false);
+
+    checkAuth(async () => {
+      const userId = localStorage.getItem('user_id'); // Fetch user_id from localStorage
+
+      if (!userId) {
+        console.error('User ID not found in localStorage');
+        setIsLoading(false);
+        return;
+      }
+
+      const payload = {
+        product_color: product.color || '',
+        product_description: product.description || '',
+        product_id: product.id,
+        product_image: product.cover_image,
+        product_name: product.name,
+        product_price: localPrice,
+        product_size: product.size || '',
+        product_url: product.url || '',
+        user_id: userId
+      };
+
+      try {
+        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/addcart/add-to-cart/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add product to cart');
+        }
+
+        const data = await response.json();
+        console.log('Product added to cart:', data);
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        console.error('Error adding product to cart:', error);
+      } finally {
+        setIsLoading(false);
+      }
     });
   };
 
   const handleAddToWishlist = (e: React.MouseEvent) => {
     e.stopPropagation();
     checkAuth(() => {
-      // Add to wishlist logic here
       console.log('Adding to wishlist:', product);
     });
   };
@@ -99,7 +144,20 @@ const ProductCard = ({
                   className="add-product-to-cart"
                   onClick={handleAddToCart}
                 >
-                  <ShoppingCart className="h-5 w-5 text-pink-500" />
+                  {isLoading ? (
+                    <div className="w-[20px] h-[20px] border-2 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+                    
+                  ) : showSuccess ? (
+                    <svg width="25px" height="25px" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#1eff00">
+                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <path d="M5.5 12.5L10.167 17L19.5 8" stroke="#1dad00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </g>
+                    </svg>
+                  ) : (
+                    <ShoppingCart className="h-5 w-5 text-pink-500" />
+                  )}
                 </motion.button>
               </div>
               <div className="flex items-center gap-1 text-xs text-green-700 justify-between w-full p-2 rounded-[10px] animate-gradient bg-gradient-to-br bg-[length:400%_400%]">
@@ -112,7 +170,6 @@ const ProductCard = ({
           </div>
         </div>
       </motion.div>
-
 
       <AuthModal
         isOpen={showAuthModal}

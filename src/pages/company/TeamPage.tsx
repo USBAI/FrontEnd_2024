@@ -21,7 +21,7 @@ const TeamPage = () => {
     },
     {
       name: 'Ernest Itangishaka',
-      role: 'Co-Founder & CTO',
+      role: 'Co-Founder & SEO - Business Developer',      
       image: ernestItangishaka,
       bio: 'Leading the vision and strategy for Kluret',
       social: {
@@ -88,7 +88,7 @@ const TeamPage = () => {
                       <h3 className="text-xl font-bold mb-1">{member.name}</h3>
                       <p className="text-blue-500 mb-2">{member.role}</p>
                       <p className="text-gray-600 mb-4">{member.bio}</p>
-                      <div className="flex items-center gap-4">
+                      {/* <div className="flex items-center gap-4">
                         <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500 transition-colors">
                           <Linkedin className="h-5 w-5" />
                         </a>
@@ -98,7 +98,7 @@ const TeamPage = () => {
                         <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500 transition-colors">
                           <Twitter className="h-5 w-5" />
                         </a>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

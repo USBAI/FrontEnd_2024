@@ -203,7 +203,7 @@ const ChatWindow = () => {
       setMessages((prev) => [...prev, botMessage]);
       scrollToBottom();
 
-      const typingDuration = 1000;
+      const typingDuration = 10;
       const typingInterval = typingDuration / data.response.length;
 
       let currentCharIndex = 0;

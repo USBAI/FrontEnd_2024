@@ -9,14 +9,15 @@ import { useCart } from '../../components/search/hooks/useCart';
 
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY, {
-  locale: 'sv' // Set Swedish locale for Klarna support
+  locale: 'sv', // Set Swedish locale for Klarna support
 });
 
 const KlarnaPaymentPage = () => {
   const { cartItems, isLoading } = useCart();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+  const [paymentId, setPaymentId] = useState<string | null>(null); // Store paymentId
+
   // Calculate total in SEK, ensuring it's at least 3 SEK
   const total = Math.max(
     cartItems?.reduce((sum, item) => {
@@ -37,22 +38,26 @@ const KlarnaPaymentPage = () => {
       }
 
       try {
-        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/klarna_pay/create-klarna-payment-intent/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            total_cost: total.toString(),
-            currency: 'sek'
-          })
-        });
+        const response = await fetch(
+          'https://customerserver1-5d81976997ba.herokuapp.com/klarna_pay/create-klarna-payment-intent/',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: userId,
+              total_cost: total.toString(),
+              currency: 'sek',
+            }),
+          }
+        );
 
         const data = await response.json();
-        
+
         if (data.status === 'success' && data.client_secret) {
           setClientSecret(data.client_secret);
+          setPaymentId(data.payment_intent_id); // Extract and set the payment ID
         } else {
           throw new Error(data.message || 'Failed to initialize payment');
         }
@@ -76,7 +81,7 @@ const KlarnaPaymentPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <KlarnaPaymentHeader />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -95,15 +100,15 @@ const KlarnaPaymentPage = () => {
                 <p className="text-red-600">{error}</p>
               </div>
             ) : clientSecret ? (
-              <Elements 
-                stripe={stripePromise} 
-                options={{ 
+              <Elements
+                stripe={stripePromise}
+                options={{
                   clientSecret,
                   appearance: { theme: 'stripe' },
-                  loader: 'auto'
+                  loader: 'auto',
                 }}
               >
-                <KlarnaStripeForm />
+                <KlarnaStripeForm onPaymentIdChange={setPaymentId} />
               </Elements>
             ) : (
               <div className="flex items-center justify-center py-12">

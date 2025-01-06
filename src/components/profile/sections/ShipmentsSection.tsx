@@ -1,26 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Package, Truck, CheckCircle, Clock } from 'lucide-react';
 
 const ShipmentsSection = () => {
-  const shipments = [
-    // {
-    //   id: 1,
-    //   orderNumber: 'ORD-123456',
-    //   date: '2024-03-15',
-    //   status: 'delivered',
-    //   items: ['Wireless Headphones', 'Smart Watch'],
-    //   trackingNumber: 'TRK-789012'
-    // },
-    // {
-    //   id: 2,
-    //   orderNumber: 'ORD-123457',
-    //   date: '2024-03-14',
-    //   status: 'in-transit',
-    //   items: ['Laptop Stand', 'Keyboard'],
-    //   trackingNumber: 'TRK-789013'
-    // }
-  ];
+  const [shipments, setShipments] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchShipments = async () => {
+      const userId = localStorage.getItem('user_id'); // Get user_id from localStorage
+      if (!userId) {
+        setError('User not authenticated');
+        return;
+      }
+
+      try {
+        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/addcart/user-orders/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user_id: userId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch shipments');
+        }
+
+        const data = await response.json();
+        if (data.orders) {
+          // Format and deduplicate shipments
+          const formattedShipments = data.orders.map((order) => ({
+            id: order._id,
+            orderNumber: order.StripePaymentID,
+            date: new Date(order.order_date).toLocaleDateString(),
+            status: 'processing', // Default status since the response doesn't have a status
+            items: order.products.map((product) => product.product_name),
+            trackingNumber: order.StripePaymentID, // Using StripePaymentID as a placeholder for tracking number
+          }));
+
+          // Deduplicate based on trackingNumber (StripePaymentID)
+          const uniqueShipments = formattedShipments.filter(
+            (shipment, index, self) =>
+              index ===
+              self.findIndex((s) => s.trackingNumber === shipment.trackingNumber)
+          );
+
+          setShipments(uniqueShipments);
+        } else {
+          setShipments([]);
+        }
+      } catch (error) {
+        console.error('Error fetching shipments:', error);
+        setError(error.message);
+      }
+    };
+
+    fetchShipments();
+  }, []);
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -46,10 +83,14 @@ const ShipmentsSection = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {shipments.length === 0 ? (
+      {error ? (
+        <div className="flex flex-col items-center justify-center gap-2 mb-8">
+          <p className="text-center text-red-500">{error}</p>
+        </div>
+      ) : shipments.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 mb-8">
           <Package className="h-6 w-6 text-blue-600" />
-          <p className="text-center text-gray-500">Oppps! No shipments available</p>
+          <p className="text-center text-gray-500">Oops! No shipments available</p>
         </div>
       ) : (
         <>
