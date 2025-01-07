@@ -48,7 +48,7 @@ export const confirmKlarnaPayment = async (
   userId: string
 ): Promise<KlarnaPaymentResponse> => {
   try {
-    const response = await fetch('http://127.0.0.1:8013/klarna_pay/confirm-payment/', {
+    const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/klarna_pay/confirm-payment/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

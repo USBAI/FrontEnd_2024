@@ -40,7 +40,7 @@ const CheckoutForm = ({ onPaymentMethodSelect }: CheckoutFormProps) => {
 
       // Create an order for each cart item
       const orderPromises = cartItems.map(item =>
-        fetch('http://127.0.0.1:8013/AddOrder_Confirm/place_order/', {
+        fetch('https://customerserver1-5d81976997ba.herokuapp.com/AddOrder_Confirm/place_order/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

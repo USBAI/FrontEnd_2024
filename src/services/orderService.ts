@@ -13,7 +13,7 @@ export const createOrder = async (
   try {
     // Create order for each cart item
     const orderPromises = cartItems.map(item => 
-      fetch('http://127.0.0.1:8013/users_order/add-user-order/', {
+      fetch('https://customerserver1-5d81976997ba.herokuapp.com/users_order/add-user-order/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
