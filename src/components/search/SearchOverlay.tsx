@@ -97,7 +97,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
 
   const LoadingCard = () => (
     <div className="animate-pulse rounded-lg p-0">
-      <div className="h-80 bg-gray-300 rounded-md mb-4"></div>
+      <div className="h-60 bg-gray-300 rounded-md mb-4"></div>
       <div className="h-6 bg-gray-300 rounded-md mb-2 w-4/4"></div>
       <div className='flex justify-between'>
         <div className="h-6 bg-gray-300 rounded-md mb-2 w-1/2"></div>
