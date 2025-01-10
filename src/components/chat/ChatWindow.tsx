@@ -29,9 +29,9 @@ interface Product {
 const TypingIndicator = () => (
   <div className="flex flex-col gap-2 min-h-[20px] p-2">
     <p className='text-white'>pppppppppppppppppppppppppppppppppppppppppp</p>
-    <div className="h-[5px] w-[90%] bg-gradient-to-r from-gray-200 via-gray-600 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] opacity-100"></div>
-    <div className="h-[5px] w-[75%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-300 opacity-100"></div>
-    <div className="h-[5px] w-[60%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-600 opacity-100"></div>
+    <div className="h-[10px] w-[90%] bg-gradient-to-r from-gray-200 via-gray-600 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] opacity-100"></div>
+    <div className="h-[10px] w-[75%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-300 opacity-100"></div>
+    <div className="h-[10px] w-[60%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-1000 opacity-100"></div>
   </div>
 );
 
@@ -47,6 +47,9 @@ const ChatWindow = () => {
   const [isFetchingProducts, setIsFetchingProducts] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showCreateAccount, setShowCreateAccount] = useState(false);
+
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -246,32 +249,115 @@ const ChatWindow = () => {
         <div className="text-center mb-8">
           <h2 className="text-lg font-bold">Discover Kluret AI</h2>
         </div>
-        <div className="bullet-point-kluret-a39d">
-          <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
-            {/* AI-Powered Insights Card */}
-            <div className="border rounded-lg p-4 shadow w-full md:w-80">
-              <h3 className="font-semibold">AI-Powered Insights</h3>
-              <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
-              <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
+        {showLogin ? (
+          <div className="w-full max-w-md mx-auto">
+            <form className="bg-white rounded-lg mb-4">
+              <div className="mb-4">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="email"
+                  type="email"
+                  placeholder="Email"
+                />
+              </div>
+              <div className="mb-6">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  id="password"
+                  type="password"
+                  placeholder="******************"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <button
+                  className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                  type="button"
+                >
+                  Sign In
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : showCreateAccount ? (
+          <div className="w-full max-w-md mx-auto">
+            <form className="bg-white rounded-lg mb-4">
+              <div className="mb-4">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="email"
+                  type="email"
+                  placeholder="Email"
+                />
+              </div>
+              <div className="mb-4">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  id="password"
+                  type="password"
+                  placeholder="Pass****"
+                />
+              </div>
+              <div className="mb-6">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Repeat pass****"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <button
+                  className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                  type="button"
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <>
+            <div className="bullet-point-kluret-a39d">
+              <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
+                {/* AI-Powered Insights Card */}
+                <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                  <h3 className="font-semibold">AI-Powered Insights</h3>
+                  <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
+                  <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
+                </div>
+                {/* Seamless Integration Card */}
+                <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                  <h3 className="font-semibold">Seamless Integration</h3>
+                  <p className="text-sm text-gray-600">Connect with various platforms effortlessly.</p>
+                  <p className="text-sm text-gray-400">Example: Use Kluret AI with your favorite e-commerce tools.</p>
+                </div>
+              </div>        
             </div>
-            {/* Seamless Integration Card */}
-            <div className="border rounded-lg p-4 shadow w-full md:w-80">
-              <h3 className="font-semibold">Seamless Integration</h3>
-              <p className="text-sm text-gray-600">Connect with various platforms effortlessly.</p>
-              <p className="text-sm text-gray-400">Example: Use Kluret AI with your favorite e-commerce tools.</p>
-            </div>
-          </div>        
-        </div>
+          </>
+        )}
 
         <div className="auth-chatwindow-39d34 flex justify-center mt-8">
-          <button className="px-0 py-2 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mr-4 transition duration-300">
+          <button 
+            onClick={() => {
+              setShowLogin(true);
+              setShowCreateAccount(false);
+            }}
+            className="px-4 py-2 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mr-4 transition duration-300"
+          >
             Login
           </button>
-          <button className="px-0 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300">
+          <button 
+            onClick={() => {
+              setShowCreateAccount(true);
+              setShowLogin(false);
+            }}
+            className="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300"
+          >
             Create Account
           </button>
         </div>
       </div>
+      
     ) : (
       <div
         ref={chatContainerRef}
@@ -291,20 +377,22 @@ const ChatWindow = () => {
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
                 >
                   {message.type === 'bot' && (
-                    <div className="flex-shrink-0 mr-2">
-                      {/* <div className="w-4 h-4 mt-[5px] rounded-full bg-blue-100 flex items-center justify-center">
-                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="20" fill="url(#paint0_linear_0_1)"/>
-                        <rect x="19" y="8" width="18" height="18" rx="9" fill="white"/>
-                        <defs>
-                        <linearGradient id="paint0_linear_0_1" x1="20" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#C4ABFF"/>
-                        <stop offset="1" stop-color="#FF7EBC"/>
-                        </linearGradient>
-                        </defs>
-                      </svg>
+                    <>
+                      {/* <div className="flex-shrink-0 mr-2">
+                        <div className="w-4 h-4 mt-[5px] rounded-full bg-blue-100 flex items-center justify-center">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="40" height="40" rx="20" fill="url(#paint0_linear_0_1)"/>
+                          <rect x="19" y="8" width="18" height="18" rx="9" fill="white"/>
+                          <defs>
+                          <linearGradient id="paint0_linear_0_1" x1="20" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#C4ABFF"/>
+                          <stop offset="1" stop-color="#FF7EBC"/>
+                          </linearGradient>
+                          </defs>
+                        </svg>
+                        </div>
                       </div> */}
-                    </div>
+                    </>
                   )}
                   <div className="max-w-[95%]">
                     {message.type === 'bot' ? (
@@ -318,11 +406,36 @@ const ChatWindow = () => {
                             <button>
                               <br />
                               <span
-                                onClick={() => handleViewProduct(message.additional_data?.product || '')}
-                                className="view-product-engine"
-                              >
-                                View Product⚡
-                              </span>
+                              onClick={() => handleViewProduct(message.additional_data?.product || '')}
+                              className="view-product-engine"
+                              style={{
+                                background: 'linear-gradient(to bottom right, rgb(255, 234, 244), rgb(228, 229, 255), rgb(241, 214, 255))',
+                                color: 'rgb(0, 0, 0)',
+                                height: 'fit-content',
+                                width: 'fit-content', 
+                                padding: '10px 30px',
+                                marginTop: '10px',
+                                borderRadius: '0px 15px 15px 15px',
+                                fontSize: '15px',
+                                animation: 'shine 2s infinite linear',
+                                backgroundSize: '200% 200%'
+                              }}
+                            >
+                              <style jsx>{`
+                                @keyframes shine {
+                                  0% {
+                                    background-position: 0% 0%;
+                                  }
+                                  50% {
+                                    background-position: 200% 200%;
+                                  }
+                                  100% {
+                                    background-position: 0% 0%;
+                                  }
+                                }
+                              `}</style>
+                              View Product⚡
+                            </span>                            
                             </button>
                             <div className='quick-engine-sugection'>
                               <div>
