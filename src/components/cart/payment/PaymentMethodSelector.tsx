@@ -46,20 +46,16 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
     },
   ];
 
-  // Fetch total from localStorage
   useEffect(() => {
     const storedTotal = localStorage.getItem('currentpayment_total');
     if (storedTotal) {
       const parsedTotal = parseFloat(storedTotal);
       if (!isNaN(parsedTotal) && parsedTotal > 0) {
         setTotal(parsedTotal);
-        console.log('Validated total amount:', parsedTotal);
       } else {
-        console.error('Invalid total amount in localStorage:', storedTotal);
         setError('Invalid total amount. Please refresh the page.');
       }
     } else {
-      console.error('Total amount not found in localStorage.');
       setError('Total amount not found. Please refresh the page.');
     }
   }, []);
@@ -84,7 +80,6 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
           setError('Shipping information not found.');
         }
       } catch (error) {
-        console.error('Error fetching shipping information:', error);
         setError('Failed to fetch shipping information.');
       }
     };
@@ -105,8 +100,6 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
       if (!total || typeof total !== 'number' || total <= 0) {
         throw new Error('Total amount is undefined or invalid.');
       }
-
-      console.log('Total amount for payment initialization:', total);
 
       const response = await fetch(
         'https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/create-payment-intent/',
@@ -129,7 +122,6 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
         throw new Error(data.message || 'Failed to initialize payment');
       }
     } catch (error) {
-      console.error('Payment initialization error:', error);
       setError(error instanceof Error ? error.message : 'Failed to initialize payment');
     }
   };
@@ -137,7 +129,7 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
   const handleSelectMethod = (method: 'card' | 'klarna') => {
     setSelectedMethod(method);
     setIsShippingComplete(false);
-    setError(null); // Clear previous errors
+    setError(null);
 
     if (method === 'card') {
       initializePayment();
@@ -158,19 +150,45 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
       if (data.status === 'success') {
         setIsShippingComplete(true);
         if (selectedMethod === 'card') {
-          await initializePayment(); // Initialize payment if "card" is selected
+          await initializePayment();
         } else {
           localStorage.setItem('payment_return_url', window.location.href);
-          window.open('/payment/klarna', '_blank'); // Redirect to Klarna
+          window.open('/payment/klarna', '_blank');
         }
       } else {
         setError('Failed to save shipping information.');
       }
     } catch (error) {
-      console.error('Error saving shipping information:', error);
       setError('Failed to save shipping information.');
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handlePaymentSubmit = async () => {
+    const stripe = useStripe();
+    const elements = useElements();
+
+    if (!stripe || !elements || !clientSecret) {
+      setError('Stripe is not initialized or payment details are missing. Please try again.');
+      return;
+    }
+
+    try {
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.href,
+        },
+      });
+
+      if (result.error) {
+        setError(result.error.message || 'Payment failed. Please try again.');
+      } else {
+        alert('Payment Successful!');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
     }
   };
 
@@ -292,7 +310,8 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            type="submit"
+            type="button"
+            onClick={handlePaymentSubmit}
             className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
           >
             Pay {total} kr
@@ -301,18 +320,20 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
       </Elements>
     );
   }
+  
 
   return (
+    
     <div className="p-6">
       <h2 className="text-xl font-semibold mb-6">Select Payment Method</h2>
       <div className="grid grid-cols-1 gap-4">
         {paymentMethods.map((method) => (
           <motion.button
             key={method.id}
-            onClick={() => handleSelectMethod(method.id as 'card' | 'klarna')}
+            onClick={() => onSelectMethod(method.id as 'card' | 'klarna')}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full p-2 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white text-left transition-all`}
+            className={`w-full p-6 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white text-left transition-all`}
           >
             <div className="flex items-center gap-4">
               <div className={`p-3 rounded-xl bg-gradient-to-r ${method.gradient}`}>
