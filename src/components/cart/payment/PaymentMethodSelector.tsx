@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Clock, ArrowLeft } from 'lucide-react';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface PaymentMethodSelectorProps {
   onShippingComplete: (method: 'card' | 'klarna') => void;
@@ -22,6 +26,8 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
     email: '',
     additional_instructions: '',
   });
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [total, setTotal] = useState<number>(0);
 
   const paymentMethods = [
     {
@@ -40,6 +46,24 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
     },
   ];
 
+  // Fetch total from localStorage
+  useEffect(() => {
+    const storedTotal = localStorage.getItem('currentpayment_total');
+    if (storedTotal) {
+      const parsedTotal = parseFloat(storedTotal);
+      if (!isNaN(parsedTotal) && parsedTotal > 0) {
+        setTotal(parsedTotal);
+        console.log('Validated total amount:', parsedTotal);
+      } else {
+        console.error('Invalid total amount in localStorage:', storedTotal);
+        setError('Invalid total amount. Please refresh the page.');
+      }
+    } else {
+      console.error('Total amount not found in localStorage.');
+      setError('Total amount not found. Please refresh the page.');
+    }
+  }, []);
+
   useEffect(() => {
     const fetchShippingInfo = async () => {
       try {
@@ -49,7 +73,9 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
           return;
         }
 
-        const response = await fetch(`https://customerserver1-5d81976997ba.herokuapp.com/users/get-shipping-info/?user_id=${userId}`);
+        const response = await fetch(
+          `https://customerserver1-5d81976997ba.herokuapp.com/users/get-shipping-info/?user_id=${userId}`
+        );
         const data = await response.json();
 
         if (data.status === 'success') {
@@ -68,9 +94,54 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
     }
   }, [selectedMethod]);
 
+  const initializePayment = async () => {
+    try {
+      const userId = localStorage.getItem('user_id');
+      if (!userId) {
+        setError('User not authenticated');
+        return;
+      }
+
+      if (!total || typeof total !== 'number' || total <= 0) {
+        throw new Error('Total amount is undefined or invalid.');
+      }
+
+      console.log('Total amount for payment initialization:', total);
+
+      const response = await fetch(
+        'https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/create-payment-intent/',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: userId,
+            total_cost: total.toString(),
+            currency: 'sek',
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.status === 'success' && data.client_secret) {
+        setClientSecret(data.client_secret);
+      } else {
+        throw new Error(data.message || 'Failed to initialize payment');
+      }
+    } catch (error) {
+      console.error('Payment initialization error:', error);
+      setError(error instanceof Error ? error.message : 'Failed to initialize payment');
+    }
+  };
+
   const handleSelectMethod = (method: 'card' | 'klarna') => {
     setSelectedMethod(method);
     setIsShippingComplete(false);
+    setError(null); // Clear previous errors
+
+    if (method === 'card') {
+      initializePayment();
+    }
   };
 
   const handleSaveShipping = async () => {
@@ -86,8 +157,12 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
 
       if (data.status === 'success') {
         setIsShippingComplete(true);
-        localStorage.setItem('payment_return_url', window.location.href);
-        window.open('/payment/klarna', '_blank');
+        if (selectedMethod === 'card') {
+          await initializePayment(); // Initialize payment if "card" is selected
+        } else {
+          localStorage.setItem('payment_return_url', window.location.href);
+          window.open('/payment/klarna', '_blank'); // Redirect to Klarna
+        }
       } else {
         setError('Failed to save shipping information.');
       }
@@ -194,6 +269,36 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
           </button>
         </form>
       </div>
+    );
+  }
+
+  if (selectedMethod === 'card' && clientSecret) {
+    return (
+      <Elements stripe={stripePromise} options={{ clientSecret }}>
+        <div className="p-6">
+          <button
+            onClick={() => setSelectedMethod(null)}
+            className="flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-4"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to payment methods
+          </button>
+          <PaymentElement
+            options={{
+              wallets: { applePay: 'auto', googlePay: 'auto' },
+              paymentMethodOrder: ['card', 'googlePay', 'applePay'],
+            }}
+          />
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+          >
+            Pay {total} kr
+          </motion.button>
+        </div>
+      </Elements>
     );
   }
 

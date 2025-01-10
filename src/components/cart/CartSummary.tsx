@@ -19,6 +19,8 @@ const CartSummary = ({ items, onClose }: CartSummaryProps) => {
   };
 
   const handleCheckout = () => {
+    const total = calculateTotal();
+    localStorage.setItem('currentpayment_total', total); // Save total to localStorage
     setShowPayment(true);
   };
 
