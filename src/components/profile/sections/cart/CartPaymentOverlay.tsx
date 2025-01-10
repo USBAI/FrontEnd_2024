@@ -200,121 +200,124 @@ const CartPaymentOverlay = ({ isOpen, onClose, total }: CartPaymentOverlayProps)
               )}
 
               {!isShippingComplete && selectedMethod === 'klarna' ? (
-                <div>
+                <div className="overflow-y-auto max-h-[70vh]">
+                <button
+                  onClick={() => setSelectedMethod(null)}
+                  className="flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-4"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to payment methods
+                </button>
+                <h2 className="text-lg font-bold mb-4">Enter Shipping Information</h2>
+                <form className="space-y-4">
+                  <input
+                    type="text"
+                    name="full_name"
+                    placeholder="Full Name"
+                    value={formFields.full_name}
+                    onChange={(e) => setFormFields({ ...formFields, full_name: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="Address"
+                    value={formFields.address}
+                    onChange={(e) => setFormFields({ ...formFields, address: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="City"
+                    value={formFields.city}
+                    onChange={(e) => setFormFields({ ...formFields, city: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <input
+                    type="text"
+                    name="state"
+                    placeholder="State"
+                    value={formFields.state}
+                    onChange={(e) => setFormFields({ ...formFields, state: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <input
+                    type="text"
+                    name="zip_code"
+                    placeholder="ZIP Code"
+                    value={formFields.zip_code}
+                    onChange={(e) => setFormFields({ ...formFields, zip_code: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <input
+                    type="text"
+                    name="country"
+                    placeholder="Country"
+                    value={formFields.country}
+                    onChange={(e) => setFormFields({ ...formFields, country: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <input
+                    type="text"
+                    name="phone_number"
+                    placeholder="Phone Number"
+                    value={formFields.phone_number}
+                    onChange={(e) => setFormFields({ ...formFields, phone_number: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formFields.email}
+                    onChange={(e) => setFormFields({ ...formFields, email: e.target.value })}
+                    className="w-full p-2 border rounded"
+                  />
+                  <textarea
+                    name="additional_instructions"
+                    placeholder="Additional Instructions (optional)"
+                    value={formFields.additional_instructions}
+                    onChange={(e) =>
+                      setFormFields({ ...formFields, additional_instructions: e.target.value })
+                    }
+                    className="w-full p-2 border rounded"
+                  />
                   <button
-                    onClick={() => setSelectedMethod(null)}
-                    className="flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-4"
+                    type="button"
+                    onClick={handleSaveShipping}
+                    className="w-full py-2 bg-blue-500 text-white rounded flex items-center justify-center"
+                    disabled={isSaving}
                   >
-                    <ArrowLeft className="h-4 w-4" />
-                    Back to payment methods
+                    {isSaving ? 'Saving...' : 'Confirm Shipping Information'}
                   </button>
-                  <h2 className="text-lg font-bold mb-4">Enter Shipping Information</h2>
-                  <form className="space-y-4">
-                    <input
-                      type="text"
-                      name="full_name"
-                      placeholder="Full Name"
-                      value={formFields.full_name}
-                      onChange={(e) => setFormFields({ ...formFields, full_name: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      name="address"
-                      placeholder="Address"
-                      value={formFields.address}
-                      onChange={(e) => setFormFields({ ...formFields, address: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      name="city"
-                      placeholder="City"
-                      value={formFields.city}
-                      onChange={(e) => setFormFields({ ...formFields, city: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      name="state"
-                      placeholder="State"
-                      value={formFields.state}
-                      onChange={(e) => setFormFields({ ...formFields, state: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      name="zip_code"
-                      placeholder="ZIP Code"
-                      value={formFields.zip_code}
-                      onChange={(e) => setFormFields({ ...formFields, zip_code: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      name="country"
-                      placeholder="Country"
-                      value={formFields.country}
-                      onChange={(e) => setFormFields({ ...formFields, country: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      name="phone_number"
-                      placeholder="Phone Number"
-                      value={formFields.phone_number}
-                      onChange={(e) => setFormFields({ ...formFields, phone_number: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      value={formFields.email}
-                      onChange={(e) => setFormFields({ ...formFields, email: e.target.value })}
-                      className="w-full p-2 border rounded"
-                    />
-                    <textarea
-                      name="additional_instructions"
-                      placeholder="Additional Instructions (optional)"
-                      value={formFields.additional_instructions}
-                      onChange={(e) =>
-                        setFormFields({ ...formFields, additional_instructions: e.target.value })
-                      }
-                      className="w-full p-2 border rounded"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleSaveShipping}
-                      className="w-full py-2 bg-blue-500 text-white rounded flex items-center justify-center"
-                      disabled={isSaving}
-                    >
-                      {isSaving ? 'Saving...' : 'Confirm Shipping Information'}
-                    </button>
-                  </form>
-                </div>
+                </form>
+              </div>
+              
               ) : paymentStatus === 'idle' && !selectedMethod ? (
                 <PaymentMethodSelector onSelectMethod={handleMethodSelect} />
               ) : selectedMethod === 'card' && clientSecret ? (
-                <Elements
-                  stripe={stripePromise}
-                  options={{
-                    clientSecret,
-                    appearance: { theme: 'stripe' },
-                    loader: 'auto',
-                  }}
-                >
-                  <CardPaymentForm
-                    total={total}
-                    onBack={() => setSelectedMethod(null)}
-                    onProcessing={() => setPaymentStatus('processing')}
-                    onSuccess={(paymentId) => {
-                      setPaymentStatus('success');
-                      handlePostOrder(paymentId);
+                <div className="overflow-y-auto max-h-[70vh]">
+                  <Elements
+                    stripe={stripePromise}
+                    options={{
+                      clientSecret,
+                      appearance: { theme: 'stripe' },
+                      loader: 'auto',
                     }}
-                    onError={() => setPaymentStatus('error')}
-                  />
-                </Elements>
+                  >
+                    <CardPaymentForm
+                      total={total}
+                      onBack={() => setSelectedMethod(null)}
+                      onProcessing={() => setPaymentStatus('processing')}
+                      onSuccess={(paymentId) => {
+                        setPaymentStatus('success');
+                        handlePostOrder(paymentId);
+                      }}
+                      onError={() => setPaymentStatus('error')}
+                    />
+                  </Elements>
+                </div>
               ) : paymentStatus === 'processing' ? (
                 <PaymentProcessing />
               ) : (

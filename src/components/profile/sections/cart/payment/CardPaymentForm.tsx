@@ -234,6 +234,8 @@ const CardPaymentForm = ({ total, onBack, onProcessing, onSuccess, onError }: Ca
                 applePay: 'auto',
                 googlePay: 'auto',
               },
+              // Exclude Klarna by default
+              paymentMethodOrder: ['card', 'googlePay', 'applePay'],
             }}
           />
           <motion.button

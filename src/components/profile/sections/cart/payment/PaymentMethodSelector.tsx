@@ -26,9 +26,9 @@ const PaymentMethodSelector = ({ onSelectMethod }: PaymentMethodSelectorProps) =
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <h2 className="text-xl font-semibold">Select Payment Method</h2>
-      <div className="space-y-4">
+      <div className="space-y-2">
         {paymentMethods.map((method) => (
           <PaymentMethodButton
             key={method.id}

@@ -8,7 +8,7 @@ interface PaymentHeaderProps {
 
 const PaymentHeader = ({ onClose, isProcessing }: PaymentHeaderProps) => {
   return (
-    <div className="p-6 border-b border-gray-200">
+    <div className="p-2 border-b border-gray-200">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg">

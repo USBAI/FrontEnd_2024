@@ -82,69 +82,71 @@ const CartPaymentOverlay = ({ isOpen, onClose, total }: CartPaymentOverlayProps)
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-            onClick={onClose}
-          />
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="paymentoverlay-div-container"
-            // className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-50 max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
-          >
-            {/* Header */}
-            <div className="relative p-6 border-b border-gray-200">
-              <button
-                onClick={onClose}
-                className="absolute right-4 top-4 p-2 text-gray-400 hover:text-gray-500 rounded-full hover:bg-gray-100 transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              <h2 className="text-xl font-semibold">Checkout</h2>
-              <p className="text-sm text-gray-500">Total: {total.toFixed(2)} kr</p>
-            </div>
-
-            {/* Content */}
-            <div className="max-h-[calc(100vh-12rem)] overflow-y-auto">
-              {error ? (
-                <div className="p-6">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
-                    {error}
-                  </div>
-                </div>
-              ) : isLoading ? (
-                <div className="p-6 flex flex-col items-center justify-center">
-                  <LoadingSpinner size="lg" />
-                  <p className="mt-4 text-gray-500">Initializing payment...</p>
-                </div>
-              ) : !selectedMethod ? (
-                <PaymentMethodSelector
-                  onSelectMethod={handleMethodSelect}
-                  onClose={onClose}
-                />
-              ) : clientSecret ? (
-                <Elements 
-                  stripe={stripePromise} 
-                  options={{ 
-                    clientSecret,
-                    appearance: { theme: 'stripe' },
-                    loader: 'auto'
-                  }}
+          <div className='the-payment-overlay-3988ue'>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              onClick={onClose}
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="paymentoverlay-div-container"
+              // className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-50 max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
+            >
+              {/* Header */}
+              <div className="relative p-6 border-b border-gray-200">
+                <button
+                  onClick={onClose}
+                  className="absolute right-4 top-4 p-2 text-gray-400 hover:text-gray-500 rounded-full hover:bg-gray-100 transition-colors"
                 >
-                  <CardPaymentForm
-                    total={total}
-                    onBack={() => setSelectedMethod(null)}
-                    onSuccess={onClose}
+                  <X className="h-5 w-5" />
+                </button>
+                <h2 className="text-xl font-semibold">Checkout</h2>
+                <p className="text-sm text-gray-500">Total: {total.toFixed(2)} kr</p>
+              </div>
+
+              {/* Content */}
+              <div className="max-h-[calc(100vh-12rem)] overflow-y-auto">
+                {error ? (
+                  <div className="p-6">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
+                      {error}
+                    </div>
+                  </div>
+                ) : isLoading ? (
+                  <div className="p-6 flex flex-col items-center justify-center">
+                    <LoadingSpinner size="lg" />
+                    <p className="mt-4 text-gray-500">Initializing payment...</p>
+                  </div>
+                ) : !selectedMethod ? (
+                  <PaymentMethodSelector
+                    onSelectMethod={handleMethodSelect}
+                    onClose={onClose}
                   />
-                </Elements>
-              ) : null}
-            </div>
-          </motion.div>
+                ) : clientSecret ? (
+                  <Elements 
+                    stripe={stripePromise} 
+                    options={{ 
+                      clientSecret,
+                      appearance: { theme: 'stripe' },
+                      loader: 'auto'
+                    }}
+                  >
+                    <CardPaymentForm
+                      total={total}
+                      onBack={() => setSelectedMethod(null)}
+                      onSuccess={onClose}
+                    />
+                  </Elements>
+                ) : null}
+              </div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

@@ -207,7 +207,7 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
             onClick={() => handleSelectMethod(method.id as 'card' | 'klarna')}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full p-6 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white text-left transition-all`}
+            className={`w-full p-2 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white text-left transition-all`}
           >
             <div className="flex items-center gap-4">
               <div className={`p-3 rounded-xl bg-gradient-to-r ${method.gradient}`}>

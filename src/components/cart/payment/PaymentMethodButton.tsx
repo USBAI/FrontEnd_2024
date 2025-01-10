@@ -39,7 +39,7 @@ const PaymentMethodButton = ({
       <motion.div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className={`w-full p-6 rounded-xl border-2 ${colors[variant].border} ${colors[variant].bg} text-left transition-all`}
+        className={`w-full p-2 rounded-xl border-2 ${colors[variant].border} ${colors[variant].bg} text-left transition-all`}
       >
         <div className="flex items-center gap-4">
           <div className={`p-3 rounded-xl bg-gradient-to-r ${colors[variant].gradient}`}>
