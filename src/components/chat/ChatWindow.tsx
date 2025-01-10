@@ -27,10 +27,11 @@ interface Product {
 }
 
 const TypingIndicator = () => (
-  <div className="flex items-center space-x-1">
-    <span className="dot bg-gray-400 rounded-full w-2 h-2 animate-bounce"></span>
-    <span className="dot bg-gray-400 rounded-full w-2 h-2 animate-bounce delay-200"></span>
-    <span className="dot bg-gray-400 rounded-full w-2 h-2 animate-bounce delay-400"></span>
+  <div className="flex flex-col gap-2 min-h-[20px] p-2">
+    <p className='text-white'>ppppppppppppppppppppppppppppppppppppppppppppppppppppppppp</p>
+    <div className="h-[5px] w-[90%] bg-gradient-to-r from-gray-200 via-gray-600 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] opacity-100"></div>
+    <div className="h-[5px] w-[75%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-300 opacity-100"></div>
+    <div className="h-[5px] w-[60%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-600 opacity-100"></div>
   </div>
 );
 
@@ -246,20 +247,20 @@ const ChatWindow = () => {
           <h2 className="text-lg font-bold">Discover Kluret AI</h2>
         </div>
         <div className="bullet-point-kluret-a39d">
-          <div className="flex grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
             {/* AI-Powered Insights Card */}
-            <div className="border rounded-lg p-4 shadow">
+            <div className="border rounded-lg p-4 shadow w-full md:w-80">
               <h3 className="font-semibold">AI-Powered Insights</h3>
               <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
               <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
             </div>
             {/* Seamless Integration Card */}
-            <div className="border rounded-lg p-4 shadow">
+            <div className="border rounded-lg p-4 shadow w-full md:w-80">
               <h3 className="font-semibold">Seamless Integration</h3>
               <p className="text-sm text-gray-600">Connect with various platforms effortlessly.</p>
               <p className="text-sm text-gray-400">Example: Use Kluret AI with your favorite e-commerce tools.</p>
             </div>
-          </div>
+          </div>        
         </div>
 
         <div className="auth-chatwindow-39d34 flex justify-center mt-8">
@@ -291,7 +292,7 @@ const ChatWindow = () => {
                 >
                   {message.type === 'bot' && (
                     <div className="flex-shrink-0 mr-2">
-                      <div className="w-4 h-4 mt-[5px] rounded-full bg-blue-100 flex items-center justify-center">
+                      {/* <div className="w-4 h-4 mt-[5px] rounded-full bg-blue-100 flex items-center justify-center">
                       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="40" height="40" rx="20" fill="url(#paint0_linear_0_1)"/>
                         <rect x="19" y="8" width="18" height="18" rx="9" fill="white"/>
@@ -302,7 +303,7 @@ const ChatWindow = () => {
                         </linearGradient>
                         </defs>
                       </svg>
-                      </div>
+                      </div> */}
                     </div>
                   )}
                   <div className="max-w-[95%]">
@@ -390,11 +391,6 @@ const ChatWindow = () => {
             </AnimatePresence>
             {isTyping && (
               <div className="flex justify-start mb-4">
-                <div className="flex-shrink-0 mr-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles h-6 w-6 text-pink-500"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>
-                  </div>
-                </div>
                 <TypingIndicator />
               </div>
             )}
