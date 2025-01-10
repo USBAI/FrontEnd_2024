@@ -245,8 +245,8 @@ const ChatWindow = () => {
         <div className="text-center mb-8">
           <h2 className="text-lg font-bold">Discover Kluret AI</h2>
         </div>
-        <div className="flex justify-center items-center flex-wrap">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bullet-point-kluret-a39d">
+          <div className="flex grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* AI-Powered Insights Card */}
             <div className="border rounded-lg p-4 shadow">
               <h3 className="font-semibold">AI-Powered Insights</h3>
@@ -262,11 +262,11 @@ const ChatWindow = () => {
           </div>
         </div>
 
-        <div className="text-center mt-8">
-          <button className="px-6 py-2 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mr-4 transition duration-300">
+        <div className="auth-chatwindow-39d34 flex justify-center mt-8">
+          <button className="px-0 py-2 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mr-4 transition duration-300">
             Login
           </button>
-          <button className="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300">
+          <button className="px-0 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300">
             Create Account
           </button>
         </div>

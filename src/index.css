@@ -107,3 +107,29 @@ html {
     min-width: 44px;
   }
 }
+
+
+
+
+.auth-chatwindow-39d34 button{
+  border-radius: 500px;
+  width: 20%;
+}
+
+@media (max-width: 900px) {
+  .auth-chatwindow-39d34 button{
+    border-radius: 500px;
+    width: 50%;
+  }
+}
+
+
+.bullet-point-kluret-a39d{
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
