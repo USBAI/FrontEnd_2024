@@ -205,10 +205,11 @@
 
 
 .quick-engine-sugection{
-    margin-top: 45px;
-    background: linear-gradient(to bottom right, rgb(230, 218, 255), rgb(255, 220, 200), rgb(228, 222, 255), rgb(223, 218, 255));
+    margin-top: 25px;
+    /* background: linear-gradient(to bottom right, rgb(230, 218, 255), rgb(255, 220, 200), rgb(228, 222, 255), rgb(223, 218, 255)); */
     padding: 5px;
     border-radius: 10px;
+    width: 100%;
 }
 
 

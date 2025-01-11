@@ -62,25 +62,35 @@ const ChatWindow = () => {
   }, [messages]);
 
   const fetchProducts = async (productName: string) => {
-    if (isFetchingProducts || !productName.trim()) return; // Prevent multiple requests or empty searches
+    if (isFetchingProducts || !productName.trim()) return;
   
     setIsFetchingProducts(true);
   
+    // Clear old suggestions immediately
+    setProductSuggestions([]);
+  
+    // Track the current request
+    const currentRequestId = Date.now();
+    let activeRequestId = currentRequestId;
+  
     try {
-      // Prepare the payload for the API call
       const formData = new FormData();
       formData.append('product_name', productName);
       formData.append('page_index', '1');
       formData.append('min_price', '0');
       formData.append('max_price', '10000');
   
-      const response = await fetch('https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRFToken': '', // Include CSRF token if required
-        },
-      });
+      // Simulate loading time for 3 seconds
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+  
+      const response = await fetch(
+        'https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/',
+        {
+          method: 'POST',
+          body: formData,
+          cache: 'no-store',
+        }
+      );
   
       if (!response.ok) {
         throw new Error(`Failed to fetch products: ${response.statusText}`);
@@ -88,13 +98,13 @@ const ChatWindow = () => {
   
       const data = await response.json();
   
-      // Transform and filter valid products
       const validProducts = data
-        .filter((product: any) => 
-          product.name &&
-          product.price &&
-          product.cover_image_url &&
-          product.product_page_url
+        .filter(
+          (product: any) =>
+            product.name &&
+            product.price &&
+            product.cover_image_url &&
+            product.product_page_url
         )
         .map((product: any) => ({
           name: product.name,
@@ -104,15 +114,34 @@ const ChatWindow = () => {
           product_page_url: product.product_page_url,
         }));
   
-      // Set product suggestions in state
-      setProductSuggestions(validProducts);
+      // Update suggestions only if the request is the latest
+      if (currentRequestId === activeRequestId) {
+        setProductSuggestions(validProducts);
+      }
     } catch (error) {
       console.error('Error fetching product suggestions:', error);
       setProductSuggestions([]);
     } finally {
-      setIsFetchingProducts(false);
+      if (currentRequestId === activeRequestId) {
+        setIsFetchingProducts(false);
+      }
     }
   };
+  
+  
+  
+
+  const cleanupSuggestionIds = () => {
+    const storedIds = JSON.parse(localStorage.getItem('product_suggestion_ids') || '[]');
+    if (storedIds.length > 50) {
+      localStorage.setItem(
+        'product_suggestion_ids',
+        JSON.stringify(storedIds.slice(-50)) // Keep only the latest 50 IDs
+      );
+    }
+  };
+  
+  
   
 
   useEffect(() => {
@@ -242,291 +271,199 @@ const ChatWindow = () => {
 
   return (
     <div className="relative flex flex-col h-[100svh] h-[100vh] bg-white">
-  <div className="h-16 flex-shrink-0" />
-  <div className="relative flex-1 min-h-0">
-    {messages.length === 0 ? (
-      <div className="bg-white p-8 aline-center justify-center flex flex-col h-full">
-        <div className="text-center mb-8">
-          <h2 className="text-lg font-bold">Discover Kluret AI</h2>
-        </div>
-        {showLogin ? (
-          <div className="w-full max-w-md mx-auto">
-            <form className="bg-white rounded-lg mb-4">
-              <div className="mb-4">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="email"
-                  type="email"
-                  placeholder="Email"
-                />
-              </div>
-              <div className="mb-6">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                  id="password"
-                  type="password"
-                  placeholder="******************"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <button
-                  className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-                  type="button"
-                >
-                  Sign In
-                </button>
-              </div>
-            </form>
-          </div>
-        ) : showCreateAccount ? (
-          <div className="w-full max-w-md mx-auto">
-            <form className="bg-white rounded-lg mb-4">
-              <div className="mb-4">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="email"
-                  type="email"
-                  placeholder="Email"
-                />
-              </div>
-              <div className="mb-4">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                  id="password"
-                  type="password"
-                  placeholder="Pass****"
-                />
-              </div>
-              <div className="mb-6">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Repeat pass****"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <button
-                  className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-                  type="button"
-                >
-                  Create Account
-                </button>
-              </div>
-            </form>
-          </div>
-        ) : (
-          <>
-            <div className="bullet-point-kluret-a39d">
-              <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
-                {/* AI-Powered Insights Card */}
-                <div className="border rounded-lg p-4 shadow w-full md:w-80">
-                  <h3 className="font-semibold">AI-Powered Insights</h3>
-                  <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
-                  <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
-                </div>
-                {/* Seamless Integration Card */}
-                <div className="border rounded-lg p-4 shadow w-full md:w-80">
-                  <h3 className="font-semibold">Seamless Integration</h3>
-                  <p className="text-sm text-gray-600">Connect with various platforms effortlessly.</p>
-                  <p className="text-sm text-gray-400">Example: Use Kluret AI with your favorite e-commerce tools.</p>
-                </div>
-              </div>        
+      <div className="h-16 flex-shrink-0" />
+      <div className="relative flex-1 min-h-0">
+        {messages.length === 0 ? (
+          <div className="bg-white p-8 aline-center justify-center flex flex-col h-full">
+            <div className="text-center mb-8">
+              <h2 className="text-lg font-bold">Discover Kluret AI</h2>
             </div>
-          </>
-        )}
-
-        <div className="auth-chatwindow-39d34 flex justify-center mt-8">
-          <button 
-            onClick={() => {
-              setShowLogin(true);
-              setShowCreateAccount(false);
-            }}
-            className="px-4 py-2 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mr-4 transition duration-300"
+            
+            <div className="bullet-point-kluret-a39d">
+                  <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
+                    {/* AI-Powered Insights Card */}
+                    <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                      <h3 className="font-semibold">AI-Powered Insights</h3>
+                      <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
+                      <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
+                    </div>
+                    <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                      <h3 className="font-semibold">AI-Powered Insights</h3>
+                      <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
+                      <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
+                    </div>
+                  </div>        
+                </div>
+          </div>
+          
+        ) : (
+          <div
+            ref={chatContainerRef}
+            className="absolute pb-[50px] pt-[50px] inset-0 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+            style={{ scrollBehavior: 'smooth' }}
           >
-            Login
-          </button>
-          <button 
-            onClick={() => {
-              setShowCreateAccount(true);
-              setShowLogin(false);
-            }}
-            className="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300"
-          >
-            Create Account
-          </button>
-        </div>
-      </div>
-      
-    ) : (
-      <div
-        ref={chatContainerRef}
-        className="absolute pb-[50px] pt-[50px] inset-0 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
-        style={{ scrollBehavior: 'smooth' }}
-      >
-        <div className="relative pb-[50px] pt-[50px] min-h-full flex flex-col justify-end">
-          <div className="max-w-4xl w-full mx-auto px-4 py-6">
-            <AnimatePresence initial={false}>
-              {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
-                >
-                  {message.type === 'bot' && (
-                    <>
-                      {/* <div className="flex-shrink-0 mr-2">
-                        <div className="w-4 h-4 mt-[5px] rounded-full bg-blue-100 flex items-center justify-center">
-                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <rect width="40" height="40" rx="20" fill="url(#paint0_linear_0_1)"/>
-                          <rect x="19" y="8" width="18" height="18" rx="9" fill="white"/>
-                          <defs>
-                          <linearGradient id="paint0_linear_0_1" x1="20" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
-                          <stop stop-color="#C4ABFF"/>
-                          <stop offset="1" stop-color="#FF7EBC"/>
-                          </linearGradient>
-                          </defs>
-                        </svg>
-                        </div>
-                      </div> */}
-                    </>
-                  )}
-                  <div className="max-w-[95%]">
-                    {message.type === 'bot' ? (
-                      <div className="relative">
-                        <BotMessage 
-                          message={message} 
-                          onViewProduct={() => handleViewProduct(message.additional_data?.product || '')}
-                        />
-                        {message.additional_data?.product && message.additional_data?.open && (
-                          <div>
-                            <button>
-                              <br />
-                              <span
-                              onClick={() => handleViewProduct(message.additional_data?.product || '')}
-                              className="view-product-engine"
-                              style={{
-                                background: 'linear-gradient(to bottom right, rgb(255, 234, 244), rgb(228, 229, 255), rgb(241, 214, 255))',
-                                color: 'rgb(0, 0, 0)',
-                                height: 'fit-content',
-                                width: 'fit-content', 
-                                padding: '10px 30px',
-                                marginTop: '10px',
-                                borderRadius: '0px 15px 15px 15px',
-                                fontSize: '15px',
-                                animation: 'shine 2s infinite linear',
-                                backgroundSize: '200% 200%'
-                              }}
-                            >
-                              <style jsx>{`
-                                @keyframes shine {
-                                  0% {
-                                    background-position: 0% 0%;
-                                  }
-                                  50% {
-                                    background-position: 200% 200%;
-                                  }
-                                  100% {
-                                    background-position: 0% 0%;
-                                  }
-                                }
-                              `}</style>
-                              View Product⚡
-                            </span>                            
-                            </button>
-                            <div className='quick-engine-sugection'>
+            <div className="relative pb-[50px] pt-[50px] min-h-full flex flex-col justify-end">
+              <div className="max-w-4xl w-full mx-auto px-4 py-6">
+                <AnimatePresence initial={false}>
+                  {messages.map((message) => (
+                    <motion.div
+                      key={message.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
+                    >
+                      <div className="max-w-[100%]">
+                        {message.type === 'bot' ? (
+                          <div className="relative">
+                            <BotMessage 
+                              message={message} 
+                              onViewProduct={() => handleViewProduct(message.additional_data?.product || '')}
+                            />
+                            {message.additional_data?.product && message.additional_data?.open && (
                               <div>
-                                <span>Quick Sugections</span>
-                              </div>
-                              <div className="flex overflow-x-auto space-x-4 mt-2" style={{ overflowY: 'auto', maxHeight: '220px' }}>
-                                {isFetchingProducts ? (
-                                  Array.from({ length: 5 }).map((_, index) => (
-                                    <div
-                                    key={index}
-                                    className="flex-shrink-0 w-40 h-36 border rounded-lg p-2 relative overflow-hidden"
-                                    style={{
-                                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-                                      backgroundSize: '200% 100%',
-                                      animation: 'shimmer 2s infinite linear'
-                                    }}
-                                  >
-                                    <style jsx>{`
-                                      @keyframes shimmer {
-                                        0% {
-                                          background-position: 200% 0;
-                                        }
-                                        100% {
-                                          background-position: -200% 0;
-                                        }
+                                <button>
+                                  <br />
+                                  <span
+                                  onClick={() => handleViewProduct(message.additional_data?.product || '')}
+                                  className="view-product-engine"
+                                  style={{
+                                    background: 'linear-gradient(to bottom right, rgb(255, 234, 244), rgb(228, 229, 255), rgb(241, 214, 255))',
+                                    color: 'rgb(0, 0, 0)',
+                                    height: 'fit-content',
+                                    width: 'fit-content', 
+                                    padding: '10px 30px',
+                                    marginTop: '10px',
+                                    borderRadius: '0px 15px 15px 15px',
+                                    fontSize: '15px',
+                                    animation: 'shine 2s infinite linear',
+                                    backgroundSize: '200% 200%'
+                                  }}
+                                >
+                                  <style jsx>{`
+                                    @keyframes shine {
+                                      0% {
+                                        background-position: 0% 0%;
                                       }
-                                    `}</style>
+                                      50% {
+                                        background-position: 200% 200%;
+                                      }
+                                      100% {
+                                        background-position: 0% 0%;
+                                      }
+                                    }
+                                  `}</style>
+                                  View Product⚡
+                                </span>                            
+                                </button>
+                                <div className="quick-engine-suggestions">
+                                  <div>
+                                    {/* <span>Quick Suggestions</span> */}
+                                    <br />
                                   </div>
-                                  ))
-                                ) : (
-                                  productSuggestions.map((product) => (
-                                    <div
-                                      key={product.product_id}
-                                      className="flex-shrink-0 w-40 h-fit border rounded-lg p-2 cursor-pointer hover:shadow-lg bg-white"
-                                      onClick={() => handleViewProduct(product.name)}
-                                    >
-                                      <img
-                                        src={product.cover_image_url}
-                                        alt={product.name}
-                                        className="w-full h-24 object-contain rounded"
-                                      />
-                                      <p className="text-sm font-semibold mt-2 truncate">{product.name}</p>
-                                      <p className="text-sm text-gray-600">{product.price}</p>
-                                      <div className='quickpay-monthly'>
-                                        <div>
-                                          {Math.round(parseFloat(product.price.replace(/[^0-9.-]+/g, '')) / 24)} kr
+                                  <div
+                                    className="flex overflow-x-auto space-x-4 mt-2"
+                                    style={{ overflowY: 'auto', maxHeight: '220px' }}
+                                  >
+                                    {isFetchingProducts ? (
+                                      // Show loading shimmer
+                                      Array.from({ length: 5 }).map((_, index) => (
+                                        <div
+                                          key={index}
+                                          className="flex-shrink-0 w-40 h-36 border rounded-lg p-2 relative overflow-hidden"
+                                          style={{
+                                            background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                                            backgroundSize: '200% 100%',
+                                            animation: 'shimmer 2s infinite linear',
+                                          }}
+                                        >
+                                          <style jsx>{`
+                                            @keyframes shimmer {
+                                              0% {
+                                                background-position: 200% 0;
+                                              }
+                                              100% {
+                                                background-position: -200% 0;
+                                              }
+                                            }
+                                          `}</style>
                                         </div>
-                                        <div>
-                                          <svg width="15" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.443 -9.15527e-05H12.0894C12.0894 3.57134 9.89835 6.77134 6.56912 9.05705L5.26019 9.97134V-9.15527e-05H0.73584V19.9999H5.26019V10.0856L12.7439 19.9999H18.2641L11.065 10.5142C14.3374 8.14277 16.4715 4.45705 16.443 -9.15527e-05Z" fill="#0B051D"></path></svg>
+                                      ))
+                                    ) : (
+                                      // Show products from the latest request only
+                                      productSuggestions.map((product) => (
+                                        <div
+                                          key={product.product_id}
+                                          className="flex-shrink-0 w-40 h-fit border rounded-lg p-2 cursor-pointer hover:shadow-lg bg-white"
+                                          onClick={() => handleViewProduct(product.name)}
+                                        >
+                                          <img
+                                            src={product.cover_image_url}
+                                            alt={product.name}
+                                            className="w-full h-24 object-contain rounded"
+                                          />
+                                          <p className="text-sm font-semibold mt-2 truncate">{product.name}</p>
+                                          <p className="text-sm text-gray-600">{product.price}</p>
+                                          <div className="quickpay-monthly">
+                                            <div>
+                                              {Math.round(parseFloat(product.price.replace(/[^0-9.-]+/g, '')) / 24)} kr
+                                            </div>
+                                            <div>
+                                              <svg
+                                                width="15"
+                                                height="20"
+                                                viewBox="0 0 19 20"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                              >
+                                                <path
+                                                  d="M16.443 -9.15527e-05H12.0894C12.0894 3.57134 9.89835 6.77134 6.56912 9.05705L5.26019 9.97134V-9.15527e-05H0.73584V19.9999H5.26019V10.0856L12.7439 19.9999H18.2641L11.065 10.5142C14.3374 8.14277 16.4715 4.45705 16.443 -9.15527e-05Z"
+                                                  fill="#0B051D"
+                                                ></path>
+                                              </svg>
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                  ))
-                                )}
+                                      ))
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
+                            )}
                           </div>
+                        ) : (
+                          <UserMessage message={message} />
                         )}
                       </div>
-                    ) : (
-                      <UserMessage message={message} />
-                    )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+                {isTyping && (
+                  <div className="flex justify-start mb-4">
+                    <TypingIndicator />
                   </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            {isTyping && (
-              <div className="flex justify-start mb-4">
-                <TypingIndicator />
+                )}
+                <div ref={messagesEndRef} />
               </div>
-            )}
-            <div ref={messagesEndRef} />
+            </div>
           </div>
+        )}
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 flex-shrink-0 bg-gradient-to-t from-white via-white/95 to-transparent pb-6 pt-4">
+        <div className="max-w-4xl mx-auto px-4">
+          <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
         </div>
       </div>
-    )}
-  </div>
 
-  <div className="fixed bottom-0 left-0 right-0 flex-shrink-0 bg-gradient-to-t from-white via-white/95 to-transparent pb-6 pt-4">
-    <div className="max-w-4xl mx-auto px-4">
-      <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
+      <SearchOverlay 
+        isOpen={isSearchOpen} 
+        onClose={handleSearchClose}
+        initialSearchQuery={searchQuery}
+        shouldTriggerSearch={shouldTriggerSearch}
+      />
     </div>
-  </div>
-
-  <SearchOverlay 
-    isOpen={isSearchOpen} 
-    onClose={handleSearchClose}
-    initialSearchQuery={searchQuery}
-    shouldTriggerSearch={shouldTriggerSearch}
-  />
-</div>
 
   );
 };
