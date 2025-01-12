@@ -56,23 +56,23 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
           onClick={goToPrevious}
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full flex items-center justify-center"
         >
-          <span style={{ fontSize: '40px',  marginTop: '-10px' }}>&#8249;</span>
+          &#8249;
         </button>
         {/* Right Arrow */}
         <button
           onClick={goToNext}
           className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full flex items-center justify-center"
         >
-          <span style={{ fontSize: '40px', marginTop: '-10px' }}>&#8250;</span>
+          &#8250;
         </button>
 
       </div>
       {/* Dots for Navigation */}
-      <div className="flex justify-center mt-2 space-x-2 bg-gray-200 rounded-full p-2 w-fit m-auto">
+      <div className="flex justify-center mt-2 space-x-2 bg-gray-200 rounded-full p-1 w-fit m-auto">
         {images.map((_, index) => (
           <div
             key={index}
-            className={`w-3 h-3 rounded-full ${
+            className={`w-2 h-2 rounded-full ${
               currentIndex === index ? 'bg-pink-400' : 'bg-white'
             }`}
           ></div>
@@ -80,7 +80,7 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
       </div>
       {/* Small Thumbnails */}
       {images.length > 1 ? (
-        <div className="flex justify-center mt-2 space-x-2 gap-4">
+        <div className="flex justify-center mt-2 space-x-2 gap-4 max-w-[90%] flex-wrap m-auto">
           {images.map((image, index) => (
             <button
               key={index}
@@ -97,6 +97,7 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
             </button>
           ))}
         </div>
+
       ) : (
         <div className="flex justify-center mt-2 space-x-2 gap-4">
           {Array.from({ length: 4 }).map((_, index) => (
