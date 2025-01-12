@@ -28,6 +28,18 @@ const ProductInfo = ({
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">{name}</h1>
         <div className="text-3xl font-bold text-gray-900">{price}</div>
+        <div className="flex items-center gap-4 text-gray-900">
+          <span className="flex-shrink-0">
+            <img
+              src="https://www.svgrepo.com/show/508697/klarna.svg"
+              width="40px"
+              alt="Klarna Logo"
+            />
+          </span>
+          <div>
+            <span className="text-[16px]">Pay SEK {(parseFloat(price.replace(/[^0-9.-]+/g, '')) / 26).toFixed(2)} / month</span>
+          </div>
+        </div>
       </div>
 
       {isLoading.sizes ? (
@@ -61,6 +73,10 @@ const ProductInfo = ({
           </div>
         )
       )}
+
+      <div>
+        
+      </div>
 
       <motion.button
         whileHover={{ scale: 1.02 }}

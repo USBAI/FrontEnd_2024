@@ -29,9 +29,9 @@ interface Product {
 const TypingIndicator = () => (
   <div className="flex flex-col gap-2 min-h-[20px] p-2">
     <p className='text-white'>pppppppppppppppppppppppppppppppppppppppppp</p>
-    <div className="h-[10px] w-[90%] bg-gradient-to-r from-gray-200 via-gray-600 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] opacity-100"></div>
+    <div className="h-[10px] w-[90%] bg-gradient-to-r from-pink-300 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] opacity-100"></div>
     <div className="h-[10px] w-[75%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-300 opacity-100"></div>
-    <div className="h-[10px] w-[60%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-1000 opacity-100"></div>
+    <div className="h-[10px] w-[60%] bg-gradient-to-r from-gray-200 via-gray-300 to-blue-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-1000 opacity-100"></div>
   </div>
 );
 

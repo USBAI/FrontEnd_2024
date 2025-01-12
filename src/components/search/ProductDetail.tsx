@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { X, Sparkles } from 'lucide-react';
 import { fetchAllProductDetails } from './services/productApi';
 import AiChatPopup from './AiChatPopup';
 import AuthModal from '../auth/AuthModal';
@@ -25,8 +25,7 @@ interface ProductDetailProps {
 }
 
 const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
-  const [showAiChat, setShowAiChat] = useState(false);
-  const [showCart, setShowCart] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(product);
   const [productImages, setProductImages] = useState<string[]>([product.cover_image]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [productDescription, setProductDescription] = useState('');
@@ -34,35 +33,69 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
   const [selectedSize, setSelectedSize] = useState('');
   const [isLoadingDetails, setIsLoadingDetails] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  
+  const [suggestedProducts, setSuggestedProducts] = useState<any[]>([]);
+
+  const [showAiChat, setShowAiChat] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+
   const { showAuthModal, setShowAuthModal, checkAuth, handleAuthSuccess } = useAuth();
   const { cartItems, addToCart } = useCart();
 
   useEffect(() => {
     const loadProductDetails = async () => {
       try {
-        const details = await fetchAllProductDetails(product);
+        setIsLoadingDetails(true); // Start loading state
+        setProductImages([currentProduct.cover_image]); // Update immediately with the new cover image
+        setProductDescription(''); // Clear old description
+        setProductSizes([]); // Clear old sizes
+
+        const details = await fetchAllProductDetails(currentProduct);
         if (details.images.length > 0) setProductImages(details.images);
         setProductDescription(details.description);
         setProductSizes(details.sizes);
       } catch (error) {
         console.error('Error fetching product details:', error);
       } finally {
-        setIsLoadingDetails(false);
+        setIsLoadingDetails(false); // End loading state
+      }
+    };
+
+    const fetchSuggestedProducts = async () => {
+      try {
+        const formData = new FormData();
+        formData.append('product_name', currentProduct.name);
+        formData.append('page_index', '1');
+        formData.append('min_price', '0');
+        formData.append('max_price', '10000');
+
+        const response = await fetch(
+          'https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/',
+          {
+            method: 'POST',
+            body: formData,
+            cache: 'no-store',
+          }
+        );
+
+        const data = await response.json();
+        setSuggestedProducts(data || []);
+      } catch (error) {
+        console.error('Error fetching suggested products:', error);
       }
     };
 
     loadProductDetails();
-  }, [product]);
+    fetchSuggestedProducts();
+  }, [currentProduct]);
 
   const handleAddToCart = () => {
     checkAuth(async () => {
       setIsAddingToCart(true);
       try {
         const success = await addToCart({
-          ...product,
+          ...currentProduct,
           size: selectedSize,
-          description: productDescription
+          description: productDescription,
         });
         if (success) {
           // Optionally show success message
@@ -73,6 +106,24 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
         setIsAddingToCart(false);
       }
     });
+  };
+
+  const calculateKlarnaInstallment = (price: string) => {
+    const numericPrice = parseFloat(price.replace(/[^0-9.-]+/g, ''));
+    return (numericPrice * 0.36).toFixed(2);
+  };
+
+  const handleSuggestedProductClick = (suggestedProduct: any) => {
+    setCurrentProduct({
+      id: suggestedProduct.product_id,
+      name: suggestedProduct.name,
+      price: suggestedProduct.price,
+      product_page: suggestedProduct.product_page_url,
+      cover_image: suggestedProduct.cover_image_url,
+    });
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -102,13 +153,6 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
               >
                 <Sparkles className="h-6 w-6 text-pink-500" />
               </motion.button>
-              {/* <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-2 hover:bg-gray-100 rounded-full"
-              >
-                <Heart className="h-6 w-6 text-gray-500" />
-              </motion.button> */}
               <CartIndicator
                 count={cartItems?.length || 0}
                 onClick={() => setShowCart(true)}
@@ -119,19 +163,16 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
 
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Product Images - Always visible immediately */}
             <ProductImageGallery
               images={productImages}
               currentIndex={currentImageIndex}
               onImageSelect={setCurrentImageIndex}
-              productName={product.name}
+              productName={currentProduct.name}
             />
-
-            {/* Product Info - Shows loading state */}
             <div className="space-y-6">
               <ProductInfo
-                name={product.name}
-                price={product.price}
+                name={currentProduct.name}
+                price={currentProduct.price}
                 sizes={productSizes}
                 selectedSize={selectedSize}
                 onSizeSelect={setSelectedSize}
@@ -139,12 +180,50 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                 isAddingToCart={isAddingToCart}
                 isLoading={isLoadingDetails}
               />
-
-              {/* Product Description - Shows loading state */}
               <ProductDescriptionSection
                 description={productDescription}
                 isLoading={isLoadingDetails}
               />
+            </div>
+          </div>
+
+          {/* Suggested Products */}
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold mb-4">You may also like</h2>
+            <div className="flex space-x-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 py-4">
+              {suggestedProducts.map((suggestedProduct) => (
+                <div
+                  key={suggestedProduct.product_id}
+                  className="min-w-[240px] max-w-[240px] bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 relative group cursor-pointer"
+                  onClick={() => handleSuggestedProductClick(suggestedProduct)}
+                >
+                  <div className="aspect-square relative overflow-hidden bg-white">
+                    <img
+                      src={suggestedProduct.cover_image_url}
+                      alt={suggestedProduct.name}
+                      className="w-full h-full object-contain"
+                    />
+                    {suggestedProduct.discount_percentage && (
+                      <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                        {suggestedProduct.discount_percentage} OFF
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4 bg-white">
+                    <h3 className="text-gray-900 text-sm font-medium line-clamp-2 mb-2">
+                      {suggestedProduct.name}
+                    </h3>
+                    <div className="flex flex-col items-start">
+                      <span className="text-lg font-semibold text-red-500">
+                        {suggestedProduct.price}
+                      </span>
+                      <span className="text-xs text-green-700">
+                        Klarna: SEK {calculateKlarnaInstallment(suggestedProduct.price)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -154,7 +233,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
         isOpen={showAiChat}
         onClose={() => setShowAiChat(false)}
         productInfo={{
-          name: product.name,
+          name: currentProduct.name,
           description: productDescription,
         }}
       />
@@ -165,10 +244,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
         onSuccess={handleAuthSuccess}
       />
 
-      <CartOverlay
-        isOpen={showCart}
-        onClose={() => setShowCart(false)}
-      />
+      <CartOverlay isOpen={showCart} onClose={() => setShowCart(false)} />
     </>
   );
 };
