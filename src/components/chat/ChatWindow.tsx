@@ -362,7 +362,7 @@ const ChatWindow = () => {
                                     {/* <span>Quick Suggestions</span> */}
                                     <br />
                                   </div>
-                                  <div
+                                  {/* <div
                                     className="flex overflow-x-auto space-x-4 mt-2"
                                     style={{ overflowY: 'auto', maxHeight: '220px' }}
                                   >
@@ -427,7 +427,7 @@ const ChatWindow = () => {
                                         </div>
                                       ))
                                     )}
-                                  </div>
+                                  </div> */}
                                 </div>
                               </div>
                             )}
