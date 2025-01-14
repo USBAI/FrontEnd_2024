@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Instagram, MessageCircle, Mail, ExternalLink } from 'lucide-react';
+import { Instagram, Mail, ExternalLink } from 'lucide-react';
 
 const Footer = () => {
   const footerSections = [
@@ -27,15 +27,9 @@ const Footer = () => {
   const socialLinks = [
     { 
       icon: Instagram, 
-      href: 'https://www.instagram.com/kluret_network/', 
+      href: 'https://www.instagram.com/kluret_ai/', 
       label: 'Instagram',
       color: 'hover:text-pink-500'
-    },
-    { 
-      icon: MessageCircle,
-      href: 'https://www.tiktok.com/@kluret_ab', 
-      label: 'TikTok',
-      color: 'hover:text-blue-500'
     },
     { 
       icon: Mail, 
@@ -56,7 +50,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 py-16">
           {/* Logo and Description */}
           <div className="space-y-6">
-            <svg width="40" height="40" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="22" height="22" rx="11" fill="url(#paint0_linear_0_1)"></rect><path d="M0.128418 12.32L21.6595 12.8032V12.8032C21.5887 15.9615 18.9709 18.4643 15.8126 18.3934L5.71863 18.1669C2.56036 18.096 0.0575377 15.4783 0.128418 12.32V12.32Z" fill="url(#paint1_linear_0_1)"></path><rect x="9" y="3" width="11" height="11" rx="5.5" fill="white"></rect><defs><linearGradient id="paint0_linear_0_1" x1="4.51" y1="2.53" x2="18.26" y2="19.69" gradientUnits="userSpaceOnUse"><stop stop-color="#EFF0FF"></stop><stop offset="0.55" stop-color="#C9B8FC"></stop><stop offset="0.986587" stop-color="#FFBAF6"></stop></linearGradient><linearGradient id="paint1_linear_0_1" x1="12.0269" y1="18.3714" x2="12.6321" y2="12.2372" gradientUnits="userSpaceOnUse"><stop stop-color="#E7B4FF" stop-opacity="0.22"></stop><stop offset="1" stop-color="#8330E8"></stop></linearGradient></defs></svg>
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" rx="50" fill="black"/>
+              <rect x="42" y="15" width="50" height="50" rx="25" fill="white"/>
+              <path d="M1.5 62H98.5V62C98.2174 65.3914 95.3823 68 91.9792 68H8.02079C4.61764 68 1.78261 65.3914 1.5 62V62Z" fill="white"/>
+            </svg>
+
             <p className="text-gray-600 text-sm leading-relaxed">
               Revolutionizing online shopping with AI-powered product search, making it easier for everyone to find exactly what they're looking for.
             </p>
@@ -74,6 +73,20 @@ const Footer = () => {
                   <social.icon className="h-5 w-5" />
                 </motion.a>
               ))}
+              <motion.a
+                href="https://www.tiktok.com/@kluret_ab"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all"
+              >
+                <img
+                  src="https://www.svgrepo.com/show/452114/tiktok.svg"
+                  alt="TikTok"
+                  className="h-5 w-5"
+                />
+              </motion.a>
             </div>
           </div>
 

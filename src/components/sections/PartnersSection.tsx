@@ -9,12 +9,14 @@ const PartnersSection = () => {
   });
 
   const partners = [
-    { name: 'Google Gemini', logo: 'https://www.svgrepo.com/show/475656/google-color.svg' },
-    { name: 'OpenAI', logo: 'https://www.svgrepo.com/show/306500/openai.svg' },
-    { name: 'Etsy', logo: 'https://www.svgrepo.com/show/349358/etsy.svg' },
-    { name: 'Stripe', logo: 'https://www.svgrepo.com/show/354401/stripe.svg' },
-    { name: 'Klarna', logo: 'https://www.svgrepo.com/show/508697/klarna.svg' },
-    { name: 'Alibaba', logo: 'https://www.svgrepo.com/show/448259/alibaba.svg' },
+    { name: 'Nike', logo: 'https://www.svgrepo.com/show/303214/nike-4-logo.svg' },
+    { name: 'Apple', logo: 'https://www.svgrepo.com/show/353414/apple.svg' },
+    { name: 'Sony', logo: 'https://www.svgrepo.com/show/303272/sony-2-logo.svg' },
+    { name: 'Gucci', logo: 'https://www.svgrepo.com/show/303492/gucci-logo.svg' },
+    { name: 'Adidas', logo: 'https://www.svgrepo.com/show/315543/adidas.svg' },
+    { name: 'Samsung', logo: 'https://www.svgrepo.com/show/303273/samsung-1-logo.svg' },
+    { name: 'Puma', logo: 'https://www.svgrepo.com/show/303470/puma-logo-logo.svg' },
+    { name: 'Bose', logo: 'https://www.svgrepo.com/show/330085/bose.svg' },
   ];
 
   return (
@@ -26,17 +28,17 @@ const PartnersSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Our Partners</h2>
-          <p className="text-xl text-gray-600">Working with industry leaders to provide the best service</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Partnered with Leading Brands</h2>
+          <p className="text-xl text-gray-600">Collaborating with industry leaders to deliver exceptional service</p>
         </motion.div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+        <div className="flex gap-20 justify-center flex-wrap w-[70%] mx-auto">
           {partners.map((partner, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: 0.1 * index }}
-              className="flex flex-col items-center relative group"
+              className="flex flex-col items-center relative group justify-center"
             >
               {/* Animated Background */}
               <motion.div
@@ -81,6 +83,11 @@ const PartnersSection = () => {
           ))}
         </div>
       </div>
+      <div className='flex items-center justify-center gap-4 mt-16'>
+        <hr className='w-16 h-[2px] bg-blue-400 w-full'/>
+        <strong className="text-gray-900">500+</strong>
+        <hr className='w-16 h-[2px] bg-pink-400 w-full'/>
+      </div>      
     </section>
   );
 };

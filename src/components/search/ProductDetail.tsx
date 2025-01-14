@@ -189,9 +189,10 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
 
           {/* Suggested Products */}
           <div className="mt-8">
-            <h2 className="text-2xl font-semibold mb-4">You may also like</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 py-4">
+              
               {suggestedProducts.map((suggestedProduct) => (
+                
                 <div
                   key={suggestedProduct.product_id}
                   className="min-w-[240px] max-w-[240px] bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 relative group cursor-pointer"
