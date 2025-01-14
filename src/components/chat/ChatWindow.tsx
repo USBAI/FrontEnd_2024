@@ -275,26 +275,29 @@ const ChatWindow = () => {
       <div className="relative flex-1 min-h-0">
         {messages.length === 0 ? (
           <div className="bg-white p-8 aline-center justify-center flex flex-col h-full">
-            <div className="text-center mb-8">
+          <div className="text-center mb-8">
               <h2 className="text-lg font-bold">Discover Kluret AI</h2>
-            </div>
-            
-            <div className="bullet-point-kluret-a39d">
-                  <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
-                    {/* AI-Powered Insights Card */}
-                    <div className="border rounded-lg p-4 shadow w-full md:w-80">
-                      <h3 className="font-semibold">AI-Powered Insights</h3>
-                      <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
-                      <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
-                    </div>
-                    <div className="border rounded-lg p-4 shadow w-full md:w-80">
-                      <h3 className="font-semibold">AI-Powered Insights</h3>
-                      <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
-                      <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
-                    </div>
-                  </div>        
-                </div>
           </div>
+      
+          <div className="bullet-point-kluret-a39d">
+              <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
+                  {/* AI-Powered Insights Card */}
+                  <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                      <h3 className="font-semibold">AI-Powered Insights</h3>
+                      <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
+                      <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
+                  </div>
+                  
+                  {/* Efficient Shopping Experience Card */}
+                  <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                      <h3 className="font-semibold">Efficient Shopping Experience</h3>
+                      <p className="text-sm text-gray-600">Quickly find what you're looking for with advanced search tools.</p>
+                      <p className="text-sm text-gray-400">Example: Search filters that help narrow down choices.</p>
+                  </div>
+              </div>        
+          </div>
+      </div>
+      
           
         ) : (
           <div
