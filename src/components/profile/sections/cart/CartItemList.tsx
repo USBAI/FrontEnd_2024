@@ -9,7 +9,7 @@ interface CartItemListProps {
 
 const CartItemList = ({ items }: CartItemListProps) => {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-wrap space-y-4 w-full justify-center items-center">
       {items.map((item, index) => (
         <motion.div
           key={index}

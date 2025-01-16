@@ -203,7 +203,7 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
           Back to payment methods
         </button>
         <h2 className="text-lg font-bold mb-4">Enter Shipping Information</h2>
-        <form className="space-y-4">
+        <form className="space-y-4 max-h-[30vh]">
           <input
             type="text"
             name="full_name"

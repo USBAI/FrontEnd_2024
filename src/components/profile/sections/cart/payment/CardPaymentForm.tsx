@@ -144,7 +144,7 @@ const CardPaymentForm = ({ total, onBack, onProcessing, onSuccess, onError }: Ca
           <h2 className="text-lg font-bold mb-4">
             {shippingInfo ? 'Edit Shipping Information' : 'Enter Shipping Information'}
           </h2>
-          <form className="space-y-4">
+          <form className="space-y-4 max-h-[30vh] overflow-y-auto">
             <input
               type="text"
               name="full_name"

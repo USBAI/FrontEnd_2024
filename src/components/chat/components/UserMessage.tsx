@@ -11,16 +11,18 @@ const UserMessage: React.FC<UserMessageProps> = ({ message }) => {
     <>
       <div className="">
         {message.image && (
-          <div className="relative group mb-2">
+          <div className="relative group mb-2 justify-end flex">
             <img
               src={message.image}
               alt="Uploaded"
-              className="max-h-48 rounded-lg mx-auto"
+              className="max-h-48 rounded-lg ml-auto" 
             />
             {message.status === 'processing' && (
               <ImageProcessingOverlay image={message.image} />
             )}
           </div>
+
+          
         )}
       </div>
       <div className='usermessagesstyle'>

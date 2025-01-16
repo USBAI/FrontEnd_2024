@@ -179,7 +179,7 @@ const CartPaymentOverlay = ({ isOpen, onClose, total }: CartPaymentOverlayProps)
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 backdrop-blur-sm z-50"
             onClick={onClose}
           />
 
@@ -209,7 +209,7 @@ const CartPaymentOverlay = ({ isOpen, onClose, total }: CartPaymentOverlayProps)
                   Back to payment methods
                 </button>
                 <h2 className="text-lg font-bold mb-4">Enter Shipping Information</h2>
-                <form className="space-y-4">
+                <form className="space-y-4 max-h-[30vh]">
                   <input
                     type="text"
                     name="full_name"
@@ -297,7 +297,7 @@ const CartPaymentOverlay = ({ isOpen, onClose, total }: CartPaymentOverlayProps)
               ) : paymentStatus === 'idle' && !selectedMethod ? (
                 <PaymentMethodSelector onSelectMethod={handleMethodSelect} />
               ) : selectedMethod === 'card' && clientSecret ? (
-                <div className="overflow-y-auto max-h-[70vh]">
+                <div className="overflow-hidden max-h-[100vh]">
                   <Elements
                     stripe={stripePromise}
                     options={{
