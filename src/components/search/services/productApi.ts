@@ -98,37 +98,26 @@ export const fetchAiResponse = async (prompt: string, productInfo: { name: strin
   }
 };
 
-export const fetchAllProductDetails = async (product: Product): Promise<ProductDetails> => {
+export const fetchAllProductDetails = async (product: Product, updateCallback: (details: Partial<ProductDetails>) => void) => {
   try {
-    // First, ensure we have a valid cover image
     const defaultImage = product.cover_image && product.cover_image.startsWith('http') 
       ? product.cover_image 
       : 'https://via.placeholder.com/400';
 
-    // Fetch all details concurrently
-    const [images, description, sizes] = await Promise.all([
-      fetchProductImages(product.product_page),
-      fetchProductDescription(product.product_page, product.name),
-      fetchProductSizes(product.product_page),
-    ]);
+    fetchProductImages(product.product_page).then((images) => {
+      const validImages = images.length > 0 ? images : [defaultImage];
+      updateCallback({ images: [...new Set(validImages)] });
+    });
 
-    // Ensure we have at least one valid image
-    const validImages = images.length > 0 ? images : [defaultImage];
+    fetchProductDescription(product.product_page, product.name).then((description) => {
+      updateCallback({ description });
+    });
 
-    // Remove any duplicate images
-    const uniqueImages = [...new Set(validImages)];
-
-    return {
-      images: uniqueImages,
-      description,
-      sizes,
-    };
+    fetchProductSizes(product.product_page).then((sizes) => {
+      updateCallback({ sizes });
+    });
   } catch (error) {
     console.error('Error fetching product details:', error);
-    return {
-      images: [product.cover_image],
-      description: '',
-      sizes: [],
-    };
   }
 };
+

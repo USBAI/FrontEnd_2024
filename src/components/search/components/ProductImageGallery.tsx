@@ -100,7 +100,7 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
 
       ) : (
         <div className="flex justify-center mt-2 space-x-2 gap-4">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 2 }).map((_, index) => (
             <div
               key={index}
               className="aspect-square rounded-lg overflow-hidden w-16 h-16 animate-pulse bg-gray-300"
@@ -132,3 +132,4 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
 };
 
 export default ProductImageGallery;
+ 

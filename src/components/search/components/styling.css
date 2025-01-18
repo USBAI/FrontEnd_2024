@@ -14,18 +14,18 @@
 }
 
 
-
     
 .percentage-droped span{
-    color: red;
+    color: rgb(255, 255, 255);
     padding: 0 0 0 5px;
+    background-color: red;
 }
 
 .percentage-droped{
     padding: 6px 5px;
-    background-color: white;
+    /* background-color: white; */
     border-radius: 9999px;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    /* box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,7 +39,7 @@
         margin: 0;
         height: fit-content;
         box-shadow: none;
-        background-color: rgba(255, 255, 255, 0);
+        background-color: rgb(255, 0, 0);
     }
     
     .percentage-droped span{

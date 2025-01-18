@@ -42,23 +42,28 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
   const { cartItems, addToCart } = useCart();
 
   useEffect(() => {
-    const loadProductDetails = async () => {
-      try {
-        setIsLoadingDetails(true); // Start loading state
-        setProductImages([currentProduct.cover_image]); // Update immediately with the new cover image
-        setProductDescription(''); // Clear old description
-        setProductSizes([]); // Clear old sizes
-
-        const details = await fetchAllProductDetails(currentProduct);
-        if (details.images.length > 0) setProductImages(details.images);
-        setProductDescription(details.description);
-        setProductSizes(details.sizes);
-      } catch (error) {
-        console.error('Error fetching product details:', error);
-      } finally {
-        setIsLoadingDetails(false); // End loading state
-      }
-    };
+      const loadProductDetails = async () => {
+        try {
+          setIsLoadingDetails(true); // Start loading state
+          setProductImages([currentProduct.cover_image]); // Set initial cover image
+          setProductDescription(''); // Clear old description
+          setProductSizes([]); // Clear old sizes
+    
+          // Fetch product details and update state incrementally
+          fetchAllProductDetails(currentProduct, (partialDetails) => {
+            if (partialDetails.images) setProductImages(partialDetails.images);
+            if (partialDetails.description) setProductDescription(partialDetails.description);
+            if (partialDetails.sizes) setProductSizes(partialDetails.sizes);
+          });
+        } catch (error) {
+          console.error('Error loading product details:', error);
+        } finally {
+          setIsLoadingDetails(false); // End loading state
+        }
+      };
+    
+      loadProductDetails();
+    
 
     const fetchSuggestedProducts = async () => {
       try {
@@ -148,11 +153,15 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 onClick={() => setShowAiChat(true)}
                 className="relative p-2 hover:bg-gray-100 rounded-full group"
               >
                 <Sparkles className="h-6 w-6 text-pink-500" />
               </motion.button>
+
+              
               <CartIndicator
                 count={cartItems?.length || 0}
                 onClick={() => setShowCart(true)}
@@ -195,7 +204,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                 
                 <div
                   key={suggestedProduct.product_id}
-                  className="min-w-[240px] max-w-[240px] bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 relative group cursor-pointer"
+                  className="min-w-[140px] max-w-[140px] bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 relative group cursor-pointer"
                   onClick={() => handleSuggestedProductClick(suggestedProduct)}
                 >
                   <div className="aspect-square relative overflow-hidden bg-white">
