@@ -28,7 +28,31 @@ const ProductInfo = ({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">{name}</h1>
+        <h1 
+          className="text-2xl font-bold text-gray-900 mb-2 cursor-pointer"
+          onClick={(e) => {
+            const target = e.currentTarget;
+            if (target.textContent === name) {
+              target.textContent = name.slice(0, 70) + "...";
+            } else {
+              target.textContent = "";
+              let i = 0;
+              const interval = setInterval(() => {
+                if (i < name.length) {
+                  target.textContent += name[i];
+                  i++;
+                } else {
+                  clearInterval(interval);
+                }
+              }, 5);
+            }
+          }}
+        >
+          {name.length > 20 ? name.slice(0, 70) + "..." : name}
+        </h1>
+        <div>
+        <br /><br />
+        </div>     
         <div className='flex items-center justify-between gap-2'>
         <div className="text-3xl font-bold text-gray-900">
           {price.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}
@@ -54,36 +78,58 @@ const ProductInfo = ({
       </div>
 
       {isLoading.sizes ? (
-        <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-1/3 mb-3" />
+        <div
+          className="animate-pulse"
+          onAnimationEnd={(e) => {
+            setTimeout(() => {
+              document.getElementById('loading-div')?.remove();
+            }, 5000); // Remove after 5 seconds
+          }}
+          id="loading-div"
+        >
+          <div className="h-6 bg-gray-200 rounded w-1/3 mb-3"></div>
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded" />
+              <div key={i} className="h-12 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
+      ) : sizes.length > 0 ? (
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Select Size</h3>
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            {sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => onSizeSelect(size)}
+                className={`py-3 rounded-lg border transition-all ${
+                  selectedSize === size
+                    ? 'border-black bg-black text-white'
+                    : 'border-gray-200 hover:border-black text-gray-900'
+                }`}
+              >
+                {size}
+              </button>
             ))}
           </div>
         </div>
       ) : (
-        sizes.length > 0 && (
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Select Size</h3>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => onSizeSelect(size)}
-                  className={`py-3 rounded-lg border transition-all ${
-                    selectedSize === size
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-200 hover:border-black text-gray-900'
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
+        <div
+          className="animate-pulse"
+          id="loading-div"
+        >
+          <div className="h-6 bg-gray-200 rounded w-1/3 mb-3"></div>
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-12 bg-gray-200 rounded"
+              ></div>
+            ))}
           </div>
-        )
+        </div>
       )}
+
 
       <div>
         
