@@ -6,7 +6,55 @@ import UserMessage from './components/UserMessage';
 import SearchOverlay from '../search/SearchOverlay';
 import { Message } from './types';
 
-// Add interface for API response
+const ProductDetailModal = ({ product, isOpen, onClose }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <motion.div
+        initial={{ y: '100vh' }}
+        animate={{ y: '0vh' }}
+        exit={{ y: '100vh' }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className="fixed bottom-0 left-0 right-0 px-[30px] z-50 rounded-t-lg p-4"
+        style={{ 
+          height: '80vh',
+          background: 'white'
+        }}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-col items-center">
+          <img
+            src={product.cover_image_url}
+            alt={product.name}
+            className="w-cuver h-32 object-contain rounded mb-4"
+          />
+          <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+          <p className="text-lg text-gray-700 mb-2">{product.price}</p>
+          <p className="text-md text-gray-500">
+            Klarna: {Math.round(parseFloat(product.price.replace(/[^0-9.-]+/g, '')) / 24)} kr / month
+          </p>
+        </div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
 interface ApiResponse {
   response: string;
   additional_data?: {
@@ -27,11 +75,11 @@ interface Product {
 }
 
 const TypingIndicator = () => (
-  <div className="flex flex-col gap-2 min-h-[20px] p-2">
-    <p className='text-white'>pppppppppppppppppppppppppppppppppppppppppp</p>
-    <div className="h-[10px] w-[90%] bg-gradient-to-r from-pink-300 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] opacity-100"></div>
-    <div className="h-[10px] w-[75%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-300 opacity-100"></div>
-    <div className="h-[10px] w-[60%] bg-gradient-to-r from-gray-200 via-gray-300 to-blue-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-1000 opacity-100"></div>
+  <div className="flex flex-col gap-2 min-h-[20px] p-2 w-full">
+    <p className='text-white'>Loading...</p>
+    <div className="h-[5px] w-[90%] bg-gradient-to-r from-pink-300 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] opacity-100"></div>
+    <div className="h-[5px] w-[75%] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-300 opacity-100"></div>
+    <div className="h-[5px] w-[60%] bg-gradient-to-r from-gray-200 via-gray-300 to-blue-200 rounded-full animate-[pulse_1s_ease-in-out_infinite] animation-delay-1000 opacity-100"></div>
   </div>
 );
 
@@ -43,12 +91,27 @@ const ChatWindow = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [shouldTriggerSearch, setShouldTriggerSearch] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [productSuggestions, setProductSuggestions] = useState<Product[]>([]);
-  const [isFetchingProducts, setIsFetchingProducts] = useState(false);
+  const [productSuggestionsMap, setProductSuggestionsMap] = useState<Record<string, Product[]>>({});
+  const [isFetchingProductsMap, setIsFetchingProductsMap] = useState<Record<string, boolean>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showCreateAccount, setShowCreateAccount] = useState(false);
+
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+
+
 
 
   const scrollToBottom = () => {
@@ -61,28 +124,21 @@ const ChatWindow = () => {
     scrollToBottom();
   }, [messages]);
 
-  const fetchProducts = async (productName: string) => {
-    if (isFetchingProducts || !productName.trim()) return;
-  
-    setIsFetchingProducts(true);
-  
-    // Clear old suggestions immediately
-    setProductSuggestions([]);
-  
-    // Track the current request
-    const currentRequestId = Date.now();
-    let activeRequestId = currentRequestId;
-  
+  const fetchProducts = async (productName: string, requestId: string) => {
+    if (isFetchingProductsMap[requestId] || !productName.trim()) return;
+
+    setIsFetchingProductsMap((prev) => ({ ...prev, [requestId]: true }));
+    setProductSuggestionsMap((prev) => ({ ...prev, [requestId]: [] }));
+
     try {
       const formData = new FormData();
       formData.append('product_name', productName);
       formData.append('page_index', '1');
       formData.append('min_price', '0');
       formData.append('max_price', '10000');
-  
-      // Simulate loading time for 3 seconds
+
       await new Promise((resolve) => setTimeout(resolve, 3000));
-  
+
       const response = await fetch(
         'https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/',
         {
@@ -91,13 +147,13 @@ const ChatWindow = () => {
           cache: 'no-store',
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`Failed to fetch products: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
-  
+
       const validProducts = data
         .filter(
           (product: any) =>
@@ -113,65 +169,26 @@ const ChatWindow = () => {
           cover_image_url: product.cover_image_url,
           product_page_url: product.product_page_url,
         }));
-  
-      // Update suggestions only if the request is the latest
-      if (currentRequestId === activeRequestId) {
-        setProductSuggestions(validProducts);
-      }
+
+      setProductSuggestionsMap((prev) => ({ ...prev, [requestId]: validProducts }));
     } catch (error) {
       console.error('Error fetching product suggestions:', error);
-      setProductSuggestions([]);
+      setProductSuggestionsMap((prev) => ({ ...prev, [requestId]: [] }));
     } finally {
-      if (currentRequestId === activeRequestId) {
-        setIsFetchingProducts(false);
-      }
+      setIsFetchingProductsMap((prev) => ({ ...prev, [requestId]: false }));
     }
-  };
-  
-  
-  
-
-  const cleanupSuggestionIds = () => {
-    const storedIds = JSON.parse(localStorage.getItem('product_suggestion_ids') || '[]');
-    if (storedIds.length > 50) {
-      localStorage.setItem(
-        'product_suggestion_ids',
-        JSON.stringify(storedIds.slice(-50)) // Keep only the latest 50 IDs
-      );
-    }
-  };
-  
-  
-  
-
-  useEffect(() => {
-    const latestMessage = messages[messages.length - 1];
-    if (
-      latestMessage?.type === 'bot' &&
-      latestMessage.additional_data?.product &&
-      latestMessage.additional_data.open
-    ) {
-      fetchProducts(latestMessage.additional_data.product);
-    }
-  }, [messages]);
-
-  const handleSearchClose = () => {
-    setIsSearchOpen(false);
-    setSearchQuery('');
-    setShouldTriggerSearch(false);
   };
 
   const handleViewProduct = async (productName: string) => {
     if (!productName.trim()) return;
-  
-    setProductSuggestions([]); // Clear previous product suggestions
+
+    const requestId = Date.now().toString();
     setSearchQuery(productName);
     setIsSearchOpen(true);
     setShouldTriggerSearch(true);
-  
-    await fetchProducts(productName); // Fetch suggestions specific to this product name
+
+    await fetchProducts(productName, requestId);
   };
-  
 
   const sendMessage = async (text: string, image?: File) => {
     if (!text.trim() && !image) return;
@@ -230,7 +247,7 @@ const ChatWindow = () => {
         id: Date.now().toString(),
         status: 'complete',
         isTyping: true,
-        additional_data: data.additional_data, // Store additional_data in the message
+        additional_data: data.additional_data,
       };
 
       setMessages((prev) => [...prev, botMessage]);
@@ -247,7 +264,7 @@ const ChatWindow = () => {
               ? {
                   ...msg,
                   content: data.response.slice(0, currentCharIndex + 1),
-                  additional_data: data.additional_data, // Make sure additional_data persists
+                  additional_data: data.additional_data,
                 }
               : msg
           )
@@ -261,6 +278,11 @@ const ChatWindow = () => {
           );
         }
       }, typingInterval);
+
+      if (data.additional_data?.product && data.additional_data.open) {
+        const requestId = Date.now().toString();
+        await fetchProducts(data.additional_data.product, requestId);
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -275,30 +297,24 @@ const ChatWindow = () => {
       <div className="relative flex-1 min-h-0">
         {messages.length === 0 ? (
           <div className="bg-white p-8 aline-center justify-center flex flex-col h-full">
-          <div className="text-center mb-8">
+            <div className="text-center mb-8">
               <h2 className="text-lg font-bold">Discover Kluret AI</h2>
-          </div>
-      
-          <div className="bullet-point-kluret-a39d">
+            </div>
+            <div className="bullet-point-kluret-a39d">
               <div className="flex flex-col items-center gap-5 md:flex-row md:justify-center w-full max-w-4xl mx-auto px-4">
-                  {/* AI-Powered Insights Card */}
-                  <div className="border rounded-lg p-4 shadow w-full md:w-80">
-                      <h3 className="font-semibold">AI-Powered Insights</h3>
-                      <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
-                      <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
-                  </div>
-                  
-                  {/* Efficient Shopping Experience Card */}
-                  <div className="border rounded-lg p-4 shadow w-full md:w-80">
-                      <h3 className="font-semibold">Efficient Shopping Experience</h3>
-                      <p className="text-sm text-gray-600">Quickly find what you're looking for with advanced search tools.</p>
-                      <p className="text-sm text-gray-400">Example: Search filters that help narrow down choices.</p>
-                  </div>
-              </div>        
+                <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                  <h3 className="font-semibold">AI-Powered Insights</h3>
+                  <p className="text-sm text-gray-600">Get tailored recommendations based on your needs.</p>
+                  <p className="text-sm text-gray-400">Example: Personalized shopping suggestions just for you.</p>
+                </div>
+                <div className="border rounded-lg p-4 shadow w-full md:w-80">
+                  <h3 className="font-semibold">Efficient Shopping Experience</h3>
+                  <p className="text-sm text-gray-600">Quickly find what you're looking for with advanced search tools.</p>
+                  <p className="text-sm text-gray-400">Example: Search filters that help narrow down choices.</p>
+                </div>
+              </div>
+            </div>
           </div>
-      </div>
-      
-          
         ) : (
           <div
             ref={chatContainerRef}
@@ -325,90 +341,68 @@ const ChatWindow = () => {
                               onViewProduct={() => handleViewProduct(message.additional_data?.product || '')}
                             />
                             {message.additional_data?.product && message.additional_data?.open && (
-                              <div>
-                                <button>
-                                  <br />
-                                  <span
+                              <>
+                                <button
                                   onClick={() => handleViewProduct(message.additional_data?.product || '')}
                                   className="view-product-engine"
                                   style={{
                                     background: 'linear-gradient(to bottom right, rgb(255, 234, 244), rgb(228, 229, 255), rgb(241, 214, 255))',
                                     color: 'rgb(0, 0, 0)',
-                                    height: 'fit-content',
-                                    width: 'fit-content', 
                                     padding: '10px 30px',
                                     marginTop: '10px',
                                     borderRadius: '0px 15px 15px 15px',
                                     fontSize: '15px',
                                     animation: 'shine 2s infinite linear',
-                                    backgroundSize: '200% 200%'
+                                    backgroundSize: '200% 200%',
                                   }}
                                 >
-                                  <style jsx>{`
-                                    @keyframes shine {
-                                      0% {
-                                        background-position: 0% 0%;
-                                      }
-                                      50% {
-                                        background-position: 200% 200%;
-                                      }
-                                      100% {
-                                        background-position: 0% 0%;
-                                      }
-                                    }
-                                  `}</style>
                                   View Product⚡
-                                </span>                            
                                 </button>
-                                <div className="quick-engine-suggestions">
-                                  <div>
-                                    {/* <span>Quick Suggestions</span> */}
-                                    <br />
-                                  </div>
-                                  {/* <div
-                                    className="flex overflow-x-auto space-x-4 mt-2"
-                                    style={{ overflowY: 'auto', maxHeight: '220px' }}
-                                  >
-                                    {isFetchingProducts ? (
-                                      // Show loading shimmer
-                                      Array.from({ length: 5 }).map((_, index) => (
-                                        <div
-                                          key={index}
-                                          className="flex-shrink-0 w-40 h-36 border rounded-lg p-2 relative overflow-hidden"
-                                          style={{
-                                            background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-                                            backgroundSize: '200% 100%',
-                                            animation: 'shimmer 2s infinite linear',
-                                          }}
-                                        >
-                                          <style jsx>{`
-                                            @keyframes shimmer {
-                                              0% {
-                                                background-position: 200% 0;
-                                              }
-                                              100% {
-                                                background-position: -200% 0;
-                                              }
+                                <div className="quick-engine-suggestions mt-4">
+                                <div
+                                  className="flex overflow-x-auto space-x-4"
+                                  style={{ maxHeight: '220px' }}
+                                >
+                                  {isFetchingProductsMap[message.id] ? (
+                                    // Show loading shimmer
+                                    Array.from({ length: 5 }).map((_, index) => (
+                                      <div
+                                        key={index}
+                                        className="flex-shrink-0 w-40 h-36 border rounded-lg p-2 relative overflow-hidden"
+                                        style={{
+                                          background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                                          backgroundSize: '200% 100%',
+                                          animation: 'shimmer 2s infinite linear',
+                                        }}
+                                      >
+                                        <style jsx>{`
+                                          @keyframes shimmer {
+                                            0% {
+                                              background-position: 200% 0;
                                             }
-                                          `}</style>
-                                        </div>
-                                      ))
-                                    ) : (
-                                      // Show products from the latest request only
-                                      productSuggestions.map((product) => (
-                                        <div
-                                          key={product.product_id}
-                                          className="flex-shrink-0 w-40 h-fit border rounded-lg p-2 cursor-pointer hover:shadow-lg bg-white"
-                                          onClick={() => handleViewProduct(product.name)}
-                                        >
-                                          <img
-                                            src={product.cover_image_url}
-                                            alt={product.name}
-                                            className="w-full h-24 object-contain rounded"
-                                          />
-                                          <p className="text-sm font-semibold mt-2 truncate">{product.name}</p>
-                                          <p className="text-sm text-gray-600">{product.price}</p>
-                                          <div className="quickpay-monthly">
+                                            100% {
+                                              background-position: -200% 0;
+                                            }
+                                          }
+                                        `}</style>
+                                      </div>
+                                    ))
+                                  ) : (
+                                    // Render actual product cards
+                                    productSuggestionsMap[message.id]?.map((product) => (
+                                      <div
+                                        key={product.product_id}
+                                        className="flex-shrink-0 w-40 border rounded-lg p-2 cursor-pointer hover:shadow-lg bg-white"
+                                        onClick={() => openModal(product)}
+                                      >
+                                        <img
+                                          src={product.cover_image_url}
+                                          alt={product.name}
+                                          className="w-full h-24 object-contain rounded"
+                                        />
+                                        <p className="text-sm font-semibold mt-2 truncate">{product.name}</p>
+                                        <p className="text-sm text-gray-600">{product.price}</p>
+                                        <div className="quickpay-monthly">
                                             <div>
                                               {Math.round(parseFloat(product.price.replace(/[^0-9.-]+/g, '')) / 24)} kr
                                             </div>
@@ -427,18 +421,26 @@ const ChatWindow = () => {
                                               </svg>
                                             </div>
                                           </div>
-                                        </div>
-                                      ))
-                                    )}
-                                  </div> */}
+                                      </div>
+                                    ))
+                                  )}
                                 </div>
-                              </div>
+
+
+                                      <ProductDetailModal
+                                        product={selectedProduct}
+                                        isOpen={isModalOpen}
+                                        onClose={closeModal}
+                                      />
+                                    </div>
+                              </>
                             )}
                           </div>
                         ) : (
                           <UserMessage message={message} />
                         )}
                       </div>
+
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -462,12 +464,11 @@ const ChatWindow = () => {
 
       <SearchOverlay 
         isOpen={isSearchOpen} 
-        onClose={handleSearchClose}
+        onClose={() => setIsSearchOpen(false)}
         initialSearchQuery={searchQuery}
         shouldTriggerSearch={shouldTriggerSearch}
       />
     </div>
-
   );
 };
 
