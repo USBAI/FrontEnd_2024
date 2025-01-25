@@ -70,7 +70,7 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
         }
 
         const response = await fetch(
-          `https://customerserver1-5d81976997ba.herokuapp.com/users/get-shipping-info/?user_id=${userId}`
+          `https://customerserver-ec7f53c083c0.herokuapp.com/users/get-shipping-info/?user_id=${userId}`
         );
         const data = await response.json();
 
@@ -102,7 +102,7 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
       }
 
       const response = await fetch(
-        'https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/create-payment-intent/',
+        'https://customerserver-ec7f53c083c0.herokuapp.com/kluret_stripe/create-payment-intent/',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -139,7 +139,7 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
   const handleSaveShipping = async () => {
     setIsSaving(true);
     try {
-      const url = `https://customerserver1-5d81976997ba.herokuapp.com/users/post-shipping-info/`;
+      const url = `https://customerserver-ec7f53c083c0.herokuapp.com/users/post-shipping-info/`;
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

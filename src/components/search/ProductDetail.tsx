@@ -74,7 +74,7 @@ const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
         formData.append('max_price', '10000');
 
         const response = await fetch(
-          'https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/',
+          'https://engine-b37ec1b1fb4e.herokuapp.com/openai_google_computing/jdb/',
           {
             method: 'POST',
             body: formData,

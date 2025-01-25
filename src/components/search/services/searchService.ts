@@ -22,7 +22,7 @@ export const searchProducts = async (
     formData.append('min_price', priceRange.min.toString());
     formData.append('max_price', priceRange.max.toString());
 
-    const response = await fetch('https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/', {
+    const response = await fetch('https://engine-b37ec1b1fb4e.herokuapp.com/openai_google_computing/jdb/', {
       method: 'POST',
       body: formData,
       headers: {

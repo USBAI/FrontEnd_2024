@@ -27,7 +27,7 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = MAX_R
 
 export const fetchProductImages = async (productUrl: string): Promise<string[]> => {
   try {
-    const response = await fetchWithRetry('https://engine1-f36f7fb18f56.herokuapp.com/vision/inteligentvision/', {
+    const response = await fetchWithRetry('https://engine-b37ec1b1fb4e.herokuapp.com/vision/inteligentvision/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: productUrl }),
@@ -49,7 +49,7 @@ export const fetchProductImages = async (productUrl: string): Promise<string[]> 
 
 export const fetchProductDescription = async (productUrl: string, productName: string): Promise<string> => {
   try {
-    const response = await fetchWithRetry('https://engine1-f36f7fb18f56.herokuapp.com/nodesconnections/openai_api_nodesconnections/', {
+    const response = await fetchWithRetry('https://engine-b37ec1b1fb4e.herokuapp.com/nodesconnections/openai_api_nodesconnections/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -68,7 +68,7 @@ export const fetchProductDescription = async (productUrl: string, productName: s
 
 export const fetchProductSizes = async (productUrl: string): Promise<string[]> => {
   try {
-    const response = await fetchWithRetry('https://engine1-f36f7fb18f56.herokuapp.com/cloud_network/groq_order/', {
+    const response = await fetchWithRetry('https://engine-b37ec1b1fb4e.herokuapp.com/cloud_network/groq_order/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: productUrl }),
@@ -84,7 +84,7 @@ export const fetchProductSizes = async (productUrl: string): Promise<string[]> =
 
 export const fetchAiResponse = async (prompt: string, productInfo: { name: string; description: string }): Promise<string> => {
   try {
-    const response = await fetchWithRetry('https://engine1-f36f7fb18f56.herokuapp.com/product_suport_google/userinput/', {
+    const response = await fetchWithRetry('https://engine-b37ec1b1fb4e.herokuapp.com/product_suport_google/userinput/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt, product_info: productInfo }),

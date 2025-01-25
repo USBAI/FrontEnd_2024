@@ -13,7 +13,7 @@ export const createOrder = async (
   try {
     // Create order for each cart item
     const orderPromises = cartItems.map(item => 
-      fetch('https://customerserver1-5d81976997ba.herokuapp.com/users_order/add-user-order/', {
+      fetch('https://customerserver-ec7f53c083c0.herokuapp.com/users_order/add-user-order/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ export const createOrder = async (
 const clearCart = async (userId: string, cartItems: CartItem[]): Promise<void> => {
   try {
     const removePromises = cartItems.map(item =>
-      fetch('https://customerserver1-5d81976997ba.herokuapp.com/addcart/remove-from-cart/', {
+      fetch('https://customerserver-ec7f53c083c0.herokuapp.com/addcart/remove-from-cart/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

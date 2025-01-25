@@ -60,7 +60,7 @@ const ProductCard = ({
       };
 
       try {
-        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/addcart/add-to-cart/', {
+        const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/addcart/add-to-cart/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

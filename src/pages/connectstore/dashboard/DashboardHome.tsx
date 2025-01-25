@@ -72,7 +72,7 @@ const DashboardHome = () => {
     }
 
     try {
-      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/ConnectStoreServer/get_store_info/', {
+      const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/ConnectStoreServer/get_store_info/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

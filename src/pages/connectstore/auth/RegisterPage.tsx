@@ -30,7 +30,7 @@ const RegisterPage = () => {
     setError('');
 
     try {
-      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/ConnectStoreAuth/register/', {
+      const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/ConnectStoreAuth/register/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

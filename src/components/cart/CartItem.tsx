@@ -31,7 +31,7 @@ const CartItem = ({ item, onItemRemoved }: CartItemProps) => {
 
     try {
       const response = await axios.post(
-        'https://customerserver1-5d81976997ba.herokuapp.com/addcart/remove-from-cart/',
+        'https://customerserver-ec7f53c083c0.herokuapp.com/addcart/remove-from-cart/',
         {
           user_id,
           product_url: item.product_url,

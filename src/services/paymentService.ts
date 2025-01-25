@@ -8,7 +8,7 @@ export const handlePaymentConfirmation = async (
   userId: string
 ): Promise<PaymentConfirmationResponse> => {
   try {
-    const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/confirm-payment/', {
+    const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/kluret_stripe/confirm-payment/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ export const createPaymentIntent = async (
   currency: string = 'sek'
 ) => {
   try {
-    const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/kluret_stripe/create-payment-intent/', {
+    const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/kluret_stripe/create-payment-intent/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

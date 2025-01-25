@@ -34,7 +34,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/users/login_authorizer/', {
+      const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/users/login_authorizer/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -64,7 +64,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/users/register_user/', {
+      const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/users/register_user/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

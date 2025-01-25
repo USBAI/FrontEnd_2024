@@ -25,8 +25,8 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
 
     try {
       const endpoint = isLogin ? 
-        'https://customerserver1-5d81976997ba.herokuapp.com/users/login_authorizer/' :
-        'https://customerserver1-5d81976997ba.herokuapp.com/users/register_user/';
+        'https://customerserver-ec7f53c083c0.herokuapp.com/users/login_authorizer/' :
+        'https://customerserver-ec7f53c083c0.herokuapp.com/users/register_user/';
 
       const response = await fetch(endpoint, {
         method: 'POST',

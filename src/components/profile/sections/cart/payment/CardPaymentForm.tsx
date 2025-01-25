@@ -43,7 +43,7 @@ const CardPaymentForm = ({ total, onBack, onProcessing, onSuccess, onError }: Ca
 
     const fetchShippingInfo = async () => {
       try {
-        const response = await fetch(`https://customerserver1-5d81976997ba.herokuapp.com/users/get-shipping-info/?user_id=${userId}`);
+        const response = await fetch(`https://customerserver-ec7f53c083c0.herokuapp.com/users/get-shipping-info/?user_id=${userId}`);
         const data = await response.json();
         if (data.status === 'success') {
           setShippingInfo(data.shipping_info);
@@ -69,8 +69,8 @@ const CardPaymentForm = ({ total, onBack, onProcessing, onSuccess, onError }: Ca
     setSaveButtonText('Saving...');
     try {
       const url = shippingInfo
-        ? `https://customerserver1-5d81976997ba.herokuapp.com/users/update-shipping-info/`
-        : `https://customerserver1-5d81976997ba.herokuapp.com/users/post-shipping-info/`;
+        ? `https://customerserver-ec7f53c083c0.herokuapp.com/users/update-shipping-info/`
+        : `https://customerserver-ec7f53c083c0.herokuapp.com/users/post-shipping-info/`;
       const method = shippingInfo ? 'PUT' : 'POST';
       const response = await fetch(url, {
         method,

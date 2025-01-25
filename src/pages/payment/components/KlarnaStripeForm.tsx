@@ -35,7 +35,7 @@ const KlarnaStripeForm = ({ onPaymentIdChange }: KlarnaStripeFormProps) => {
     const verifyPaymentFromURL = async () => {
       if (paymentIntent && userId && redirectStatus === 'succeeded') {
         try {
-          const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/addcart/place-order/', {
+          const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/addcart/place-order/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const KlarnaStripeForm = ({ onPaymentIdChange }: KlarnaStripeFormProps) => {
     const verifyPayment = async () => {
       if (paymentId && userId) {
         try {
-          const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/AddCart/place-order/', {
+          const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/AddCart/place-order/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

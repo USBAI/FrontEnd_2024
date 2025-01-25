@@ -23,7 +23,7 @@ const Dashboard = () => {
       if (!userUuid) return;
 
       try {
-        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/AccessApi/get_user_info/', {
+        const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/AccessApi/get_user_info/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

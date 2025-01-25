@@ -17,7 +17,7 @@ export const initializeKlarnaPayment = async (
   currency: string = 'sek'
 ): Promise<KlarnaPaymentResponse> => {
   try {
-    const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/klarna_pay/create-klarna-payment-intent/', {
+    const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/klarna_pay/create-klarna-payment-intent/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ export const handleKlarnaPaymentStatus = async (
   userId: string
 ): Promise<{ status: 'success' | 'error'; message?: string }> => {
   try {
-    const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/klarna_pay/confirm-payment/', {
+    const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/klarna_pay/confirm-payment/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

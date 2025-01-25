@@ -140,7 +140,7 @@ const ChatWindow = () => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const response = await fetch(
-        'https://engine1-f36f7fb18f56.herokuapp.com/openai_google_computing/jdb/',
+        'https://engine-b37ec1b1fb4e.herokuapp.com/openai_google_computing/jdb/',
         {
           method: 'POST',
           body: formData,
@@ -216,12 +216,12 @@ const ChatWindow = () => {
         formData.append('user_id', 'ckWh4hcLqQD4DLioKvyIZubI9r2qL0pkEx9D');
         formData.append('image', image);
 
-        response = await fetch('https://engine1-f36f7fb18f56.herokuapp.com/imagebase_api_ai/chatbot/', {
+        response = await fetch('https://engine-b37ec1b1fb4e.herokuapp.com/imagebase_api_ai/chatbot/', {
           method: 'POST',
           body: formData,
         });
       } else {
-        response = await fetch('https://engine1-f36f7fb18f56.herokuapp.com/textbase_api/chatbot/', {
+        response = await fetch('https://engine-b37ec1b1fb4e.herokuapp.com/textbase_api/chatbot/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

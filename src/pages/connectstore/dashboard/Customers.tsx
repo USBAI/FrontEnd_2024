@@ -37,7 +37,7 @@ const Customers = () => {
 
     const fetchCustomers = async () => {
       try {
-        const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/ConnectStoreServer/get_store_info/', {
+        const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/ConnectStoreServer/get_store_info/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const Customers = () => {
     if (!token || !storeId) return;
 
     try {
-      const response = await fetch('https://customerserver1-5d81976997ba.herokuapp.com/ConnectStoreServer/save_customer/', {
+      const response = await fetch('https://customerserver-ec7f53c083c0.herokuapp.com/ConnectStoreServer/save_customer/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
