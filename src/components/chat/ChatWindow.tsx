@@ -6,54 +6,215 @@ import UserMessage from './components/UserMessage';
 import SearchOverlay from '../search/SearchOverlay';
 import { Message } from './types';
 
-const ProductDetailModal = ({ product, isOpen, onClose }) => (
-  <AnimatePresence>
-    {isOpen && (
-      <motion.div
-        initial={{ y: '100vh' }}
-        animate={{ y: '0vh' }}
-        exit={{ y: '100vh' }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed bottom-0 left-0 right-0 px-[30px] z-50 rounded-t-lg p-4"
-        style={{ 
-          height: '80vh',
-          background: 'white'
-        }}
-      >
-        <div className="flex justify-between items-center mb-4">
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-              stroke="currentColor"
-              className="w-6 h-6"
+const ProductDetailModal = ({ product, isOpen, onClose }) => {
+  const [productImages, setProductImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchProductImages = async () => {
+      if (!product || !product.product_page_url) return;
+
+      setIsLoading(true);
+      setProductImages([product.cover_image_url]); // Show the main product image first
+
+      const formData = new FormData();
+      formData.append("url", product.product_page_url);
+
+      try {
+        const response = await fetch(
+          "https://engine-b37ec1b1fb4e.herokuapp.com/vision/inteligentvision/",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && Array.isArray(data.images)) {
+            setProductImages([product.cover_image_url, ...data.images]); // Add fetched images
+          }
+        } else {
+          console.error("Failed to fetch product images:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching product images:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchProductImages();
+    } else {
+      setProductImages([]);
+      setCurrentIndex(0);
+    }
+  }, [product, isOpen]);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : productImages.length - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev < productImages.length - 1 ? prev + 1 : 0));
+  };
+
+  const handleThumbnailClick = (index) => {
+    setCurrentIndex(index);
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: "20%" }}
+          exit={{ y: "100%" }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="fixed bottom-0 left-0 right-0 z-50 rounded-t-lg shadow-lg overflow-hidden"
+          style={{
+            height: "80vh",
+            width: "97%",
+            margin: "0 auto",
+            background: `
+              radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5), transparent 60%),
+              radial-gradient(circle at 70% 70%, rgba(173, 216, 230, 0.5), transparent 70%),
+              radial-gradient(circle at 50% 50%, rgba(240, 248, 255, 0.7), transparent 60%),
+              #f0f8ff`,
+          }}
+        >
+          <div className="flex justify-between items-center p-4">
+            <button
+              onClick={() => {
+                onClose();
+                setProductImages([]);
+              }}
+              className="p-2 rounded-full hover:bg-gray-200"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <div className="flex flex-col items-center">
-          <img
-            src={product.cover_image_url}
-            alt={product.name}
-            className="w-cuver h-32 object-contain rounded mb-4"
-          />
-          <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-          <p className="text-lg text-gray-700 mb-2">{product.price}</p>
-          <p className="text-md text-gray-500">
-            Klarna: {Math.round(parseFloat(product.price.replace(/[^0-9.-]+/g, '')) / 24)} kr / month
-          </p>
-        </div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-6 h-full p-4">
+            {/* Left Section - Main Image Carousel */}
+            <div className="flex-1 flex flex-col items-center">
+              <div
+                className="relative w-full flex items-center justify-center bg-white rounded"
+                style={{ height: "40vh" }}
+              >
+                {isLoading ? (
+                  <img
+                    src={product.cover_image_url}
+                    alt={`Product Main`}
+                    className="w-full h-full object-contain rounded"
+                  />
+                ) : (
+                  <>
+                    <img
+                      src={productImages[currentIndex]}
+                      alt={`Product Image ${currentIndex + 1}`}
+                      className="w-full h-full object-contain rounded"
+                    />
+                    <button
+                      onClick={handlePrev}
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+                    >
+                      ❮
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+                    >
+                      ❯
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnail Row */}
+              <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 justify-center items-center">
+                {productImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`w-full max-w-[60px] border rounded-[5px] ${
+                      index === currentIndex
+                        ? "border-pink-500"
+                        : "border-gray-300"
+                    }`}
+                    onClick={() => handleThumbnailClick(index)}
+                  >
+                    <img
+                      src={image}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-12 object-cover rounded-[5px]"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Section - Product Information */}
+            <div className="flex-1">
+              <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+              <p className="text-lg text-gray-700 mb-2">{product.price}</p>
+              <p className="text-md text-gray-500 mb-4">
+                Klarna:{" "}
+                {Math.round(
+                  parseFloat(product.price.replace(/[^0-9.-]+/g, "")) / 24
+                )}{" "}
+                kr / month
+              </p>
+              <div className="text-gray-600 mb-4">
+                <p>
+                  This is a premium product designed for durability and
+                  functionality. It combines lightweight design with superior
+                  performance to provide an exceptional user experience.
+                </p>
+              </div>
+              <button
+                className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium flex items-center justify-center gap-2"
+                tabIndex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-shopping-cart h-5 w-5"
+                >
+                  <circle cx="8" cy="21" r="1"></circle>
+                  <circle cx="19" cy="21" r="1"></circle>
+                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                </svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 interface ApiResponse {
   response: string;
