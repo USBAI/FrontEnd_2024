@@ -8,16 +8,19 @@ import { Message } from './types';
 
 const ProductDetailModal = ({ product, isOpen, onClose }) => {
   const [productImages, setProductImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [description, setDescription] = useState("");
+  const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
+  const [isImagesLoading, setIsImagesLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const fetchProductImages = async () => {
-      if (!product || !product.product_page_url) return;
+    const fetchProductDetails = async () => {
+      if (!product || !product.product_page_url || !product.name) return;
 
-      setIsLoading(true);
+      setIsImagesLoading(true);
       setProductImages([product.cover_image_url]); // Show the main product image first
 
+      // Fetch images
       const formData = new FormData();
       formData.append("url", product.product_page_url);
 
@@ -33,22 +36,46 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
         if (response.ok) {
           const data = await response.json();
           if (data.images && Array.isArray(data.images)) {
-            setProductImages([product.cover_image_url, ...data.images]); // Add fetched images
+            setProductImages([product.cover_image_url, ...data.images]);
           }
-        } else {
-          console.error("Failed to fetch product images:", response.statusText);
         }
       } catch (error) {
         console.error("Error fetching product images:", error);
       } finally {
-        setIsLoading(false);
+        setIsImagesLoading(false);
+      }
+
+      // Fetch description
+      setIsDescriptionLoading(true);
+      try {
+        const descResponse = await fetch(
+          "https://engine-b37ec1b1fb4e.herokuapp.com/nodesconnections/openai_api_nodesconnections/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              url: product.product_page_url,
+              product_name: product.name,
+            }),
+          }
+        );
+
+        if (descResponse.ok) {
+          const descData = await descResponse.json();
+          setDescription(descData.description);
+        }
+      } catch (error) {
+        console.error("Error fetching product description:", error);
+      } finally {
+        setIsDescriptionLoading(false);
       }
     };
 
     if (isOpen) {
-      fetchProductImages();
+      fetchProductDetails();
     } else {
       setProductImages([]);
+      setDescription("");
       setCurrentIndex(0);
     }
   }, [product, isOpen]);
@@ -83,6 +110,7 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
               radial-gradient(circle at 70% 70%, rgba(173, 216, 230, 0.5), transparent 70%),
               radial-gradient(circle at 50% 50%, rgba(240, 248, 255, 0.7), transparent 60%),
               #f0f8ff`,
+            paddingBottom: "env(safe-area-inset-bottom)", // Safe area padding
           }}
         >
           <div className="flex justify-between items-center p-4">
@@ -90,6 +118,7 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
               onClick={() => {
                 onClose();
                 setProductImages([]);
+                setDescription("");
               }}
               className="p-2 rounded-full hover:bg-gray-200"
             >
@@ -110,19 +139,20 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
             </button>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-6 h-full p-4">
+          <div
+            className="flex flex-col md:flex-row gap-6 h-full p-4 overflow-y-auto"
+            style={{
+              maxHeight: "calc(80vh - 50px - env(safe-area-inset-bottom))",
+            }}
+          >
             {/* Left Section - Main Image Carousel */}
             <div className="flex-1 flex flex-col items-center">
               <div
                 className="relative w-full flex items-center justify-center bg-white rounded"
                 style={{ height: "40vh" }}
               >
-                {isLoading ? (
-                  <img
-                    src={product.cover_image_url}
-                    alt={`Product Main`}
-                    className="w-full h-full object-contain rounded"
-                  />
+                {isImagesLoading ? (
+                  <div className="w-full h-full bg-gray-300 rounded animate-pulse"></div>
                 ) : (
                   <>
                     <img
@@ -179,15 +209,19 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
                 )}{" "}
                 kr / month
               </p>
-              <div className="text-gray-600 mb-4">
-                <p>
-                  This is a premium product designed for durability and
-                  functionality. It combines lightweight design with superior
-                  performance to provide an exceptional user experience.
-                </p>
-              </div>
+
+              {/* Description Section */}
+              {isDescriptionLoading ? (
+                <div className="w-full h-24 bg-gray-300 rounded animate-pulse"></div>
+              ) : (
+                <div
+                  className="text-gray-600"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                ></div>
+              )}
+
               <button
-                className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium flex items-center justify-center gap-2 mt-4"
                 tabIndex="0"
               >
                 <svg
@@ -215,6 +249,7 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
     </AnimatePresence>
   );
 };
+
 
 interface ApiResponse {
   response: string;
