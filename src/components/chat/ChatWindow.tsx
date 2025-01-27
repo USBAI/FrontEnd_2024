@@ -12,63 +12,63 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
   const [isImagesLoading, setIsImagesLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [addToCartState, setAddToCartState] = useState("idle"); // 'idle', 'loading', 'success'
 
   useEffect(() => {
     const fetchProductDetails = async () => {
       if (!product || !product.product_page_url || !product.name) return;
 
       setIsImagesLoading(true);
-      setProductImages([product.cover_image_url]); // Show the main product image first
+      setIsDescriptionLoading(true);
+      setProductImages([product.cover_image_url]);
 
-      // Fetch images
       const formData = new FormData();
       formData.append("url", product.product_page_url);
 
-      try {
-        const response = await fetch(
-          "https://engine-b37ec1b1fb4e.herokuapp.com/vision/inteligentvision/",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.images && Array.isArray(data.images)) {
-            setProductImages([product.cover_image_url, ...data.images]);
+      // Fetch images
+      fetch(
+        "https://engine-b37ec1b1fb4e.herokuapp.com/vision/inteligentvision/",
+        {
+          method: "POST",
+          body: formData,
+        }
+      ).then(async (imagesResponse) => {
+        if (imagesResponse.ok) {
+          const imagesData = await imagesResponse.json();
+          if (imagesData.images && Array.isArray(imagesData.images)) {
+            const uniqueImages = Array.from(
+              new Set([product.cover_image_url, ...imagesData.images])
+            );
+            setProductImages(uniqueImages);
           }
         }
-      } catch (error) {
-        console.error("Error fetching product images:", error);
-      } finally {
         setIsImagesLoading(false);
-      }
+      }).catch(error => {
+        console.error("Error fetching images:", error);
+        setIsImagesLoading(false);
+      });
 
       // Fetch description
-      setIsDescriptionLoading(true);
-      try {
-        const descResponse = await fetch(
-          "https://engine-b37ec1b1fb4e.herokuapp.com/nodesconnections/openai_api_nodesconnections/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              url: product.product_page_url,
-              product_name: product.name,
-            }),
-          }
-        );
-
+      fetch(
+        "https://engine-b37ec1b1fb4e.herokuapp.com/nodesconnections/openai_api_nodesconnections/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: product.product_page_url,
+            product_name: product.name,
+          }),
+        }
+      ).then(async (descResponse) => {
         if (descResponse.ok) {
           const descData = await descResponse.json();
           setDescription(descData.description);
         }
-      } catch (error) {
-        console.error("Error fetching product description:", error);
-      } finally {
         setIsDescriptionLoading(false);
-      }
+      }).catch(error => {
+        console.error("Error fetching description:", error);
+        setIsDescriptionLoading(false);
+      });
     };
 
     if (isOpen) {
@@ -77,6 +77,7 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
       setProductImages([]);
       setDescription("");
       setCurrentIndex(0);
+      setAddToCartState("idle");
     }
   }, [product, isOpen]);
 
@@ -92,17 +93,62 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
     setCurrentIndex(index);
   };
 
+  const handleAddToCart = async () => {
+    const userId = localStorage.getItem("user_id");
+    if (!userId) return;
+
+    setAddToCartState("loading");
+
+    const payload = {
+      user_id: userId,
+      product_id: product.product_id,
+      product_name: product.name,
+      product_price: product.price,
+      product_image: product.cover_image_url,
+      product_url: product.product_page_url,
+      product_description: description,
+      product_color: "",
+      product_size: "",
+    };
+
+    try {
+      const response = await fetch(
+        "https://customerserver-ec7f53c083c0.herokuapp.com/addcart/add-to-cart/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (response.ok) {
+        setAddToCartState("success");
+
+        // Update localStorage to add `request: true`
+        localStorage.setItem("request", "true");
+
+        setTimeout(() => setAddToCartState("idle"), 2000); // Reset button state after 2 seconds
+      } else {
+        setAddToCartState("idle");
+        console.error("Failed to add product to cart");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      setAddToCartState("idle");
+    }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           initial={{ y: "100%" }}
-          animate={{ y: "20%" }}
+          animate={{ y: "10%" }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="fixed bottom-0 left-0 right-0 z-50 rounded-t-lg shadow-lg overflow-hidden"
           style={{
-            height: "80vh",
+            height: "90vh",
             width: "97%",
             margin: "0 auto",
             background: `
@@ -110,7 +156,7 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
               radial-gradient(circle at 70% 70%, rgba(173, 216, 230, 0.5), transparent 70%),
               radial-gradient(circle at 50% 50%, rgba(240, 248, 255, 0.7), transparent 60%),
               #f0f8ff`,
-            paddingBottom: "env(safe-area-inset-bottom)", // Safe area padding
+            paddingBottom: "env(safe-area-inset-bottom)",
           }}
         >
           <div className="flex justify-between items-center p-4">
@@ -142,7 +188,7 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
           <div
             className="flex flex-col md:flex-row gap-6 h-full p-4 overflow-y-auto"
             style={{
-              maxHeight: "calc(80vh - 50px - env(safe-area-inset-bottom))",
+              maxHeight: "calc(90vh - 50px - env(safe-area-inset-bottom))",
             }}
           >
             {/* Left Section - Main Image Carousel */}
@@ -200,6 +246,59 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
 
             {/* Right Section - Product Information */}
             <div className="flex-1">
+              {/* Add to Cart Button */}
+              <button
+                className={`w-full py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 mb-4 ${
+                  addToCartState === "success"
+                    ? "bg-green-500 text-white"
+                    : "bg-black text-white"
+                }`}
+                tabIndex="0"
+                onClick={handleAddToCart}
+                disabled={addToCartState === "loading"}
+              >
+                {addToCartState === "loading" && (
+                  <div className="loader w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                )}
+                {addToCartState === "success" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-check-circle"
+                  >
+                    <path d="M9 12l2 2 4-4"></path>
+                    <circle cx="12" cy="12" r="10"></circle>
+                  </svg>
+                )}
+                {addToCartState === "idle" && (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-shopping-cart h-5 w-5"
+                    >
+                      <circle cx="8" cy="21" r="1"></circle>
+                      <circle cx="19" cy="21" r="1"></circle>
+                      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                    </svg>
+                    Add to Cart
+                  </>
+                )}
+              </button>
+
               <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
               <p className="text-lg text-gray-700 mb-2">{product.price}</p>
               <p className="text-md text-gray-500 mb-4">
@@ -212,43 +311,45 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
 
               {/* Description Section */}
               {isDescriptionLoading ? (
-                <div className="w-full h-24 bg-gray-300 rounded animate-pulse"></div>
+                <div className="space-y-3">
+                  <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-5/6 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-2/3 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-4/5 animate-pulse"></div>
+                </div>
               ) : (
-                <div
-                  className="text-gray-600"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                ></div>
+                <div>
+                  <div
+                    className="text-gray-700 p-4 border border-gray-200 rounded shadow-sm bg-white overflow-auto"
+                    dangerouslySetInnerHTML={{ __html: description }}
+                  ></div>
+                  <div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                  </div>
+                </div>
               )}
-
-              <button
-                className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium flex items-center justify-center gap-2 mt-4"
-                tabIndex="0"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-shopping-cart h-5 w-5"
-                >
-                  <circle cx="8" cy="21" r="1"></circle>
-                  <circle cx="19" cy="21" r="1"></circle>
-                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
-                </svg>
-                Add to Cart
-              </button>
             </div>
           </div>
+          
+          <div>
+              <br />
+              <br />
+              <br />
+              <br />
+            </div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 };
+
+
 
 
 interface ApiResponse {

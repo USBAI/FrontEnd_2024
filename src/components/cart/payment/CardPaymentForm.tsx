@@ -54,7 +54,7 @@ const CardPaymentForm = ({ clientSecret, total, onBack, onSuccess }: CardPayment
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `${window.location.origin}/payment-complete`,
+          return_url: `${window.location.origin}/payment/klarna`,
         },
       });
 

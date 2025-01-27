@@ -6,6 +6,7 @@ import KlarnaPaymentCart from './components/KlarnaPaymentCart';
 import KlarnaPaymentHeader from './components/KlarnaPaymentHeader';
 import KlarnaStripeForm from './components/KlarnaStripeForm';
 import { useCart } from '../../components/search/hooks/useCart';
+import { useNavigate } from 'react-router-dom';
 
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY, {
@@ -13,6 +14,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY, {
 });
 
 const KlarnaPaymentPage = () => {
+  const navigate = useNavigate();
   const { cartItems, isLoading } = useCart();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,8 +31,6 @@ const KlarnaPaymentPage = () => {
 
   useEffect(() => {
     const initializePayment = async () => {
-      if (!cartItems?.length) return;
-
       const userId = localStorage.getItem('user_id');
       if (!userId) {
         setError('User not authenticated');
@@ -68,7 +68,7 @@ const KlarnaPaymentPage = () => {
     };
 
     initializePayment();
-  }, [cartItems, total]);
+  }, [cartItems, total, navigate]);
 
   if (isLoading) {
     return (

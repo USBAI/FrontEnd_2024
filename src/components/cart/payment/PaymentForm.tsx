@@ -34,7 +34,7 @@ const PaymentForm = ({ total, onProcessing, onSuccess, onError }: PaymentFormPro
       const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: window.location.origin + '/payment-complete',
+          return_url: window.location.origin + '/payment/klarna',
         },
       });
 

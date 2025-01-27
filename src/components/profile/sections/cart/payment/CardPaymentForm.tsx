@@ -112,7 +112,7 @@ const CardPaymentForm = ({ total, onBack, onProcessing, onSuccess, onError }: Ca
       const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/payment-complete`,
+          return_url: `${window.location.origin}/payment/klarna`,
         },
       });
 
@@ -144,7 +144,7 @@ const CardPaymentForm = ({ total, onBack, onProcessing, onSuccess, onError }: Ca
           <h2 className="text-lg font-bold mb-4">
             {shippingInfo ? 'Edit Shipping Information' : 'Enter Shipping Information'}
           </h2>
-          <form className="space-y-4 max-h-[30vh] overflow-y-auto">
+          <form className="space-y-4 max-h-[30vh] overflow-y-auto overflow-x-hidden">
             <input
               type="text"
               name="full_name"
@@ -228,16 +228,28 @@ const CardPaymentForm = ({ total, onBack, onProcessing, onSuccess, onError }: Ca
         </div>
       ) : (
         <form onSubmit={handleSubmitPayment} className="space-y-6">
-          <PaymentElement
-            options={{
-              wallets: {
-                applePay: 'auto',
-                googlePay: 'auto',
-              },
-              // Exclude Klarna by default
-              paymentMethodOrder: ['card', 'googlePay', 'applePay'],
-            }}
-          />
+          <div className="h-[400px] overflow-y-auto overflow-x-hidden">
+            <PaymentElement
+              options={{
+                paymentMethodOrder: ['card'],
+                layout: 'tabs',
+                defaultValues: {
+                  billingDetails: {
+                    name: formFields.full_name,
+                    email: formFields.email,
+                    phone: formFields.phone_number,
+                    address: {
+                      line1: formFields.address,
+                      city: formFields.city,
+                      state: formFields.state,
+                      postal_code: formFields.zip_code,
+                      country: formFields.country,
+                    }
+                  }
+                }
+              }}
+            />
+          </div>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

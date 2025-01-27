@@ -330,7 +330,7 @@ const PaymentMethodSelector = ({ onShippingComplete }: PaymentMethodSelectorProp
         {paymentMethods.map((method) => (
           <motion.button
             key={method.id}
-            onClick={() => onSelectMethod(method.id as 'card' | 'klarna')}
+            onClick={() => handleSelectMethod(method.id as 'card' | 'klarna')}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={`w-full p-6 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white text-left transition-all`}
