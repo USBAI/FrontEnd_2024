@@ -316,6 +316,18 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
                   <div className="h-4 bg-gray-300 rounded w-5/6 animate-pulse"></div>
                   <div className="h-4 bg-gray-300 rounded w-2/3 animate-pulse"></div>
                   <div className="h-4 bg-gray-300 rounded w-4/5 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-5/6 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-2/3 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-4/5 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-5/6 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-2/3 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-4/5 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-5/6 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-2/3 animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-4/5 animate-pulse"></div>
                 </div>
               ) : (
                 <div>
