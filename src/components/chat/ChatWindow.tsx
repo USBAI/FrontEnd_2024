@@ -6,6 +6,7 @@ import UserMessage from './components/UserMessage';
 import SearchOverlay from '../search/SearchOverlay';
 import { Message } from './types';
 
+
 const ProductDetailModal = ({ product, isOpen, onClose }) => {
   const [productImages, setProductImages] = useState([]);
   const [description, setDescription] = useState("");
@@ -13,6 +14,49 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
   const [isImagesLoading, setIsImagesLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [addToCartState, setAddToCartState] = useState("idle"); // 'idle', 'loading', 'success'
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const endpoint = isLogin ? 
+        'https://customerserver-ec7f53c083c0.herokuapp.com/users/login_authorizer/' :
+        'https://customerserver-ec7f53c083c0.herokuapp.com/users/register_user/';
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        localStorage.setItem('user_id', data.user_id);
+        setShowAuthModal(false);
+        handleAddToCart();
+      } else {
+        setError(data.message || 'Authentication failed');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -95,7 +139,10 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
 
   const handleAddToCart = async () => {
     const userId = localStorage.getItem("user_id");
-    if (!userId) return;
+    if (!userId) {
+      setShowAuthModal(true);
+      return;
+    }
 
     setAddToCartState("loading");
 
@@ -123,11 +170,8 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
 
       if (response.ok) {
         setAddToCartState("success");
-
-        // Update localStorage to add `request: true`
         localStorage.setItem("request", "true");
-
-        setTimeout(() => setAddToCartState("idle"), 2000); // Reset button state after 2 seconds
+        setTimeout(() => setAddToCartState("idle"), 2000);
       } else {
         setAddToCartState("idle");
         console.error("Failed to add product to cart");
@@ -357,9 +401,182 @@ const ProductDetailModal = ({ product, isOpen, onClose }) => {
             </div>
         </motion.div>
       )}
+
+      {showAuthModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-white rounded-2xl p-6 w-full max-w-md mx-4 relative"
+          >
+            <button
+              onClick={() => setShowAuthModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {isLogin ? 'Welcome Back' : 'Create Account'}
+              </h2>
+              <p className="text-gray-500 mt-1">
+                {isLogin ? 'Sign in to continue shopping' : 'Join to start shopping'}
+              </p>
+            </div>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleAuthSubmit} className="space-y-4">
+              {!isLogin && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                      placeholder="Enter your name"
+                      required={!isLogin}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                  <input
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg font-medium hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  isLogin ? 'Sign In' : 'Create Account'
+                )}
+              </button>
+            </form>
+
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-pink-500 hover:text-pink-600 text-sm"
+              >
+                {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };
+
+
+
+
+
+
+
 
 
 

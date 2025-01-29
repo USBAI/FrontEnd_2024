@@ -145,14 +145,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isOpen, onClose }) => {
         ))}
       </div>
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
+      <button
         onClick={onClose}
-        className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors z-50"
+        className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors z-50 cursor-pointer"
       >
         <X className="h-6 w-6 text-gray-600" />
-      </motion.button>
+      </button>
 
       <div className="w-full max-w-md px-4 relative z-10">
         <AnimatePresence mode="wait">
