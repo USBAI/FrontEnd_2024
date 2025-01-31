@@ -609,6 +609,10 @@ const TypingIndicator = () => (
   </div>
 );
 
+const generateRandomUserId = () => {
+  return 'user_' + Math.random().toString(36).substring(2, 15);
+};
+
 const ChatWindow = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -622,9 +626,9 @@ const ChatWindow = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sessionUserId] = useState(generateRandomUserId());
 
   const openModal = (product) => {
     setSelectedProduct(product);
@@ -635,10 +639,6 @@ const ChatWindow = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
   };
-
-
-
-
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -739,7 +739,7 @@ const ChatWindow = () => {
         const formData = new FormData();
         formData.append('user_input', text || 'I want to buy this');
         formData.append('user_history', userHistory);
-        formData.append('user_id', 'ckWh4hcLqQD4DLioKvyIZubI9r2qL0pkEx9D');
+        formData.append('user_id', sessionUserId);
         formData.append('image', image);
 
         response = await fetch('https://engine-b37ec1b1fb4e.herokuapp.com/imagebase_api_ai/chatbot/', {
@@ -753,7 +753,7 @@ const ChatWindow = () => {
           body: JSON.stringify({
             user_input: text,
             user_history: userHistory,
-            user_id: 'ckWh4hcLqQD4DLioKvyIZubI9r2qL0pkEx9D',
+            user_id: sessionUserId,
           }),
         });
       }
