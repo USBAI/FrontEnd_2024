@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Users, ShoppingBag, Building2, CreditCard, Globe, Laptop, CloverIcon } from 'lucide-react';
+import kluretVideo from './kluret_view.mp4';
 
 const stats = [
   {
@@ -113,6 +114,19 @@ const StatsSection = () => {
               </div>
             </motion.div>
           ))}
+        </div>
+
+        <div className="mt-16 w-full">
+          <video
+            className="w-full h-auto rounded-lg"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src={kluretVideo} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
 
       </div>
