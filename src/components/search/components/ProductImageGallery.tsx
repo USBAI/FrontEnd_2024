@@ -10,6 +10,7 @@ interface ProductImageGalleryProps {
 
 const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName }: ProductImageGalleryProps) => {
   const [startX, setStartX] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartX(e.touches[0].clientX);
@@ -42,7 +43,7 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
     <div className="space-y-4">
       {/* Main Image with Left and Right Arrows */}
       <div
-        className="relative aspect-square bg-white rounded-lg overflow-hidden"
+        className="relative aspect-square bg-white rounded-lg overflow-hidden cursor-pointer"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -50,6 +51,7 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
           src={images[currentIndex]}
           alt={productName}
           className="w-full h-full object-contain"
+          onClick={() => setIsFullscreen(true)}
         />
         {/* Left Arrow */}
         <button
@@ -66,6 +68,45 @@ const ProductImageGallery = ({ images, currentIndex, onImageSelect, productName 
           &#8250;
         </button>
 
+        {/* Fullscreen Modal */}
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center"
+            onClick={() => setIsFullscreen(false)}
+          >
+            <button
+              className="absolute top-4 right-4 text-white p-2"
+              onClick={() => setIsFullscreen(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <motion.img
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.5 }}
+              src={images[currentIndex]}
+              alt={productName}
+              className="max-h-[90vh] max-w-[90vw] object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
       </div>
       {/* Dots for Navigation */}
       <div className="flex justify-center mt-2 space-x-2 bg-gray-200 rounded-full p-1 w-fit m-auto">

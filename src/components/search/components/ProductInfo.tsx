@@ -118,12 +118,12 @@ const ProductInfo = ({
           className="animate-pulse"
           id="loading-div"
         >
-          <div className="h-6 bg-gray-200 rounded w-1/3 mb-3"></div>
+          <div className="h-0 bg-gray-200 rounded w-1/3 mb-3"></div>
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(0)].map((_, i) => (
               <div
                 key={i}
-                className="h-12 bg-gray-200 rounded"
+                className="h-12 bg-pink-600 rounded"
               ></div>
             ))}
           </div>
